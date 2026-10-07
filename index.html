@@ -304,6 +304,9 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
 .tile h2{font-size:16.5px;font-weight:600;margin:2px 0 4px}
 .tile p{margin:0;color:var(--muted);font-size:13.5px}
 .tile .host{display:block;margin-top:8px;font-size:12px;color:var(--muted);opacity:.8;word-break:break-all}
+a.tile{text-decoration:none;color:inherit}
+.tile-ext{position:absolute;top:12px;right:12px;width:16px;height:16px;color:var(--muted);opacity:.7}
+.tile-ext svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------------- การ์ดลงเวลาปฏิบัติราชการ (เด่นสุดบนหน้าหลัก) ---------------- */
 .punch{
@@ -346,7 +349,7 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
 /* ---------------- PC: ย่อส่วนหัวให้เห็นทุกระบบในหน้าเดียว ไม่ต้องเลื่อน ---------------- */
 @media (min-width:861px){
   .home{padding:18px clamp(16px,2.5vw,36px) 20px}
-  .home-inner{max-width:1240px}
+  .home-inner{max-width:2200px;margin-inline:auto}
   .hero{padding:20px 26px;margin-bottom:16px;border-radius:18px}
   .hero-logo{display:none}
   .today{font-size:13px;margin-bottom:4px}
@@ -384,9 +387,23 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
   .top-row .clock{grid-column:1/-1;grid-row:1;text-align:left;padding:0 0 12px;border-left:0;border-bottom:1px dashed var(--line);
                   display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .top-row .clock > span{margin:0}
+  .top-row .featured{container-type:inline-size}
+  /* การ์ดลงเวลากว้างพอ (จอใหญ่): ขยายนาฬิกาและตัวอักษรให้เต็มพื้นที่ */
+  .home.tight .tile .host,.home.tight .punch-note{display:none}
+  /* (คลาส roomy ใส่โดย fitHome เมื่อพื้นที่สูงและกว้างพอ) */
+    .top-row.roomy .punch{padding:clamp(20px,5cqw,34px) clamp(22px,6cqw,40px);gap:16px 22px}
+    .top-row.roomy .clock{padding-bottom:16px}
+    .top-row.roomy .clock time{font-size:clamp(44px,11cqw,84px)}
+    .top-row.roomy .clock > span{font-size:15px}
+    .top-row.roomy .punch .tile-icon{width:58px;height:58px;flex-basis:58px;border-radius:16px}
+    .top-row.roomy .punch .tile-icon svg{width:30px;height:30px}
+    .top-row.roomy .punch h2{font-size:21px}
+    .top-row.roomy .punch p{font-size:14.5px;margin-bottom:14px}
+    .top-row.roomy .punch-go{padding:11px 22px;font-size:15.5px}
+    .top-row.roomy .punch-note{font-size:13px}
   .top-row .featured{display:flex}
   .top-row .punch{flex:1}
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 }
 
 /* ---------------- มือถือ ---------------- */
@@ -531,6 +548,7 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
    icon  : doc | money | calendar | stamp | folder | media | chart | users | box | link
    group : หัวข้อกลุ่มในเมนู (ใส่ชื่อเดียวกันจะรวมกลุ่มกัน)
    color : สีไล่เฉดของไอคอน [สีอ่อน, สีเข้ม] ไม่ใส่จะใช้สีเทาอมฟ้า
+   newTab: true = เปิดในแท็บใหม่แทนการเปิดในกรอบ (ใช้กับระบบ Google Apps Script ที่ต้องเข้าสู่ระบบ Google)
    ลำดับในรายการนี้ = ลำดับที่แสดงทั้งในเมนูและบนหน้าหลัก (เรียงตามความถี่ในการใช้งาน)
    ========================================================= */
 const SYSTEMS = [
@@ -544,6 +562,9 @@ const SYSTEMS = [
     url:"https://eng.msu.ac.th/deantracking/",       icon:"stamp",    group:"งานเอกสาร", color:["#B57BFF","#6D28D9"] },
   { id:"dwms",      name:"ระบบ E-Service งานโสตทัศนศึกษา DWMS", desc:"ขอใช้บริการงานโสตทัศนศึกษาออนไลน์",
     url:"https://panya-jeerachat.github.io/dwms/",   icon:"media",    group:"งานบริการ", color:["#22D3EE","#0E7490"] },
+  { id:"meeting",   name:"ระบบจองห้องประชุม",  desc:"ตรวจสอบห้องว่างและจองห้องประชุมของคณะ",
+    url:"https://script.google.com/a/macros/msu.ac.th/s/AKfycbzVlT2789uC8xLi78HhvyKdP0c7tIrxvdd6Z5vykmqASaLnhP_Wk8yxJ91JS5M7fkWD/exec",
+    icon:"meeting", group:"งานบริการ", color:["#8B9BFF","#4338CA"], newTab:true },
   { id:"assistant", name:"ค้นหาบุคลากร",     desc:"ระบบผู้ช่วยค้นหาห้องพัก/ห้องทำงานบุคลากร",
     url:"https://eng.msu.ac.th/assistantpersonnel/", icon:"users",    group:"งานบริหาร", color:["#FF6FB5","#BE185D"] },
 ];
@@ -585,6 +606,7 @@ const ICONS = {
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>',
   ext:'<path d="M14 4h6v6"/><path d="M20 4l-9 9"/>',
   chart:'<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  meeting:'<rect x="3.5" y="9" width="17" height="6" rx="2"/><path d="M7 15v4M17 15v4"/><circle cx="8" cy="5" r="1.8"/><circle cx="16" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/>',
   users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.5 14a5 5 0 0 1 3 5"/>',
   box:'<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
@@ -611,7 +633,9 @@ function build(){
   SYSTEMS.forEach(s=>{
     if(!SHOW_GROUPS){ if(lastGroup===null){ html += `<div class="nav-group">ระบบงาน</div>`; lastGroup=''; } }
     else if(s.group && s.group!==lastGroup){ html += `<div class="nav-group">${esc(s.group)}</div>`; lastGroup=s.group; }
-    html += `<button class="nav-item" data-id="${esc(s.id)}" title="${esc(s.name)}"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="dot" aria-hidden="true"></span></button>`;
+    html += s.newTab
+      ? `<a class="nav-item" href="${esc(s.url)}" target="_blank" rel="noopener" data-ext title="${esc(s.name)} (เปิดในแท็บใหม่)"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="ext" aria-hidden="true">${svg('ext')}</span></a>`
+      : `<button class="nav-item" data-id="${esc(s.id)}" title="${esc(s.name)}"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="dot" aria-hidden="true"></span></button>`;
   });
   html += `<div class="nav-group">ลิงก์ภายนอก</div>
     <a class="nav-item" href="${esc(FACULTY_SITE.url)}" ${FACULTY_SITE.newTab?'target="_blank" rel="noopener"':''} title="${esc(FACULTY_SITE.name)}">
@@ -621,11 +645,13 @@ function build(){
     </a>`;
   $('nav').innerHTML = html;
 
-  $('grid').innerHTML = SYSTEMS.map(s=>`
-    <button class="tile" data-id="${esc(s.id)}" style="${tint(s)}">
-      <span class="tile-icon">${svg(s.icon)}</span>
-      <span><h2>${esc(s.name)}</h2><p>${esc(s.desc||'')}</p><span class="host">${esc(shortUrl(s.url))}</span></span>
-    </button>`).join('');
+  $('grid').innerHTML = SYSTEMS.map(s=>{
+    const inner = `<span class="tile-icon">${svg(s.icon)}</span>
+      <span><h2>${esc(s.name)}</h2><p>${esc(s.desc||'')}</p><span class="host">${s.newTab ? 'เปิดในแท็บใหม่' : esc(shortUrl(s.url))}</span></span>`;
+    return s.newTab
+      ? `<a class="tile" href="${esc(s.url)}" target="_blank" rel="noopener" data-ext style="${tint(s)}">${inner}<span class="tile-ext" aria-hidden="true">${svg('ext')}</span></a>`
+      : `<button class="tile" data-id="${esc(s.id)}" style="${tint(s)}">${inner}</button>`;
+  }).join('');
 
   $('featured').innerHTML = FEATURED ? `
     <div class="punch" style="${tint(FEATURED)}">
@@ -640,7 +666,7 @@ function build(){
     </div>` : '';
 
   document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
-  document.querySelectorAll('.pin, .punch-go').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('drawer')));
+  document.querySelectorAll('.pin, .punch-go, [data-ext]').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('drawer')));
 }
 
 /* นาฬิกาบนการ์ดลงเวลา (เดินเฉพาะตอนอยู่หน้าหลัก) */
@@ -661,6 +687,7 @@ function findSystem(url){
   let u; try{ u = new URL(url, location.href) }catch(e){ return null }
   let best = null, bestLen = -1;
   for(const s of SYSTEMS){
+    if(s.newTab) continue;
     const b = new URL(s.url); const base = b.pathname.replace(/\/+$/,'');
     if(u.origin!==b.origin) continue;
     if(u.pathname===base || u.pathname.startsWith(base+'/')){
@@ -681,7 +708,7 @@ function frameFor(s, startUrl){
     f.dataset.loading = '';
     document.querySelector(`.nav-item[data-id="${s.id}"]`)?.classList.add('loaded');
     installGuard(f, s);
-    try{ f.contentWindow.postMessage({eoffice:'hello', systems:SYSTEMS.map(x=>x.url)}, '*'); }catch(e){}
+    try{ f.contentWindow.postMessage({eoffice:'hello', systems:SYSTEMS.filter(x=>!x.newTab).map(x=>x.url)}, '*'); }catch(e){}
     if(current===s.id){ doneLoading(); showUrl(s); }
   });
   f.src = startUrl || s.url;
@@ -791,7 +818,7 @@ function doneLoading(){
 }
 
 function go(id, push=true, startUrl){
-  const s = SYSTEMS.find(x=>x.id===id);
+  const s = SYSTEMS.find(x=>x.id===id && !x.newTab);
   if(!s) id='home';
   current = id;
 
@@ -809,7 +836,7 @@ function go(id, push=true, startUrl){
     document.title = s.name + ' | EN-MSU Smart Office';
   }else{
     $('title').textContent='หน้าหลัก'; $('subtitle').textContent='';
-    setTimeout(tick);
+    setTimeout(()=>{ tick(); fitHome(); });
     $('actions').hidden = true;
     document.title = APP_TITLE;
   }
@@ -991,6 +1018,51 @@ const News = (()=>{
   return { start, sync };
 })();
 
+/* =========================================================
+   จัดหน้าหลักบน PC ให้เต็มความกว้างจอ และเห็นทุกอย่างในหน้าเดียว
+   - ระบบงานแบ่งเป็นแถวเท่า ๆ กัน (7 ระบบ = 4+3, 8 = 4+4, 10 = 5+5)
+   - สไลด์ข่าวขยาย/ย่อตามพื้นที่ที่เหลือ เพิ่มระบบเมื่อไรก็ปรับให้เอง
+   ========================================================= */
+const TILE_MIN_W = 220, TILE_MAX_COLS = 5;
+function fitHome(){
+  const view = $('view-home'), inner = view.querySelector('.home-inner');
+  const top = view.querySelector('.top-row'), grid = $('grid');
+  if(!matchMedia('(min-width:1100px)').matches){ grid.style.gridTemplateColumns = top.style.gridTemplateColumns = ''; view.classList.remove('tight'); top.classList.remove('roomy'); return; }
+  if(view.hidden) return;
+  const W = inner.clientWidth, gap = 12, n = grid.children.length;
+  const maxCols = Math.max(1, Math.min(TILE_MAX_COLS, Math.floor((W + gap) / (TILE_MIN_W + gap))));
+  const rows = Math.ceil(n / maxCols), cols = Math.ceil(n / rows);
+  grid.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
+
+  const cs = getComputedStyle(view);
+  const availH = view.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const minW = W * .34, maxW = W * .6;
+  const fit = ()=>{
+    let w = maxW;
+    for(let i = 0; i < 4; i++){
+      top.style.gridTemplateColumns = `${Math.round(w)}px minmax(0,1fr)`;
+      const over = inner.offsetHeight - availH;
+      const next = Math.max(minW, Math.min(maxW, w - over * 16 / 9));
+      if(Math.abs(next - w) < 2) break;
+      w = next;
+    }
+    return w;
+  };
+  top.classList.remove('roomy'); view.classList.remove('tight');
+  const w = fit();
+  /* จอเตี้ย: ซ่อนบรรทัดรองเพื่อให้พอดีหน้าเดียว */
+  if(inner.offsetHeight > availH + 1){ view.classList.add('tight'); fit(); }
+  /* ถ้าสไลด์สูงพอ ขยายการ์ดลงเวลาให้ตัวใหญ่ขึ้น แล้วตรวจซ้ำว่ายังพอดีจอ */
+  if(w * 9 / 16 >= 300 && W - w >= 520){
+    top.classList.add('roomy');
+    if(inner.offsetHeight > availH + 1){ top.classList.remove('roomy'); fit(); }
+  }
+}
+let fitT;
+const refit = ()=>{ clearTimeout(fitT); fitT = setTimeout(fitHome, 60); };
+addEventListener('resize', refit);
+if(window.ResizeObserver) new ResizeObserver(refit).observe($('view-home'));   // รวมตอนย่อ/ขยายเมนู
+
 /* ---------------- เริ่มต้น ---------------- */
 (function init(){
   document.documentElement.dataset.theme = load('theme') || 'light'; // เริ่มต้นโหมดสว่าง
@@ -1000,6 +1072,8 @@ const News = (()=>{
   go(location.hash.replace(/^#\/?/,'')||'home', false);
   tick(); setInterval(()=>{ tick(); News.sync(); }, 1000);
   News.start();
+  fitHome();
+  document.fonts && document.fonts.ready.then(fitHome);
 })();
 </script>
 </body>
