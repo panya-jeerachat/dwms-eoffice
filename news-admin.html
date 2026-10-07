@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>จัดการข่าวประชาสัมพันธ์ — EN-MSU Smart Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red-1:#E0243A; --red-2:#B3122E; --red-3:#6E0B22; --red-4:#3A0714; --coral:#FF6B5A; --gold:#F2B705;
+  --grad-hot:linear-gradient(120deg,var(--coral),var(--red-1) 40%,var(--red-2) 70%,var(--red-3));
+  --grad-rail:linear-gradient(165deg,var(--red-2) 0%,var(--red-3) 45%,var(--red-4) 100%);
+  --bg:#F5EFEF; --surface:#FFFFFF; --surface-2:#FBF7F7; --text:#2A1B1D; --muted:#76666A; --line:#EADADC;
+  --accent:#B3122E; --accent-soft:#FBE7EA; --ok:#0F7A4C; --ok-soft:#E3F6EC; --warn:#9A5B00; --warn-soft:#FFF3D6;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --bg:#1A1314; --surface:#251B1D; --surface-2:#2C2124; --text:#F5EAEB; --muted:#B39FA3; --line:#3D2B2F;
+  --accent:#FF6B7C; --accent-soft:#3F1B22; --ok:#5BD69B; --ok-soft:#173326; --warn:#F5C35B; --warn-soft:#3A2D12;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ปุ่มและช่องกรอก */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);
+  border-radius:11px;padding:9px 16px;font-weight:500;text-decoration:none;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--surface-2);border-color:#d9c3c6}
+.btn.primary{border:0;color:#fff;background:var(--grad-hot);font-weight:600;box-shadow:0 6px 16px rgba(179,18,46,.25)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{border-color:transparent;background:none}
+.btn.ghost:hover{background:var(--accent-soft);color:var(--accent)}
+.btn.danger:hover{background:#FDECEE;border-color:#F3B8C0;color:#B3122E}
+.btn.sm{padding:6px 10px;font-size:13.5px;border-radius:9px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.icon-only{padding:7px}
+label.f{display:block;margin:0 0 14px}
+label.f > span{display:block;font-size:13.5px;font-weight:600;margin-bottom:5px}
+label.f > span small{font-weight:400;color:var(--muted)}
+.in{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;outline:none}
+.in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.in{resize:vertical;min-height:96px}
+.hint{font-size:12.5px;color:var(--muted);margin-top:5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.okmsg{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:9px 12px;font-size:14px;margin:0 0 14px}
+.err{background:#FDECEE;color:#9B1027;border-radius:10px;padding:9px 12px;font-size:14px;margin:0 0 14px}
+
+/* หน้าเข้าสู่ระบบ */
+.auth{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:var(--grad-rail)}
+.auth-card{width:min(420px,100%);background:var(--surface);border-radius:22px;padding:28px 26px;box-shadow:0 30px 70px rgba(30,0,8,.45)}
+.auth-card .mark{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:15px;color:#fff;background:var(--grad-hot);margin-bottom:14px}
+.auth-card .mark svg{width:28px;height:28px}
+.auth-card h1{margin:0;font-size:22px;line-height:1.3}
+.auth-card p.lead{margin:6px 0 20px;color:var(--muted);font-size:14px}
+.auth-card .btn.primary{width:100%;padding:12px}
+.auth-foot{margin-top:16px;text-align:center;font-size:13.5px}
+.auth-foot a{color:var(--accent);text-decoration:none}
+
+/* แถบด้านบน */
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,32px);
+  padding-top:calc(10px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));
+  background:var(--grad-rail);color:#fff}
+.bar .mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.14)}
+.bar h1{margin:0;font-size:16px;line-height:1.25;font-weight:600}
+.bar h1 small{display:block;font-size:12px;font-weight:400;opacity:.75}
+.bar .sp{flex:1}
+.who{text-align:right;font-size:13px;line-height:1.3}
+.who b{display:block;font-size:14px}
+.who span{opacity:.75}
+.bar .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);color:#fff}
+.bar .btn:hover{background:rgba(255,255,255,.22)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:18px clamp(14px,3vw,32px) 60px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:none;padding:10px 14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--accent);border-color:var(--accent)}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar .note{font-size:13.5px;color:var(--muted);flex:1;min-width:220px}
+
+/* รายการข่าว */
+.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.item{display:grid;grid-template-columns:28px 160px 1fr auto;gap:14px;align-items:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.item.off{opacity:.72}
+.ord{font-weight:700;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.thumb{aspect-ratio:16/9;border-radius:9px;overflow:hidden;background:var(--surface-2);container-type:inline-size;position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.info{min-width:0}
+.info b{display:block;font-size:15px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta{font-size:12.5px;color:var(--muted);margin-top:2px}
+.chip{display:inline-block;font-size:12px;font-weight:600;border-radius:99px;padding:2px 10px;margin-top:6px}
+.chip.live{background:var(--ok-soft);color:var(--ok)}
+.chip.hidden{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.chip.expired{background:var(--accent-soft);color:var(--accent)}
+.chip.scheduled{background:var(--warn-soft);color:var(--warn)}
+.acts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.empty{text-align:center;padding:40px 16px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+
+/* สไลด์ตัวอย่าง (ตรงกับหน้าหลัก) */
+.slide-text{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6cqw 7.5cqw 8cqw;color:#fff;overflow:hidden}
+.slide-text > *{flex-shrink:0;max-width:100%}
+.slide-text::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1.3px,transparent 1.5px);background-size:16px 16px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 50%,#000);mask-image:linear-gradient(100deg,transparent 50%,#000)}
+.slide-text .k{align-self:flex-start;font-size:max(11px,2.2cqw);font-weight:600;padding:.3em .9em;border-radius:99px;background:rgba(255,255,255,.2);margin-bottom:2.2cqw}
+.slide-text h3{margin:0;font-size:max(16px,4.9cqw);line-height:1.3;font-weight:700;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.slide-text p{margin:1.6cqw 0 0;font-size:max(12px,2.5cqw);line-height:1.5;opacity:.92;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@container (max-width:520px){ .slide-text .more{display:none} .slide-text{padding:6cqw 7cqw 9cqw} }
+.thumb .slide-text .k,.thumb .slide-text p,.thumb .slide-text .more{display:none}
+.thumb .slide-text h3{font-size:9cqw}
+.slide-text .more{align-self:flex-start;margin-top:2.6cqw;font-size:max(12px,2.3cqw);font-weight:600;border-bottom:2px solid currentColor}
+.t-red  {background:linear-gradient(125deg,#FF6B5A,#E0243A 42%,#8E0F28)}
+.t-gold {background:linear-gradient(125deg,#FFE08A,#F2B705 50%,#C77800);color:#3A0714}
+.t-gold .k{background:rgba(58,7,20,.12)}
+.t-blue {background:linear-gradient(125deg,#5B95FF,#1D4ED8 55%,#172B6B)}
+.t-green{background:linear-gradient(125deg,#3DDBA3,#047857 55%,#064E3B)}
+.t-ink  {background:linear-gradient(125deg,#4A3337,#251B1D 60%,#120C0D)}
+
+/* หน้าต่างแก้ไขข่าว */
+dialog.ed{border:0;padding:0;border-radius:20px;width:min(980px,96vw);max-height:94vh;background:var(--surface);color:var(--text);
+  box-shadow:0 30px 80px rgba(20,0,6,.45);overflow:hidden}
+dialog.ed[open]{display:flex;flex-direction:column}
+dialog.ed::backdrop{background:rgba(25,4,10,.65)}
+.ed-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ed-head h2{margin:0;font-size:18px;flex:1}
+.ed-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;padding:18px;overflow:auto}
+.ed-foot{display:flex;gap:10px;justify-content:flex-end;align-items:center;padding:12px 18px;border-top:1px solid var(--line);background:var(--surface-2)}
+.ed-foot .status{flex:1;font-size:13.5px;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg input:checked + span{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px rgba(60,0,15,.1)}
+.seg input:focus-visible + span{outline:2px solid var(--accent)}
+
+.spec{border:1px solid #F3D489;background:var(--warn-soft);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-bottom:12px}
+.spec b{color:var(--warn)}
+.spec ul{margin:6px 0 0;padding-left:18px}
+.spec li{margin:2px 0}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;
+  border:2px dashed var(--line);border-radius:14px;padding:22px 14px;background:var(--surface-2);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop svg{width:30px;height:30px;color:var(--accent)}
+.drop small{color:var(--muted)}
+.imginfo{font-size:13px;margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.badge{font-size:12px;font-weight:600;border-radius:99px;padding:2px 9px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.fit{display:grid;gap:6px;margin-top:10px;font-size:14px}
+.fit label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.fit input{margin-top:4px;accent-color:var(--accent)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches label{cursor:pointer}
+.swatches input{position:absolute;opacity:0}
+.swatches span{display:block;width:40px;height:40px;border-radius:11px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.swatches input:checked + span{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}
+.swatches input:focus-visible + span{outline:2px solid var(--accent);outline-offset:4px}
+.check{display:flex;gap:10px;align-items:center;font-weight:600;cursor:pointer;margin:4px 0 0}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+
+.pv-side{position:sticky;top:0;align-self:start}
+.pv-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.pv-top b{font-size:14px}
+.pv-wrap{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;place-items:center}
+.pv{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;container-type:inline-size;background:#2A1B1D;
+  box-shadow:0 10px 26px rgba(60,0,15,.18);transition:width .25s}
+.pv.mobile{width:350px;max-width:100%;border-radius:12px}
+.pv canvas,.pv img{display:block;width:100%;height:100%;object-fit:cover}
+.pv .placeholder{position:absolute;inset:0;display:grid;place-items:center;color:#c9b3b7;font-size:14px;text-align:center;padding:12px}
+.safe{position:absolute;inset:5% 5% 9%;border:1.5px dashed rgba(255,255,255,.85);border-radius:6px;pointer-events:none;
+  box-shadow:0 0 0 999px rgba(0,0,0,.18)}
+.pv-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+/* ผู้ใช้งาน */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
+.card h3{margin:0 0 12px;font-size:16px}
+.ufrm{display:grid;grid-template-columns:1.3fr 1.2fr 1.1fr .8fr auto;gap:10px;align-items:end}
+.ufrm label.f{margin:0}
+.users{display:grid;gap:8px}
+.urow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.urow b{font-size:15px}
+.urow .meta span + span::before{content:" · "}
+.role{font-size:11.5px;font-weight:700;border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+.role.admin{background:var(--accent-soft);color:var(--accent)}
+.role.editor{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.role.off{background:#eee;color:#777}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:100;
+  background:#2A1B1D;color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:.25s;pointer-events:none;max-width:92vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:#9B1027}
+.cfg{max-width:640px;margin:40px auto;padding:20px 22px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.cfg code{background:var(--surface-2);padding:1px 6px;border-radius:5px}
+
+@media (max-width:860px){
+  .ed-body{grid-template-columns:1fr}
+  .pv-side{position:static;order:-1}
+  .ufrm{grid-template-columns:1fr 1fr}
+  .ufrm .btn{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .who{display:none}
+  .bar .btn .lbl{display:none}
+  .item{grid-template-columns:110px 1fr;gap:10px}
+  .ord{display:none}
+  .acts{grid-column:1/-1;justify-content:flex-start}
+  .row2{grid-template-columns:1fr}
+  dialog.ed{width:100vw;max-width:100vw;height:100%;max-height:100%;border-radius:0}
+  .urow{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ยังไม่ได้ตั้งค่า -->
+<div class="cfg" id="vCfg" hidden>
+  <h2 style="margin-top:0">ยังไม่ได้เชื่อมต่อระบบข่าว</h2>
+  <p>ยังไม่ได้ใส่ URL ของ Web App ในส่วนโค้ด &lt;script&gt; ของไฟล์นี้ (ตัวแปร NEWS_API ใกล้ท้ายไฟล์)</p>
+  <p><a href="index.html">กลับหน้า EN-MSU Smart Office</a></p>
+</div>
+
+<!-- เข้าสู่ระบบ -->
+<main class="auth" id="vLogin" hidden>
+  <form class="auth-card" id="loginForm" novalidate>
+    <span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+    <h1>ระบบข่าวประชาสัมพันธ์</h1>
+    <p class="lead">EN-MSU Smart Office · สำหรับบุคลากรผู้รับผิดชอบลงข่าว</p>
+    <p class="err" id="loginErr" hidden></p>
+    <p class="okmsg" id="loginOk" hidden></p>
+    <label class="f"><span>อีเมล</span>
+      <input class="in" id="lEmail" type="text" inputmode="email" autocomplete="username" placeholder="ชื่อผู้ใช้@msu.ac.th" required></label>
+    <label class="f"><span>รหัสผ่าน</span>
+      <input class="in" id="lPw" type="password" autocomplete="current-password" required></label>
+    <button class="btn primary" id="loginBtn">เข้าสู่ระบบ</button>
+    <div class="auth-foot"><a href="#" id="forgotOpen">ลืมรหัสผ่าน?</a></div>
+    <div class="auth-foot" style="margin-top:8px"><a href="index.html">← กลับหน้า EN-MSU Smart Office</a></div>
+  </form>
+</main>
+
+<!-- ลืมรหัสผ่าน -->
+<main class="auth" id="vForgot" hidden>
+  <form class="auth-card" id="forgotForm" novalidate>
+    <span class="mark"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+    <h1>ลืมรหัสผ่าน</h1>
+    <p class="lead">ใส่อีเมล @msu.ac.th ของคุณ ระบบจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ไปที่อีเมลนั้น</p>
+    <p class="err" id="forgotErr" hidden></p>
+    <div id="forgotSent" hidden>
+      <p class="okmsg" id="forgotMsg"></p>
+      <p class="hint" style="margin:0 0 16px">ลิงก์ใช้ได้ 30 นาทีและใช้ได้ครั้งเดียว ถ้าไม่พบอีเมล ให้ดูในโฟลเดอร์สแปมหรือจดหมายขยะ</p>
+    </div>
+    <div id="forgotFields">
+      <label class="f"><span>อีเมล</span>
+        <input class="in" id="fEmail" type="text" inputmode="email" autocomplete="username" placeholder="ชื่อผู้ใช้@msu.ac.th"></label>
+      <button class="btn primary" id="forgotBtn">ส่งลิงก์ตั้งรหัสผ่านใหม่</button>
+    </div>
+    <div class="auth-foot"><a href="#" class="toLogin">← กลับไปหน้าเข้าสู่ระบบ</a></div>
+  </form>
+</main>
+
+<!-- ตั้งรหัสผ่านใหม่จากลิงก์ในอีเมล -->
+<main class="auth" id="vReset" hidden>
+  <form class="auth-card" id="resetForm" novalidate>
+    <span class="mark"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+    <h1>ตั้งรหัสผ่านใหม่</h1>
+    <p class="lead">ตั้งรหัสผ่านที่คุณจำได้ อย่างน้อย 6 ตัวอักษร</p>
+    <p class="err" id="resetErr" hidden></p>
+    <label class="f"><span>รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัวอักษร)</small></span><input class="in" id="rNew" type="password" autocomplete="new-password" minlength="6"></label>
+    <label class="f"><span>ยืนยันรหัสผ่านใหม่</span><input class="in" id="rNew2" type="password" autocomplete="new-password"></label>
+    <label class="check" style="font-weight:500;font-size:13.5px;margin:-4px 0 14px"><input type="checkbox" class="showPw" data-for="rNew,rNew2"> แสดงรหัสผ่าน</label>
+    <button class="btn primary" id="resetBtn">บันทึกรหัสผ่านใหม่</button>
+    <div class="auth-foot"><a href="#" class="toLogin">← กลับไปหน้าเข้าสู่ระบบ</a></div>
+  </form>
+</main>
+
+<!-- เปลี่ยนรหัสผ่าน -->
+<main class="auth" id="vPw" hidden>
+  <form class="auth-card" id="pwForm" novalidate>
+    <span class="mark"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+    <h1>ตั้งรหัสผ่านใหม่</h1>
+    <p class="lead" id="pwLead">เพื่อความปลอดภัย กรุณาเปลี่ยนรหัสผ่านเริ่มต้นก่อนใช้งาน</p>
+    <p class="err" id="pwErr" hidden></p>
+    <input type="text" id="pwUser" autocomplete="username" hidden>
+    <label class="f"><span>รหัสผ่านปัจจุบัน</span><input class="in" id="pOld" type="password" autocomplete="current-password"></label>
+    <label class="f"><span>รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัวอักษร)</small></span><input class="in" id="pNew" type="password" autocomplete="new-password" minlength="6"></label>
+    <label class="f"><span>ยืนยันรหัสผ่านใหม่</span><input class="in" id="pNew2" type="password" autocomplete="new-password"></label>
+    <label class="check" style="font-weight:500;font-size:13.5px;margin:-4px 0 14px"><input type="checkbox" class="showPw" data-for="pOld,pNew,pNew2"> แสดงรหัสผ่าน</label>
+    <button class="btn primary" id="pwBtn">บันทึกรหัสผ่านใหม่</button>
+    <button class="btn" type="button" id="pwSkip" style="width:100%;margin-top:10px" hidden>ข้ามไปก่อน เข้าใช้งานเลย</button>
+    <div class="auth-foot"><a href="#" id="pwCancel">ยกเลิก</a></div>
+  </form>
+</main>
+
+<!-- หน้าจัดการ -->
+<div id="vApp" hidden>
+  <header class="bar">
+    <span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></span>
+    <h1>ข่าวประชาสัมพันธ์<small>EN-MSU Smart Office</small></h1>
+    <span class="sp"></span>
+    <div class="who"><b id="whoName"></b><span id="whoDept"></span></div>
+    <a class="btn sm" href="index.html" title="ไปหน้า EN-MSU Smart Office"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lbl">หน้าหลัก</span></a>
+    <button class="btn sm" id="pwOpen" title="เปลี่ยนรหัสผ่าน"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="lbl">รหัสผ่าน</span></button>
+    <button class="btn sm" id="logoutBtn" title="ออกจากระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg><span class="lbl">ออก</span></button>
+  </header>
+
+  <div class="wrap">
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="tNews">ข่าวประชาสัมพันธ์</button>
+      <button role="tab" aria-selected="false" data-tab="tUsers" id="usersTab" hidden>ผู้ใช้งาน</button>
+    </div>
+
+    <section id="tNews">
+      <div class="toolbar">
+        <button class="btn primary" id="addNews"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>เพิ่มข่าว</button>
+        <span class="note">ข่าวลำดับบนสุดแสดงเป็นสไลด์แรก ใช้ปุ่มลูกศรขึ้น–ลงเพื่อจัดลำดับความสำคัญ</span>
+        <button class="btn sm ghost" id="reload" title="โหลดใหม่"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+      </div>
+      <ul class="list" id="newsList"></ul>
+    </section>
+
+    <section id="tUsers" hidden>
+      <form class="card" id="userForm" novalidate>
+        <h3 id="uFormTitle">เพิ่มผู้รับผิดชอบลงข่าว</h3>
+        <div class="ufrm">
+          <label class="f"><span>อีเมล @msu.ac.th</span><input class="in" id="uEmail" type="email" placeholder="name@msu.ac.th" required></label>
+          <label class="f"><span>ชื่อ-สกุล</span><input class="in" id="uName" required maxlength="100"></label>
+          <label class="f"><span>ฝ่าย / หน่วยงาน</span><input class="in" id="uDept" list="deptList" maxlength="100"></label>
+          <label class="f"><span>สิทธิ์</span><select class="in" id="uRole"><option value="editor">ผู้ลงข่าว</option><option value="admin">ผู้ดูแลระบบ</option></select></label>
+          <div style="display:flex;gap:6px"><button class="btn primary" id="uSave">เพิ่มผู้ใช้</button><button class="btn" type="button" id="uCancel" hidden>ยกเลิก</button></div>
+        </div>
+        <p class="hint" id="uHint"></p>
+      </form>
+      <div class="users" id="userList"></div>
+    </section>
+  </div>
+</div>
+
+<datalist id="deptList"></datalist>
+
+<!-- หน้าต่างเพิ่ม/แก้ไขข่าว -->
+<dialog class="ed" id="ed">
+  <form id="edForm" novalidate style="display:contents">
+    <div class="ed-head">
+      <h2 id="edTitle">เพิ่มข่าว</h2>
+      <button class="btn ghost icon-only" type="button" id="edClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="ed-body">
+      <div>
+        <div class="seg" role="radiogroup" aria-label="รูปแบบข่าว">
+          <label><input type="radio" name="type" value="image" checked><span><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>ภาพข่าว</span></label>
+          <label><input type="radio" name="type" value="text"><span><svg class="i" viewBox="0 0 24 24"><path d="M5 6h14M5 11h14M5 16h9"/></svg>ข้อความ</span></label>
+        </div>
+
+        <div id="imgFields">
+          <div class="spec">
+            <b>ขนาดภาพที่ต้องสร้าง: 1920 × 1080 พิกเซล (สัดส่วน 16:9)</b>
+            <ul>
+              <li>ใน Canva เลือกขนาด "งานนำเสนอ 16:9" หรือ "Presentation 1920 × 1080"</li>
+              <li>หัวข้อสูงอย่างน้อย 90 px ข้อความรองอย่างน้อย 60 px เพื่อให้อ่านออกบนมือถือ</li>
+              <li>วางข้อความสำคัญในกรอบเส้นประของตัวอย่าง (ด้านล่างเว้นที่ให้จุดบอกลำดับข่าว)</li>
+              <li>ไฟล์ JPG หรือ PNG ระบบจะย่อและบีบอัดให้อัตโนมัติ คมชัดทั้งจอคอมและมือถือ</li>
+            </ul>
+          </div>
+          <label class="drop" id="drop">
+            <svg class="i" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <b id="dropLbl">เลือกไฟล์ภาพ หรือลากมาวางที่นี่</b>
+            <small>JPG / PNG / WebP ไม่เกิน 15 MB</small>
+            <input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
+          </label>
+          <div class="imginfo" id="imgInfo" hidden></div>
+          <div class="fit" id="fitBox" hidden>
+            <label><input type="radio" name="fit" value="cover" checked><span><b>ครอบให้เต็มกรอบ</b> ตัดส่วนเกินด้านข้างหรือบน-ล่างออก</span></label>
+            <label><input type="radio" name="fit" value="contain"><span><b>แสดงทั้งภาพ</b> เติมพื้นหลังเบลอจากภาพเดิม ไม่ตัดเนื้อหา</span></label>
+          </div>
+          <div style="height:14px"></div>
+        </div>
+
+        <label class="f"><span>หัวข้อข่าว <small id="titleHint">(ใช้เป็นคำอธิบายภาพ และแสดงเมื่อเปิดดูข่าว)</small></span>
+          <input class="in" id="fTitle" maxlength="150" required></label>
+
+        <div id="textFields" hidden>
+          <label class="f"><span>รายละเอียด <small id="bodyCount">0/600</small></span>
+            <textarea class="in" id="fBody" maxlength="600" placeholder="วัน เวลา สถานที่ หรือรายละเอียดที่ต้องการแจ้ง"></textarea>
+            <span class="hint">บนสไลด์แสดง 2 บรรทัดแรก ข้อความเต็มแสดงเมื่อกดเปิดข่าว</span></label>
+          <div class="f" style="margin-bottom:14px"><span style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px">สีพื้นหลัง</span>
+            <div class="swatches" id="swatches"></div></div>
+        </div>
+
+        <div class="row2">
+          <label class="f"><span>ลิงก์เพิ่มเติม <small>(ถ้ามี)</small></span><input class="in" id="fLink" type="url" placeholder="https://"></label>
+          <label class="f"><span>ข้อความปุ่มลิงก์</span><input class="in" id="fLinkLabel" maxlength="30" placeholder="อ่านเพิ่มเติม"></label>
+        </div>
+        <div class="row2">
+          <label class="f"><span>เริ่มแสดง <small>(เว้นว่าง = ทันที)</small></span><input class="in" id="fStart" type="date"></label>
+          <label class="f"><span>แสดงถึงวันที่ <small>(เว้นว่าง = ไม่กำหนด)</small></span><input class="in" id="fEnd" type="date"></label>
+        </div>
+        <label class="f" id="deptField"><span>ฝ่ายเจ้าของข่าว</span><input class="in" id="fDept" list="deptList" maxlength="100"></label>
+        <label class="check"><input type="checkbox" id="fPub" checked> แสดงบนหน้า EN-MSU Smart Office</label>
+      </div>
+
+      <div class="pv-side">
+        <div class="pv-top">
+          <b>ตัวอย่างบนหน้าหลัก</b>
+          <div class="seg" style="margin:0">
+            <label><input type="radio" name="pvsize" value="pc" checked><span>คอมพิวเตอร์</span></label>
+            <label><input type="radio" name="pvsize" value="mobile"><span>มือถือ</span></label>
+          </div>
+        </div>
+        <div class="pv-wrap"><div class="pv" id="pv"></div></div>
+        <label class="check" style="font-weight:500;font-size:13.5px;margin-top:8px" id="safeToggle"><input type="checkbox" id="fSafe" checked> แสดงกรอบพื้นที่ปลอดภัย (ไม่บันทึกลงภาพ)</label>
+        <p class="pv-note" id="pvNote">โหมด "มือถือ" แสดงขนาดจริงบนโทรศัพท์ ใช้ตรวจว่าตัวอักษรเล็กเกินไปหรือไม่</p>
+      </div>
+    </div>
+    <div class="ed-foot">
+      <span class="status" id="edStatus"></span>
+      <button class="btn" type="button" id="edCancel">ยกเลิก</button>
+      <button class="btn primary" id="edSave">บันทึกข่าว</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   ★ ตั้งค่า: URL ของ Web App จาก Code.gs (ลงท้ายด้วย /exec) ★
+   ต้องเป็น URL เดียวกับ NEWS_API ใน index.html
+   ========================================================= */
+const NEWS_API = "https://script.google.com/macros/s/AKfycbw3rvUK2QZAFQgFHyRzPkmQ9Z88lFugDFM-V32Tco7KM_T9hZ_BGT8-6mktL3LY2NueBA/exec";
+
+const THEMES = { red:'แดงคณะ', gold:'ทอง', blue:'น้ำเงิน', green:'เขียว', ink:'เข้ม' };
+const OUT_W = 1920, OUT_H = 1080;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k){ try{ return sessionStorage.getItem('eoffice-news-'+k) }catch(e){ return null } },
+  set(k,v){ try{ v==null ? sessionStorage.removeItem('eoffice-news-'+k) : sessionStorage.setItem('eoffice-news-'+k,v) }catch(e){} }
+};
+try{ const t = localStorage.getItem('eoffice-theme'); if(t) document.documentElement.dataset.theme = t; }catch(e){}
+
+let token = store.get('token'), me = null, meta = { departments:[], themes:Object.keys(THEMES) }, news = [], users = [];
+let forcedPw = false;
+
+/* ---------------- เชื่อมต่อ Apps Script ---------------- */
+async function api(action, data = {}){
+  let r;
+  try{
+    r = await fetch(NEWS_API, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+                                body: JSON.stringify(Object.assign({ action, token }, data)) });
+  }catch(e){ throw new Error('เชื่อมต่อระบบไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่'); }
+  let j;
+  try{ j = await r.json(); }catch(e){ throw new Error('ระบบตอบกลับไม่ถูกต้อง (ตรวจสอบการ Deploy ของ Apps Script)'); }
+  if(!j.ok){
+    if(j.code === 'AUTH'){ logoutLocal(); }
+    else if(j.code === 'MUST_CHANGE'){ showPw(true); }
+    const e = new Error(j.error || 'เกิดข้อผิดพลาด'); e.code = j.code; throw e;
+  }
+  return j;
+}
+
+function toast(msg, bad){
+  const t = $('toast'); t.textContent = msg; t.classList.toggle('bad', !!bad); t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), bad ? 4500 : 2600);
+}
+function busy(btn, on, label){
+  if(on){ btn._t = btn.innerHTML; btn.disabled = true; if(label) btn.textContent = label; }
+  else { btn.disabled = false; if(btn._t != null) btn.innerHTML = btn._t; }
+}
+function view(id){ ['vCfg','vLogin','vForgot','vReset','vPw','vApp'].forEach(v => $(v).hidden = v !== id); }
+
+/* ---------------- เข้าสู่ระบบ ---------------- */
+$('loginForm').onsubmit = async e => {
+  e.preventDefault();
+  const btn = $('loginBtn'); $('loginErr').hidden = true; $('loginOk').hidden = true;
+  if(!$('lEmail').value.trim() || !$('lPw').value){ return showErr('loginErr','กรุณากรอกอีเมลและรหัสผ่าน'); }
+  busy(btn, true, 'กำลังเข้าสู่ระบบ…');
+  try{
+    const j = await api('login', { email:$('lEmail').value, password:$('lPw').value });
+    token = j.token; store.set('token', token); setMe(j.user, j.meta);
+    $('lPw').value = '';
+    if(j.user.mustChange) showPw(true); else enterApp();
+  }catch(err){ showErr('loginErr', err.message); }
+  finally{ busy(btn, false); }
+};
+function showErr(id, m){ $(id).textContent = m; $(id).hidden = false; }
+function setMe(u, m){ me = u; if(m) meta = m; $('whoName').textContent = u.name || u.email; $('whoDept').textContent = u.dept || (u.role==='admin' ? 'ผู้ดูแลระบบ' : ''); }
+
+function showPw(forced){
+  forcedPw = forced;
+  $('pwLead').textContent = forced
+    ? 'คุณยังใช้รหัสผ่านเริ่มต้นอยู่ แนะนำให้ตั้งรหัสผ่านของตัวเอง หรือกด "ข้ามไปก่อน" เพื่อเข้าใช้งานทันที'
+    : 'ตั้งรหัสผ่านใหม่สำหรับบัญชีของคุณ';
+  $('pwCancel').textContent = forced ? 'ออกจากระบบ' : 'ยกเลิก';
+  $('pwSkip').hidden = !forced;
+  $('pwUser').value = me ? me.email : '';
+  ['pOld','pNew','pNew2'].forEach(i => $(i).value = ''); $('pwErr').hidden = true;
+  view('vPw'); $('pOld').focus();
+}
+$('pwOpen').onclick = () => showPw(false);
+$('pwSkip').onclick = () => { store.set('skipPw', '1'); enterApp(); };
+$('pwCancel').onclick = e => { e.preventDefault(); forcedPw ? logout() : view('vApp'); };
+$('pwForm').onsubmit = async e => {
+  e.preventDefault(); $('pwErr').hidden = true;
+  const n1 = $('pNew').value, n2 = $('pNew2').value;
+  const bad = pwProblem(n1, n2); if(bad) return showErr('pwErr', bad);
+  const btn = $('pwBtn'); busy(btn, true, 'กำลังบันทึก…');
+  try{
+    const j = await api('changePassword', { oldPassword:$('pOld').value, newPassword:n1 });
+    if(j.token){ token = j.token; store.set('token', token); }
+    setMe(j.user); toast('เปลี่ยนรหัสผ่านเรียบร้อย'); enterApp();
+  }catch(err){ if(err.code !== 'AUTH') showErr('pwErr', err.message); }
+  finally{ busy(btn, false); }
+};
+
+const MIN_PW = 6;
+function pwProblem(n1, n2){
+  if(n1.length < MIN_PW) return `รหัสผ่านใหม่ต้องยาวอย่างน้อย ${MIN_PW} ตัวอักษร`;
+  if(n1 !== n2) return 'ยืนยันรหัสผ่านใหม่ไม่ตรงกัน';
+  return '';
+}
+document.querySelectorAll('.showPw').forEach(c => c.onchange = () =>
+  c.dataset.for.split(',').forEach(id => $(id).type = c.checked ? 'text' : 'password'));
+
+/* ---------------- ลืมรหัสผ่าน ---------------- */
+function showLogin(okMsg){
+  view('vLogin'); $('loginErr').hidden = true;
+  $('loginOk').hidden = !okMsg; $('loginOk').textContent = okMsg || '';
+}
+document.querySelectorAll('.toLogin').forEach(a => a.onclick = e => { e.preventDefault(); showLogin(); });
+$('forgotOpen').onclick = e => {
+  e.preventDefault();
+  $('fEmail').value = $('lEmail').value; $('forgotErr').hidden = true;
+  $('forgotSent').hidden = true; $('forgotFields').hidden = false;
+  view('vForgot'); $('fEmail').focus();
+};
+$('forgotForm').onsubmit = async e => {
+  e.preventDefault(); $('forgotErr').hidden = true;
+  const em = $('fEmail').value.trim();
+  if(!em) return showErr('forgotErr', 'กรุณาใส่อีเมล');
+  const btn = $('forgotBtn'); busy(btn, true, 'กำลังส่ง…');
+  try{
+    const j = await api('forgotPassword', { email: em });
+    $('forgotMsg').textContent = j.message; $('forgotSent').hidden = false; $('forgotFields').hidden = true;
+  }catch(err){ showErr('forgotErr', err.message); }
+  finally{ busy(btn, false); }
+};
+let resetToken = null;
+$('resetForm').onsubmit = async e => {
+  e.preventDefault(); $('resetErr').hidden = true;
+  const bad = pwProblem($('rNew').value, $('rNew2').value); if(bad) return showErr('resetErr', bad);
+  const btn = $('resetBtn'); busy(btn, true, 'กำลังบันทึก…');
+  try{
+    const j = await api('resetWithToken', { resetToken, newPassword: $('rNew').value });
+    $('rNew').value = $('rNew2').value = '';
+    $('lEmail').value = j.email; $('lPw').value = '';
+    showLogin('ตั้งรหัสผ่านใหม่เรียบร้อย เข้าสู่ระบบด้วยรหัสผ่านใหม่ได้เลย');
+    $('lPw').focus();
+  }catch(err){ showErr('resetErr', err.message); }
+  finally{ busy(btn, false); }
+};
+
+function logoutLocal(){ token = null; me = null; store.set('token', null); store.set('skipPw', null); view('vLogin'); }
+async function logout(){ try{ await api('logout'); }catch(e){} logoutLocal(); }
+$('logoutBtn').onclick = logout;
+
+function enterApp(){
+  view('vApp');
+  $('usersTab').hidden = me.role !== 'admin';
+  $('deptField').hidden = me.role !== 'admin';
+  $('deptList').innerHTML = (meta.departments || []).map(d => `<option value="${esc(d)}">`).join('');
+  tab('tNews'); loadNews();
+}
+
+/* ---------------- แท็บ ---------------- */
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => tab(b.dataset.tab));
+function tab(id){
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
+  $('tNews').hidden = id !== 'tNews'; $('tUsers').hidden = id !== 'tUsers';
+  if(id === 'tUsers') loadUsers();
+}
+
+/* ---------------- รายการข่าว ---------------- */
+const STATUS = { live:'กำลังแสดง', hidden:'ซ่อนอยู่', expired:'หมดเวลาแสดง', scheduled:'รอเริ่มแสดง' };
+const thDate = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('th-TH',{ day:'numeric', month:'short', year:'2-digit' }) : '';
+
+async function loadNews(){
+  $('newsList').innerHTML = '<li class="empty">กำลังโหลด…</li>';
+  try{ news = (await api('listNews')).news; renderNews(); }
+  catch(err){ if(err.code !== 'AUTH' && err.code !== 'MUST_CHANGE') $('newsList').innerHTML = `<li class="empty">${esc(err.message)}</li>`; }
+}
+$('reload').onclick = loadNews;
+
+function textSlide(n){
+  return `<div class="slide-text t-${esc(n.theme || 'red')}"><span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span>
+    <h3>${esc(n.title || 'หัวข้อข่าว')}</h3>${n.body ? `<p>${esc(n.body)}</p>` : ''}
+    ${n.link || (n.body && n.body.length > 120) ? `<span class="more">${esc(n.link ? (n.linkLabel || 'อ่านเพิ่มเติม') : 'อ่านต่อ')} ›</span>` : ''}</div>`;
+}
+function imgTag(n, w){ return `<img src="${esc(n.img)}=w${w}" alt="" data-id="${esc(n.id)}" loading="lazy">`; }
+
+function renderNews(){
+  const L = $('newsList');
+  if(!news.length){ L.innerHTML = '<li class="empty">ยังไม่มีข่าว กด "เพิ่มข่าว" เพื่อเริ่มลงข่าวแรก<br><small>เมื่อไม่มีข่าว หน้าหลักจะแสดงแบนเนอร์ของคณะแทน</small></li>'; return; }
+  L.innerHTML = news.map((n, k) => {
+    const range = n.start || n.end ? `${thDate(n.start) || 'ทันที'} – ${thDate(n.end) || 'ไม่กำหนด'}` : 'แสดงต่อเนื่อง';
+    return `<li class="item ${n.status === 'live' ? '' : 'off'}" data-id="${esc(n.id)}">
+      <span class="ord">${k + 1}</span>
+      <div class="thumb">${n.type === 'image' ? imgTag(n, 480) : textSlide(n)}</div>
+      <div class="info"><b title="${esc(n.title)}">${esc(n.title)}</b>
+        <div class="meta">${esc(n.dept || '-')} · โดย ${esc(n.authorName || n.author)} · ${esc(range)}</div>
+        <span class="chip ${n.status}">${STATUS[n.status]}</span></div>
+      <div class="acts">
+        <button class="btn sm icon-only" data-act="up" ${k === 0 ? 'disabled' : ''} title="เลื่อนขึ้น" aria-label="เลื่อนขึ้น"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+        <button class="btn sm icon-only" data-act="down" ${k === news.length - 1 ? 'disabled' : ''} title="เลื่อนลง" aria-label="เลื่อนลง"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+        ${n.canEdit ? `
+        <button class="btn sm" data-act="edit">แก้ไข</button>
+        <button class="btn sm" data-act="pub">${n.published ? 'ซ่อน' : 'แสดง'}</button>
+        <button class="btn sm danger" data-act="del">ลบ</button>` : ''}
+      </div></li>`;
+  }).join('');
+}
+
+$('newsList').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-act]'); if(!b) return;
+  const li = b.closest('.item'), id = li.dataset.id, k = news.findIndex(n => n.id === id), n = news[k];
+  const act = b.dataset.act;
+  if(act === 'edit') return openEditor(n);
+  if(act === 'up' || act === 'down'){
+    const j = act === 'up' ? k - 1 : k + 1; if(j < 0 || j >= news.length) return;
+    [news[k], news[j]] = [news[j], news[k]]; renderNews();
+    $('newsList').querySelectorAll('button[data-act="up"],button[data-act="down"]').forEach(x => x.disabled = true);
+    try{ await api('reorder', { ids: news.map(x => x.id) }); toast('จัดลำดับแล้ว'); }
+    catch(err){ toast(err.message, true); }
+    return loadNews();
+  }
+  if(act === 'pub'){
+    busy(b, true);
+    try{ await api('setPublished', { id, published: !n.published }); toast(n.published ? 'ซ่อนข่าวแล้ว' : 'แสดงข่าวแล้ว'); loadNews(); }
+    catch(err){ toast(err.message, true); busy(b, false); }
+    return;
+  }
+  if(act === 'del'){
+    if(!confirm(`ลบข่าว "${n.title}" ?\nลบแล้วกู้คืนไม่ได้ (ภาพจะถูกย้ายไปถังขยะของ Google Drive)`)) return;
+    busy(b, true, 'กำลังลบ…');
+    try{ await api('deleteNews', { id }); toast('ลบข่าวแล้ว'); loadNews(); }
+    catch(err){ toast(err.message, true); busy(b, false); }
+  }
+});
+
+/* ภาพที่โดเมนไม่อนุญาตแชร์สาธารณะ: ขอภาพผ่าน Apps Script แทน */
+const imgCache = {};
+document.addEventListener('error', e => {
+  const img = e.target;
+  if(img.tagName !== 'IMG' || !img.dataset.id || img.dataset.fb) return;
+  img.dataset.fb = '1';
+  const id = img.dataset.id;
+  (imgCache[id] ||= api('image', { id }).then(j => j.data)).then(d => img.src = d).catch(() => {});
+}, true);
+
+/* ---------------- หน้าต่างเพิ่ม/แก้ไขข่าว ---------------- */
+const ed = $('ed');
+let edItem = null, srcImg = null, srcInfo = null, outCanvas = null;
+
+$('swatches').innerHTML = Object.entries(THEMES).map(([k, v], i) =>
+  `<label title="${v}"><input type="radio" name="theme" value="${k}" ${i ? '' : 'checked'} aria-label="${v}"><span class="t-${k}"></span></label>`).join('');
+
+const typeVal = () => ed.querySelector('input[name="type"]:checked').value;
+const fitVal  = () => ed.querySelector('input[name="fit"]:checked').value;
+const themeVal = () => ed.querySelector('input[name="theme"]:checked').value;
+
+function openEditor(n){
+  edItem = n || null; srcImg = null; srcInfo = null; outCanvas = null;
+  $('edTitle').textContent = n ? 'แก้ไขข่าว' : 'เพิ่มข่าว';
+  ed.querySelector(`input[name="type"][value="${n ? n.type : 'image'}"]`).checked = true;
+  ed.querySelector(`input[name="theme"][value="${(n && n.theme) || 'red'}"]`).checked = true;
+  ed.querySelector('input[name="fit"][value="cover"]').checked = true;
+  $('fTitle').value = n ? n.title : '';
+  $('fBody').value = n ? (n.body || '') : '';
+  $('fLink').value = n ? (n.link || '') : '';
+  $('fLinkLabel').value = n ? (n.linkLabel || '') : '';
+  $('fStart').value = n ? (n.start || '') : '';
+  $('fEnd').value = n ? (n.end || '') : '';
+  $('fDept').value = n ? (n.dept || '') : (me.dept || '');
+  $('fPub').checked = n ? n.published : true;
+  $('file').value = ''; $('imgInfo').hidden = true; $('fitBox').hidden = true;
+  $('dropLbl').textContent = n && n.type === 'image' ? 'เปลี่ยนภาพ (เลือกไฟล์ใหม่ หรือลากมาวาง)' : 'เลือกไฟล์ภาพ หรือลากมาวางที่นี่';
+  $('edStatus').textContent = '';
+  syncType(); preview();
+  ed.showModal();
+}
+$('addNews').onclick = () => openEditor(null);
+$('edClose').onclick = $('edCancel').onclick = () => ed.close();
+ed.addEventListener('cancel', e => { if($('edSave').disabled) e.preventDefault(); });
+
+function syncType(){
+  const img = typeVal() === 'image';
+  $('imgFields').hidden = !img; $('textFields').hidden = img;
+  $('safeToggle').hidden = !img;
+  $('titleHint').textContent = img ? '(ใช้เป็นคำอธิบายภาพ และแสดงเมื่อเปิดดูข่าว)' : '(ข้อความใหญ่บนสไลด์)';
+  $('bodyCount').textContent = `${$('fBody').value.length}/600`;
+}
+ed.querySelectorAll('input[name="type"]').forEach(r => r.onchange = () => { syncType(); preview(); });
+ed.querySelectorAll('input[name="fit"]').forEach(r => r.onchange = () => { render(); preview(); });
+ed.querySelectorAll('input[name="pvsize"]').forEach(r => r.onchange = () => $('pv').classList.toggle('mobile', r.value === 'mobile' && r.checked));
+['fTitle','fBody','fLink','fLinkLabel','fDept','fSafe'].forEach(i => $(i).addEventListener('input', () => { syncType(); preview(); }));
+$('swatches').addEventListener('change', preview);
+
+function preview(){
+  const pv = $('pv');
+  if(typeVal() === 'text'){
+    pv.innerHTML = textSlide({ title:$('fTitle').value, body:$('fBody').value, link:$('fLink').value,
+      linkLabel:$('fLinkLabel').value, theme:themeVal(), dept: me.role === 'admin' ? $('fDept').value : me.dept });
+    return;
+  }
+  const safe = $('fSafe').checked ? '<div class="safe"></div>' : '';
+  if(outCanvas){ pv.replaceChildren(outCanvas); pv.insertAdjacentHTML('beforeend', safe); }
+  else if(edItem && edItem.type === 'image' && edItem.img){ pv.innerHTML = imgTag(edItem, 1920) + safe; }
+  else pv.innerHTML = '<div class="placeholder">ยังไม่ได้เลือกภาพ<br>ตัวอย่างจะแสดงที่นี่ในสัดส่วน 16:9</div>' + safe;
+}
+
+/* ---- เลือกไฟล์ / ลากวาง ---- */
+const drop = $('drop');
+$('file').onchange = () => $('file').files[0] && pick($('file').files[0]);
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if(f) pick(f); });
+
+function pick(file){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast('รองรับเฉพาะไฟล์ JPG, PNG หรือ WebP', true);
+  if(file.size > 15 * 1024 * 1024) return toast('ไฟล์ใหญ่เกิน 15 MB', true);
+  const url = URL.createObjectURL(file);
+  const im = new Image();
+  im.onload = () => {
+    srcImg = im; srcInfo = { w: im.naturalWidth, h: im.naturalHeight, size: file.size, name: file.name };
+    const ratio = srcInfo.w / srcInfo.h, exact = Math.abs(ratio - 16/9) < 0.01;
+    const small = srcInfo.w < 1280 || srcInfo.h < 720;
+    $('imgInfo').innerHTML = `<span>ภาพของคุณ ${srcInfo.w} × ${srcInfo.h} px · ${file.size < 1048576 ? Math.round(file.size/1024) + ' KB' : (file.size/1048576).toFixed(1) + ' MB'}</span>
+      ${exact ? '<span class="badge ok">✓ สัดส่วน 16:9 ถูกต้อง</span>' : '<span class="badge warn">สัดส่วนไม่ใช่ 16:9</span>'}
+      ${small ? '<span class="badge warn">ภาพเล็กกว่าที่แนะนำ อาจไม่คมชัด</span>' : (exact ? '<span class="badge ok">✓ ความละเอียดเพียงพอ</span>' : '')}`;
+    $('imgInfo').hidden = false;
+    $('fitBox').hidden = exact;
+    $('dropLbl').textContent = 'เปลี่ยนภาพ: ' + file.name;
+    if(!$('fTitle').value) $('fTitle').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').slice(0, 150);
+    render(); preview();
+  };
+  im.onerror = () => toast('เปิดไฟล์ภาพนี้ไม่ได้', true);
+  im.src = url;
+}
+
+/* ---- ย่อ/ครอบภาพเป็น 1920×1080 ---- */
+function render(){
+  if(!srcImg) return;
+  const c = document.createElement('canvas'); c.width = OUT_W; c.height = OUT_H;
+  const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  const { w, h } = srcInfo;
+  const cover = Math.max(OUT_W / w, OUT_H / h), contain = Math.min(OUT_W / w, OUT_H / h);
+  const draw = (img, s) => { const dw = w * s, dh = h * s; x.drawImage(img, (OUT_W - dw) / 2, (OUT_H - dh) / 2, dw, dh); };
+  if(Math.abs(w / h - 16/9) < 0.01 || fitVal() === 'cover'){
+    draw(stepDown(srcImg, w * cover), cover);
+  } else {
+    /* พื้นหลังเบลอ: ย่อให้เล็กมากแล้วขยายกลับ (ใช้ได้ทุกเบราว์เซอร์) */
+    const t = document.createElement('canvas'); t.width = 48; t.height = 27;
+    const tx = t.getContext('2d'); const s = Math.max(48 / w, 27 / h);
+    tx.drawImage(srcImg, (48 - w*s) / 2, (27 - h*s) / 2, w*s, h*s);
+    x.drawImage(t, 0, 0, OUT_W, OUT_H);
+    x.fillStyle = 'rgba(0,0,0,.22)'; x.fillRect(0, 0, OUT_W, OUT_H);
+    draw(stepDown(srcImg, w * contain), contain);
+  }
+  outCanvas = c;
+}
+/* ย่อทีละครึ่งเพื่อให้ตัวอักษรในภาพยังคมชัด (ภาพใหญ่มาก เช่น 4000 px) */
+function stepDown(img, targetW){
+  let cur = img, cw = img.naturalWidth || img.width, ch = img.naturalHeight || img.height;
+  while(cw / 2 > targetW){
+    const c = document.createElement('canvas'); c.width = Math.round(cw / 2); c.height = Math.round(ch / 2);
+    const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(cur, 0, 0, c.width, c.height);
+    cur = c; cw = c.width; ch = c.height;
+  }
+  return cur;
+}
+function exportJpeg(){
+  const maxB = (meta.maxImageBytes || 4 * 1024 * 1024) * 0.95;
+  for(const q of [0.9, 0.85, 0.78, 0.7, 0.6]){
+    const d = outCanvas.toDataURL('image/jpeg', q);
+    if(d.length * 0.75 < maxB) return d;
+  }
+  throw new Error('ภาพมีรายละเอียดมากเกินไป ลองบันทึกเป็น JPG ก่อนอัปโหลด');
+}
+
+/* ---- บันทึก ---- */
+$('edForm').onsubmit = async e => {
+  e.preventDefault();
+  const type = typeVal();
+  const title = $('fTitle').value.trim();
+  if(type === 'image' && !outCanvas && !(edItem && edItem.type === 'image')) return toast('กรุณาเลือกภาพข่าว', true);
+  if(!title){ $('fTitle').focus(); return toast('กรุณาใส่หัวข้อข่าว', true); }
+  const link = $('fLink').value.trim();
+  if(link && !/^https?:\/\/\S+$/i.test(link)){ $('fLink').focus(); return toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://', true); }
+  if($('fStart').value && $('fEnd').value && $('fEnd').value < $('fStart').value) return toast('วันสิ้นสุดต้องไม่อยู่ก่อนวันเริ่มแสดง', true);
+
+  const data = { id: edItem ? edItem.id : '', type, title, body: $('fBody').value, link, linkLabel: $('fLinkLabel').value,
+                 theme: themeVal(), start: $('fStart').value, end: $('fEnd').value, published: $('fPub').checked };
+  if(me.role === 'admin') data.dept = $('fDept').value;
+  const btn = $('edSave');
+  try{
+    if(type === 'image' && outCanvas){ $('edStatus').textContent = 'กำลังเตรียมภาพ…'; data.imageData = exportJpeg(); }
+    busy(btn, true, type === 'image' && data.imageData ? 'กำลังอัปโหลด…' : 'กำลังบันทึก…');
+    $('edStatus').textContent = data.imageData ? `ขนาดไฟล์หลังบีบอัด ${(data.imageData.length * 0.75 / 1024).toFixed(0)} KB` : '';
+    await api('saveNews', data);
+    ed.close(); toast(edItem ? 'บันทึกการแก้ไขแล้ว' : 'เพิ่มข่าวแล้ว'); loadNews();
+  }catch(err){ $('edStatus').textContent = ''; toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
+
+/* ---------------- ผู้ใช้งาน (เฉพาะผู้ดูแลระบบ) ---------------- */
+let uEditing = null;
+async function loadUsers(){
+  $('uHint').textContent = meta.defaultPassword
+    ? `บัญชีใหม่และบัญชีที่ถูกรีเซ็ตใช้รหัสผ่านเริ่มต้น ${meta.defaultPassword} ระบบจะชวนให้ตั้งรหัสผ่านใหม่เมื่อเข้าครั้งแรก (ผู้ใช้กดข้ามได้)`
+    : '';
+  $('userList').innerHTML = '<div class="empty">กำลังโหลด…</div>';
+  try{ users = (await api('listUsers')).users; renderUsers(); }
+  catch(err){ $('userList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
+}
+function renderUsers(){
+  $('userList').innerHTML = users.map(u => `
+    <div class="urow" data-email="${esc(u.email)}">
+      <div><b>${esc(u.name)}</b><span class="role ${u.role}">${u.role === 'admin' ? 'ผู้ดูแล' : 'ผู้ลงข่าว'}</span>${u.active ? '' : '<span class="role off">ปิดใช้งาน</span>'}
+        <div class="meta"><span>${esc(u.email)}</span><span>${esc(u.dept || 'ไม่ระบุฝ่าย')}</span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
+      <div class="acts">
+        <button class="btn sm" data-act="edit">แก้ไข</button>
+        <button class="btn sm" data-act="reset">รีเซ็ตรหัสผ่าน</button>
+        ${u.email === 'admin' || u.email === me.email ? '' : `
+        <button class="btn sm" data-act="toggle">${u.active ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}</button>
+        <button class="btn sm danger" data-act="del">ลบ</button>`}
+      </div>
+    </div>`).join('') || '<div class="empty">ยังไม่มีผู้ใช้</div>';
+}
+function userForm(u){
+  uEditing = u || null;
+  $('uFormTitle').textContent = u ? 'แก้ไขข้อมูลผู้ใช้' : 'เพิ่มผู้รับผิดชอบลงข่าว';
+  $('uEmail').value = u ? u.email : ''; $('uEmail').disabled = !!u;
+  $('uName').value = u ? u.name : ''; $('uDept').value = u ? (u.dept || '') : '';
+  $('uRole').value = u ? u.role : 'editor'; $('uRole').disabled = !!u && u.email === 'admin';
+  $('uSave').textContent = u ? 'บันทึก' : 'เพิ่มผู้ใช้'; $('uCancel').hidden = !u;
+}
+$('uCancel').onclick = () => userForm(null);
+$('userForm').onsubmit = async e => {
+  e.preventDefault();
+  const email = $('uEmail').value.trim().toLowerCase();
+  if(!uEditing && !/^[a-z0-9._%+-]+@msu\.ac\.th$/.test(email)) return toast('ต้องเป็นอีเมล @msu.ac.th เท่านั้น', true);
+  if(!$('uName').value.trim()) return toast('กรุณาใส่ชื่อ-สกุล', true);
+  const btn = $('uSave'); busy(btn, true, 'กำลังบันทึก…');
+  try{
+    await api('saveUser', { isNew: !uEditing, email: uEditing ? uEditing.email : email,
+      name: $('uName').value, dept: $('uDept').value, role: $('uRole').value });
+    toast(uEditing ? 'บันทึกแล้ว' : `เพิ่ม ${email} แล้ว`);
+    const d = $('uDept').value.trim();
+    if(d && !meta.departments.includes(d)){ meta.departments.push(d); $('deptList').insertAdjacentHTML('beforeend', `<option value="${esc(d)}">`); }
+    userForm(null); loadUsers();
+  }catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
+$('userList').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-act]'); if(!b) return;
+  const u = users.find(x => x.email === b.closest('.urow').dataset.email);
+  const act = b.dataset.act;
+  if(act === 'edit'){ userForm(u); $('userForm').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
+  const ask = { reset:`รีเซ็ตรหัสผ่านของ ${u.name} กลับเป็นรหัสผ่านเริ่มต้น?`, del:`ลบผู้ใช้ ${u.name}?\nข่าวที่ลงไว้จะยังอยู่`,
+                toggle: u.active ? `ปิดใช้งานบัญชี ${u.name}? (เข้าสู่ระบบไม่ได้จนกว่าจะเปิดใหม่)` : '' }[act];
+  if(ask && !confirm(ask)) return;
+  busy(b, true);
+  try{
+    if(act === 'reset'){ await api('resetPassword', { email:u.email }); toast('รีเซ็ตรหัสผ่านแล้ว'); }
+    if(act === 'del'){ await api('deleteUser', { email:u.email }); toast('ลบผู้ใช้แล้ว'); }
+    if(act === 'toggle'){ await api('saveUser', { email:u.email, name:u.name, dept:u.dept, role:u.role, active:!u.active }); toast(u.active ? 'ปิดใช้งานแล้ว' : 'เปิดใช้งานแล้ว'); }
+    loadUsers();
+  }catch(err){ toast(err.message, true); busy(b, false); }
+});
+
+/* ---------------- เริ่มต้น ---------------- */
+(async function init(){
+  if(!NEWS_API) return view('vCfg');
+  const q = new URLSearchParams(location.search);
+  if(q.get('reset')){
+    resetToken = q.get('reset');
+    history.replaceState(null, '', location.pathname);   // ไม่ให้ลิงก์ค้างในประวัติ/แถบที่อยู่
+    return view('vReset');
+  }
+  if(!token) return view('vLogin');
+  try{
+    const j = await api('me'); setMe(j.user, j.meta);
+    j.user.mustChange && !store.get('skipPw') ? showPw(true) : enterApp();
+  }catch(e){ if(e.code !== 'AUTH') { view('vLogin'); showErr('loginErr', e.message); } }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EN-MSU Smart Office | คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   ธีมสีแดงไล่เฉด (ปรับเฉดทั้งหมดได้ที่ชุดตัวแปรนี้)
+   ========================================================= */
+:root{
+  --red-1:#E0243A;   /* แดงสด */
+  --red-2:#B3122E;   /* แดงเข้ม */
+  --red-3:#6E0B22;   /* แดงไวน์ */
+  --red-4:#3A0714;   /* เลือดหมูเข้มสุด */
+  --coral:#FF6B5A;   /* แดงอมส้ม สำหรับไฮไลต์ */
+  --gold:#F2B705;    /* สีทองจากโลโก้ */
+  --grad-rail:linear-gradient(165deg,var(--red-2) 0%,var(--red-3) 45%,var(--red-4) 100%);
+  --grad-hot:linear-gradient(120deg,var(--coral),var(--red-1) 40%,var(--red-2) 70%,var(--red-3));
+
+  --rail-text:#FFF3F3;
+  --rail-muted:rgba(255,230,230,.62);
+  --rail-hover:rgba(255,255,255,.10);
+  --bg:#F5EFEF;
+  --surface:#FFFFFF;
+  --text:#2A1B1D;
+  --muted:#76666A;
+  --line:#EADADC;
+  --accent:#B3122E;
+  --accent-soft:#FBE7EA;
+
+  --rail-w:272px;
+  --rail-w-mini:76px;
+  --top-h:56px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1A1314; --surface:#251B1D; --text:#F5EAEB; --muted:#B39FA3; --line:#3D2B2F;
+    --accent:#FF6B7C; --accent-soft:#3F1B22;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1A1314; --surface:#251B1D; --text:#F5EAEB; --muted:#B39FA3; --line:#3D2B2F;
+  --accent:#FF6B7C; --accent-soft:#3F1B22;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif;
+  background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+  display:flex;overflow:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+/* ---------------- แถบเมนูซ้าย: พื้นไล่เฉดแดงเคลื่อนไหวช้า ๆ ---------------- */
+.rail{
+  width:var(--rail-w);flex:0 0 auto;height:100%;position:relative;overflow:hidden;
+  background:var(--grad-rail);color:var(--rail-text);
+  display:flex;flex-direction:column;transition:width .2s ease;z-index:30;
+}
+.rail::before{ /* แสงเรืองที่ลอยไปมา */
+  content:"";position:absolute;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,90,.45),transparent 65%);
+  top:-120px;left:-140px;pointer-events:none;animation:glow 18s ease-in-out infinite alternate;
+}
+.rail::after{
+  content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(242,183,5,.16),transparent 65%);
+  bottom:-120px;right:-160px;pointer-events:none;animation:glow 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes glow{0%{transform:translate(0,0)}50%{transform:translate(90px,220px)}100%{transform:translate(30px,420px)}}
+.rail > *{position:relative;z-index:1}
+
+.brand{padding:16px 14px 10px}
+.logo-card{
+  background:#fff;border-radius:14px;padding:4px 8px;display:block;
+  box-shadow:0 6px 18px rgba(40,0,10,.35);
+}
+.logo-card img{display:block;width:100%;aspect-ratio:2.5/1;object-fit:cover;object-position:center}
+.brand-name{margin:12px 4px 0;white-space:nowrap;overflow:hidden}
+.brand-name strong{display:block;font-size:20px;font-weight:700;letter-spacing:.01em}
+.brand-name span{font-size:12.5px;color:var(--rail-muted)}
+.brand-mini{
+  display:none;width:44px;height:44px;margin:0 auto;border-radius:12px;background:#fff;color:var(--red-2);
+  place-items:center;font-weight:700;font-size:15px;box-shadow:inset 0 -3px 0 var(--gold);
+}
+.logo-fallback .logo-card{display:none}
+
+.nav{flex:1;overflow-y:auto;padding:4px 10px}
+.nav-group{font-size:12px;color:var(--rail-muted);padding:14px 10px 6px;white-space:nowrap}
+.nav-item{
+  position:relative;display:flex;align-items:center;gap:12px;width:100%;
+  background:none;border:0;text-align:left;padding:7px 10px;margin:2px 0;border-radius:11px;
+  color:var(--rail-text);white-space:nowrap;
+}
+.nav-item:hover{background:var(--rail-hover)}
+a.nav-item{text-decoration:none}
+.nav-item .ext{margin-left:auto;opacity:.6;display:grid}
+.nav-item .ext svg{width:15px;height:15px;flex:0 0 15px}
+body.mini .nav-item .ext{display:none}
+.nav-item svg{width:22px;height:22px;flex:0 0 22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nav-ico{
+  width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  box-shadow:0 3px 10px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.nav-ico svg{width:19px!important;height:19px!important;flex:0 0 19px!important;stroke-width:1.9!important}
+.nav-item .label{white-space:normal;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nav-item .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);margin-left:auto;opacity:0;flex:0 0 7px}
+.nav-item.loaded .dot{opacity:.85}
+.nav-item[aria-current="page"]{
+  background:#fff;color:var(--text-on-white,#2A1B1D);font-weight:600;box-shadow:0 4px 14px rgba(40,0,10,.3);
+}
+.nav-item[aria-current="page"]::before{
+  content:"";position:absolute;left:-10px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--gold);
+}
+
+.rail-foot{padding:10px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:6px}
+.rail-foot .nav-item{margin:0;flex:1}
+
+/* ย่อเมนู (desktop) */
+body.mini .rail{width:var(--rail-w-mini)}
+body.mini .logo-card, body.mini .brand-name, body.mini .nav-group,
+body.mini .nav-item .label, body.mini .nav-item .dot{display:none}
+body.mini .brand-mini{display:grid}
+body.mini .nav-item{justify-content:center;padding:7px 0}
+body.mini .nav-item[aria-current="page"]::before{left:-10px}
+body.mini .rail-foot{flex-direction:column}
+
+/* ---------------- รายการเด่นในเมนู (ลงเวลาปฏิบัติราชการ) ---------------- */
+.nav-item.pin{
+  background:linear-gradient(135deg,#FFE9A8,#F2B705);color:var(--red-4);margin:6px 0 4px;padding:9px 10px;border-radius:12px;
+  box-shadow:0 6px 16px rgba(40,0,10,.35), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.nav-item.pin:hover{background:linear-gradient(135deg,#FFF1C4,#F7C42A)}
+.nav-item.pin .label{display:block;-webkit-line-clamp:unset}
+.nav-item.pin .label b{display:block;font-weight:700;font-size:14.5px;line-height:1.3}
+.nav-item.pin .label small{display:block;font-size:12px;color:#6E0B22;line-height:1.3}
+.nav-item.pin .ext{opacity:.75}
+body.mini .nav-item.pin{padding:8px 0;background:transparent;box-shadow:none}
+body.mini .nav-item.pin .nav-ico{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold)}
+
+/* ---------------- ส่วนแสดงผล ---------------- */
+.main{flex:1;min-width:0;height:100%;display:flex;flex-direction:column}
+.topbar{
+  height:var(--top-h);flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:0 12px 0 8px;
+  background:var(--surface);border-bottom:1px solid var(--line);position:relative;
+}
+.icon-btn{width:40px;height:40px;border:0;background:none;border-radius:10px;display:grid;place-items:center;color:var(--muted)}
+.icon-btn:hover{background:var(--accent-soft);color:var(--accent)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.crumb{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;overflow:hidden;white-space:nowrap}
+.crumb b{font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis}
+.crumb small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:2px}
+.actions[hidden]{display:none}
+.progress{position:absolute;left:0;bottom:-1px;height:3px;width:0;background:var(--grad-hot);transition:width .4s ease,opacity .3s}
+
+.stage{flex:1;position:relative;min-height:0}
+.view{position:absolute;inset:0;overflow:auto}
+.view[hidden]{display:none}
+iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
+
+.notice{
+  position:absolute;left:50%;bottom:20px;transform:translateX(-50%);max-width:min(560px,calc(100% - 32px));
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--red-1);
+  border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-size:14px;
+  box-shadow:0 8px 28px rgba(80,0,20,.2);z-index:5;
+}
+.notice[hidden]{display:none}
+.notice button{border:0;border-radius:8px;padding:7px 12px;white-space:nowrap}
+.notice .go{background:var(--grad-hot);color:#fff}
+.notice .x{background:none;color:var(--muted)}
+
+/* ---------------- หน้าหลัก ---------------- */
+.home{padding:24px clamp(16px,3.5vw,48px) 40px}
+.home-inner{max-width:1100px}
+
+.hero{
+  position:relative;overflow:hidden;border-radius:22px;color:#fff;
+  padding:clamp(24px,4vw,44px);margin-bottom:28px;
+  background:linear-gradient(120deg,#FF6B5A,#E0243A,#B3122E,#6E0B22,#B3122E,#E0243A);
+  background-size:300% 300%;animation:flow 16s ease infinite;
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+}
+@keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero::after{ /* ลายจุดเลียนแบบโลโก้ */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1.4px,transparent 1.6px);
+  background-size:18px 18px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 45%,#000 100%);
+          mask-image:linear-gradient(100deg,transparent 45%,#000 100%);
+}
+.hero > *{position:relative;z-index:1}
+.today{margin:0 0 8px;font-size:14px;color:rgba(255,240,240,.85)}
+.hero h1{margin:0;font-size:clamp(40px,6vw,68px);line-height:1;font-weight:700;letter-spacing:-.02em}
+.hero h1 span{display:block;font-weight:600;color:#FFE08A}
+.hero .sub{margin:10px 0 0;font-size:clamp(15px,1.6vw,18px);font-weight:500}
+.hero .lead{margin:14px 0 0;max-width:52ch;color:rgba(255,240,240,.9);font-size:14.5px}
+.hero-logo{
+  width:clamp(180px,24vw,300px);background:#fff;border-radius:16px;padding:6px 12px;
+  box-shadow:0 12px 30px rgba(50,0,12,.35);
+}
+.hero-logo img{display:block;width:100%;aspect-ratio:2.5/1;object-fit:cover}
+.logo-fallback .hero-logo{display:none}
+
+/* ---------------- ข่าวประชาสัมพันธ์: สไลด์สัดส่วน 16:9 (ภาพข่าวต้นฉบับ 1920×1080) ---------------- */
+.news{
+  position:relative;aspect-ratio:16/9;border-radius:22px;overflow:hidden;margin-bottom:24px;isolation:isolate;
+  container-type:inline-size;background:var(--red-3);box-shadow:0 12px 30px rgba(90,0,20,.16);outline:none;
+}
+.news:focus-visible{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--gold)}
+.news-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.22,.7,.2,1);touch-action:pan-y;will-change:transform}
+.news-track.drag{transition:none}
+.slide{flex:0 0 100%;height:100%;position:relative;overflow:hidden;cursor:pointer;user-select:none}
+.slide img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none;background:#2A1B1D}
+.news .slide.hero{margin:0;border-radius:0;cursor:default;padding:5.5cqw 6.5cqw;gap:4cqw}
+.news .hero h1{font-size:max(26px,8.4cqw)}
+.news .today{font-size:max(11.5px,2.5cqw);margin-bottom:1.4cqw}
+.news .hero .sub{font-size:max(12px,2.9cqw);margin-top:2cqw}
+.news .hero-logo{display:block;width:30cqw;padding:1cqw 2cqw;border-radius:2.6cqw}
+.logo-fallback .news .hero-logo{display:none}
+
+/* ข่าวแบบข้อความ */
+.slide.text{display:flex;flex-direction:column;justify-content:center;padding:6cqw 7.5cqw 8cqw;color:#fff}
+.slide.text::after,.dlg-head::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1.3px,transparent 1.5px);background-size:16px 16px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 50%,#000);mask-image:linear-gradient(100deg,transparent 50%,#000)}
+.slide.text .k,.dlg-head .k{align-self:flex-start;font-size:max(11px,2.2cqw);font-weight:600;padding:.3em .9em;border-radius:99px;background:rgba(255,255,255,.2);margin-bottom:2.2cqw}
+.slide.text > *{flex-shrink:0;max-width:100%}
+.slide.text h3{margin:0;font-size:max(16px,4.9cqw);line-height:1.3;font-weight:700;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.slide.text p{margin:1.6cqw 0 0;font-size:max(12px,2.5cqw);line-height:1.5;opacity:.92;white-space:pre-line;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@container (max-width:520px){ .slide.text .more{display:none} .slide.text{padding:6cqw 7cqw 9cqw} }
+.slide.text .more{align-self:flex-start;margin-top:2.6cqw;font-size:max(12px,2.3cqw);font-weight:600;border-bottom:2px solid currentColor}
+.t-red  {background:linear-gradient(125deg,#FF6B5A,#E0243A 42%,#8E0F28)}
+.t-gold {background:linear-gradient(125deg,#FFE08A,#F2B705 50%,#C77800);color:#3A0714!important}
+.t-gold .k{background:rgba(58,7,20,.12)!important}
+.t-blue {background:linear-gradient(125deg,#5B95FF,#1D4ED8 55%,#172B6B)}
+.t-green{background:linear-gradient(125deg,#3DDBA3,#047857 55%,#064E3B)}
+.t-ink  {background:linear-gradient(125deg,#4A3337,#251B1D 60%,#120C0D)}
+
+/* ปุ่มเลื่อนและจุดบอกตำแหน่ง */
+.news-nav{position:absolute;top:50%;z-index:3;width:40px;height:40px;margin-top:-20px;border:0;border-radius:50%;
+  display:grid;place-items:center;background:rgba(255,255,255,.9);color:var(--red-3);
+  box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;transition:opacity .2s}
+.news-nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.news-nav.prev{left:12px}.news-nav.next{right:12px}
+.news:hover .news-nav,.news:focus-visible .news-nav{opacity:1}
+@media (hover:none){.news-nav{display:none}}
+.news-dots{position:absolute;left:0;right:0;bottom:max(4px,1.2cqw);z-index:3;display:flex;justify-content:center;flex-wrap:wrap;pointer-events:none}
+.news-dots button{pointer-events:auto;border:0;background:none;padding:7px 3px;display:grid;place-items:center}
+.news-dots span{display:block;position:relative;overflow:hidden;width:8px;height:8px;border-radius:99px;
+  background:rgba(255,255,255,.6);box-shadow:0 0 0 1px rgba(40,0,10,.18);transition:width .3s}
+.news-dots [aria-current="true"] span{width:26px;background:rgba(255,255,255,.45)}
+.news-dots [aria-current="true"] span::after{content:"";position:absolute;inset:0;background:#fff;border-radius:inherit;
+  transform-origin:left;animation:dotfill var(--dur,7s) linear forwards}
+.news.paused .news-dots span::after{animation-play-state:paused}
+@keyframes dotfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* หน้าต่างดูข่าวเต็ม */
+.news-dlg{border:0;padding:0;border-radius:18px;background:var(--surface);color:var(--text);
+  width:min(1100px,94vw);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(20,0,6,.45)}
+.news-dlg::backdrop{background:rgba(25,4,10,.72)}
+.news-dlg img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;background:#120C0D}
+.dlg-x{position:sticky;top:10px;float:right;margin:10px 10px -50px 0;z-index:2;width:40px;height:40px;border-radius:50%;border:0;
+  display:grid;place-items:center;background:rgba(255,255,255,.92);color:var(--red-3);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.dlg-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.dlg-head{position:relative;overflow:hidden;color:#fff;padding:34px 30px 28px;display:flex;flex-direction:column}
+.dlg-head .k{margin-bottom:12px;font-size:12.5px}
+.dlg-head h3{margin:0;font-size:clamp(22px,3vw,30px);line-height:1.3;max-width:28ch}
+.dlg-pad{padding:18px 26px 24px}
+.dlg-pad h3{margin:0 0 4px;font-size:19px;line-height:1.4}
+.dlg-pad .meta{font-size:13px;color:var(--muted)}
+.dlg-pad .body{margin:0;white-space:pre-line;font-size:15.5px;line-height:1.7}
+.dlg-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;text-decoration:none;color:#fff;font-weight:600;
+  background:var(--grad-hot);border-radius:12px;padding:10px 18px}
+
+.section-title{font-size:17px;font-weight:600;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.tile{
+  position:relative;overflow:hidden;display:flex;gap:16px;align-items:flex-start;text-align:left;width:100%;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;
+  transition:border-color .15s,transform .15s,box-shadow .15s;
+}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--c1),var(--c2));opacity:0;transition:opacity .15s}
+.tile:hover{border-color:transparent;transform:translateY(-2px);box-shadow:0 10px 26px color-mix(in srgb,var(--c2) 22%,transparent)}
+.tile:hover::before{opacity:1}
+.tile-icon{
+  width:50px;height:50px;flex:0 0 50px;border-radius:14px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  box-shadow:0 6px 16px color-mix(in srgb,var(--c2) 38%,transparent), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.tile-icon svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tile h2{font-size:16.5px;font-weight:600;margin:2px 0 4px}
+.tile p{margin:0;color:var(--muted);font-size:13.5px}
+.tile .host{display:block;margin-top:8px;font-size:12px;color:var(--muted);opacity:.8;word-break:break-all}
+
+/* ---------------- การ์ดลงเวลาปฏิบัติราชการ (เด่นสุดบนหน้าหลัก) ---------------- */
+.punch{
+  position:relative;overflow:hidden;margin:0 0 28px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:18px 22px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:20px 22px 20px 28px;
+}
+.punch::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--gold),#F29A05)}
+.punch .tile-icon{width:58px;height:58px;flex-basis:58px;border-radius:16px}
+.punch .tile-icon svg{width:30px;height:30px}
+.punch h2{margin:0;font-size:20px;font-weight:700}
+.punch p{margin:2px 0 12px;color:var(--muted);font-size:14px}
+.punch-go{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:600;font-size:15px;
+  background:var(--grad-hot);border-radius:12px;padding:10px 18px;
+  box-shadow:0 8px 20px rgba(179,18,46,.28);transition:transform .15s,box-shadow .15s;
+}
+.punch-go:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(179,18,46,.36)}
+.punch-go svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.punch-note{display:block;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.clock{text-align:right;padding-left:22px;border-left:1px dashed var(--line)}
+.clock time{display:block;font-size:clamp(34px,4.4vw,48px);font-weight:700;line-height:1;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums;color:var(--accent)}
+.clock time .sec{font-size:.5em;font-weight:600;color:var(--muted);margin-left:4px}
+.clock > span{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
+
+/* ---------------- Footer ผู้พัฒนา ---------------- */
+.site-footer{
+  flex:0 0 auto;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 10px;
+  padding:7px 14px;font-size:12.5px;color:var(--muted);text-align:center;
+  background:var(--surface);border-top:1px solid var(--line);position:relative;
+}
+.site-footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--grad-hot);opacity:.8}
+.site-footer strong{color:var(--text);font-weight:600}
+.site-footer .sep{opacity:.5}
+.site-footer a{color:var(--accent);text-decoration:none;font-weight:500}
+.site-footer a:hover{text-decoration:underline}
+
+/* ---------------- PC: ย่อส่วนหัวให้เห็นทุกระบบในหน้าเดียว ไม่ต้องเลื่อน ---------------- */
+@media (min-width:861px){
+  .home{padding:18px clamp(16px,2.5vw,36px) 20px}
+  .home-inner{max-width:1240px}
+  .hero{padding:20px 26px;margin-bottom:16px;border-radius:18px}
+  .hero-logo{display:none}
+  .today{font-size:13px;margin-bottom:4px}
+  .hero h1{font-size:clamp(30px,2.8vw,40px)}
+  .hero .sub{margin-top:8px;font-size:14.5px}
+
+  .punch{margin-bottom:16px;padding:16px 20px 16px 24px;gap:12px 18px;border-radius:18px}
+  .punch .tile-icon{width:48px;height:48px;flex-basis:48px;border-radius:14px}
+  .punch .tile-icon svg{width:26px;height:26px}
+  .punch h2{font-size:17.5px}
+  .punch p{margin:0 0 10px;font-size:13px}
+  .punch-go{padding:8px 16px;font-size:14px}
+  .punch-note{margin-top:8px;font-size:12px}
+  .clock{padding-left:18px}
+  .clock time{font-size:clamp(30px,3vw,40px)}
+  .clock > span{margin-top:6px;font-size:12.5px}
+
+  .section-title{font-size:16px;margin:4px 0 10px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .tile{padding:14px 16px;gap:14px;border-radius:14px}
+  .tile-icon{width:44px;height:44px;flex-basis:44px;border-radius:12px}
+  .tile-icon svg{width:23px;height:23px}
+  .tile h2{font-size:15.5px;margin:0 0 2px;line-height:1.4}
+  .tile p{font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tile .host{margin-top:4px;font-size:11.5px}
+}
+/* จอกว้าง: วางแบนเนอร์กับการ์ดลงเวลาคู่กันในแถวเดียว และระบบงาน 3 คอลัมน์ 2 แถว */
+@media (min-width:1100px){
+  /* ความกว้างสไลด์คำนวณจากความสูงจอ เพื่อให้ทั้งหน้าพอดีโดยไม่ต้องเลื่อน */
+  .top-row{display:grid;grid-template-columns:min(max(calc((100vh - 465px) * 16 / 9),40%),60%) minmax(0,1fr);
+           gap:16px;margin-bottom:18px;align-items:stretch}
+  .top-row .news,.top-row .punch{margin:0}
+  .top-row .news{border-radius:18px}
+  .top-row .punch{grid-template-columns:auto 1fr;align-content:center}
+  .top-row .clock{grid-column:1/-1;grid-row:1;text-align:left;padding:0 0 12px;border-left:0;border-bottom:1px dashed var(--line);
+                  display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .top-row .clock > span{margin:0}
+  .top-row .featured{display:flex}
+  .top-row .punch{flex:1}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+/* ---------------- มือถือ ---------------- */
+.scrim{display:none}
+@media (max-width:860px){
+  .rail{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);transition:transform .22s ease;
+        padding-top:env(safe-area-inset-top,0px);width:var(--rail-w)!important}
+  body.drawer .rail{transform:none}
+  body.drawer .scrim{display:block;position:fixed;inset:0;background:rgba(30,0,8,.45);z-index:20}
+  body.mini .logo-card, body.mini .brand-name, body.mini .nav-group,
+  body.mini .nav-item .label, body.mini .nav-item .dot{display:revert}
+  body.mini .brand-mini{display:none}
+  body.mini .nav-item{justify-content:flex-start;padding:7px 10px}
+  .crumb small{display:none}
+  .news{border-radius:16px;margin-bottom:16px}
+  .punch{grid-template-columns:auto 1fr;padding:18px 18px 18px 24px}
+  .punch > .tile-icon{align-self:start;width:48px;height:48px;flex-basis:48px}
+  .clock{grid-column:1/-1;grid-row:1;text-align:left;padding:0 0 14px;border-left:0;border-bottom:1px dashed var(--line);
+         display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .clock > span{margin:0}
+  .punch-go{width:100%;justify-content:center;padding:13px 18px;font-size:16px}
+  .site-footer .sep{display:none}
+  body.in-system .site-footer{display:none} /* เปิดระบบบนมือถือ ซ่อน footer เพื่อให้จอกว้างขึ้น */
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<aside class="rail" id="rail" aria-label="เมนูระบบงาน">
+  <div class="brand">
+    <span class="logo-card"><img src="logo.png" alt="คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม" onerror="document.body.classList.add('logo-fallback')"></span>
+    <div class="brand-mini" aria-hidden="true">EN</div>
+    <div class="brand-name">
+      <strong>EN-MSU Smart Office</strong>
+      <span>คณะวิศวกรรมศาสตร์ มมส.</span>
+    </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="rail-foot">
+    <button class="nav-item" id="themeBtn" title="สลับโหมดสว่าง/มืด">
+      <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <span class="label">โหมดสี</span>
+    </button>
+    <button class="nav-item" id="miniBtn" title="ย่อ/ขยายเมนู">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+      <span class="label">ย่อเมนู</span>
+    </button>
+  </div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<main class="main">
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" title="เมนู" aria-label="เปิดเมนู">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="crumb"><b id="title">หน้าหลัก</b><small id="subtitle"></small></div>
+    <div class="actions" id="actions" hidden>
+      <button class="icon-btn" id="backBtn" title="ย้อนกลับ (ภายในระบบ)" aria-label="ย้อนกลับ">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="icon-btn" id="startBtn" title="กลับหน้าแรกของระบบนี้" aria-label="หน้าแรกของระบบ">
+        <svg viewBox="0 0 24 24"><path d="M5 5v14"/><path d="M19 5l-9 7 9 7z"/></svg>
+      </button>
+      <button class="icon-btn" id="reloadBtn" title="โหลดหน้านี้ใหม่" aria-label="โหลดใหม่">
+        <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+      </button>
+      <button class="icon-btn" id="popBtn" title="เปิดในแท็บใหม่" aria-label="เปิดในแท็บใหม่">
+        <svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+      </button>
+      <button class="icon-btn" id="homeBtn" title="กลับหน้าหลัก" aria-label="กลับหน้าหลัก">
+        <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      </button>
+    </div>
+    <div class="progress" id="progress"></div>
+  </header>
+
+  <div class="stage" id="stage">
+    <section class="view home" id="view-home">
+      <div class="home-inner">
+        <div class="top-row">
+        <section class="news" id="news" tabindex="0" aria-roledescription="carousel"
+                 aria-label="ข่าวประชาสัมพันธ์ (ลูกศรซ้าย/ขวาเพื่อเลื่อน, Enter เพื่อดูรายละเอียด)">
+          <div class="news-track" id="newsTrack">
+            <div class="slide brand hero" id="brandSlide">
+              <div>
+                <p class="today" id="today"></p>
+                <h1>EN-MSU <span>Smart Office</span></h1>
+                <p class="sub">คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</p>
+              </div>
+              <div class="hero-logo"><img src="logo.png" alt="" aria-hidden="true"></div>
+            </div>
+          </div>
+          <button class="news-nav prev" id="newsPrev" type="button" tabindex="-1" aria-label="ข่าวก่อนหน้า" hidden>
+            <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="news-nav next" id="newsNext" type="button" tabindex="-1" aria-label="ข่าวถัดไป" hidden>
+            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="news-dots" id="newsDots"></div>
+        </section>
+        <div id="featured" class="featured"></div>
+        </div>
+        <h2 class="section-title">ระบบงานทั้งหมด</h2>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+    <div class="notice" id="notice" hidden>
+      <span>ระบบนี้ใช้เวลาโหลดนาน หากหน้ายังว่าง ให้เปิดในแท็บใหม่</span>
+      <button class="go" id="noticeGo">เปิดในแท็บใหม่</button>
+      <button class="x" id="noticeX" aria-label="ปิดข้อความ">ปิด</button>
+    </div>
+  </div>
+
+  <dialog class="news-dlg" id="newsDlg" aria-label="รายละเอียดข่าว">
+    <button class="dlg-x" type="button" aria-label="ปิด" onclick="this.closest('dialog').close()">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div id="newsDlgBody"></div>
+  </dialog>
+
+  <footer class="site-footer">
+    <span>© 2569 <strong>คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</strong></span>
+    <span class="sep">|</span>
+    <span>พัฒนาโดย <strong>นายปัญญา จีระฉัตร</strong></span>
+    <span class="sep">|</span>
+    <span>นักวิชาการโสตทัศนศึกษา</span>
+    <span class="sep">|</span>
+    <a href="mailto:panya.j@msu.ac.th">panya.j@msu.ac.th</a>
+    <span class="sep">|</span>
+    <a href="news-admin.html" class="admin-link">ลงข่าวประชาสัมพันธ์</a>
+  </footer>
+</main>
+
+<script>
+/* =========================================================
+   ★ ตั้งค่ารายชื่อระบบ — เพิ่ม/ลด/สลับลำดับได้ที่นี่ที่เดียว ★
+   id    : ชื่อสั้นภาษาอังกฤษ (ใช้ในลิงก์ เช่น index.html#/leave)
+   name  : ชื่อที่แสดงในเมนู
+   desc  : คำอธิบายสั้น ๆ บนหน้าหลัก
+   url   : ที่อยู่ของระบบ
+   icon  : doc | money | calendar | stamp | folder | media | chart | users | box | link
+   group : หัวข้อกลุ่มในเมนู (ใส่ชื่อเดียวกันจะรวมกลุ่มกัน)
+   color : สีไล่เฉดของไอคอน [สีอ่อน, สีเข้ม] ไม่ใส่จะใช้สีเทาอมฟ้า
+   ลำดับในรายการนี้ = ลำดับที่แสดงทั้งในเมนูและบนหน้าหลัก (เรียงตามความถี่ในการใช้งาน)
+   ========================================================= */
+const SYSTEMS = [
+  { id:"leave",     name:"ระบบยื่นใบลาและไปปฏิบัติราชการ", desc:"ยื่นใบลา ขออนุมัติไปปฏิบัติราชการ และตรวจสอบวันลาคงเหลือ",
+    url:"https://eng.msu.ac.th/leave/",              icon:"calendar", group:"งานบริหาร", color:["#FFC53D","#EA580C"] },
+  { id:"documents", name:"ติดตามเอกสาร",        desc:"ส่งและติดตามสถานะเอกสารภายในคณะ",
+    url:"https://eng.msu.ac.th/documentstracking/",  icon:"doc",      group:"งานเอกสาร", color:["#4F8BFF","#1D4ED8"] },
+  { id:"finacc",    name:"การเงินและบัญชี",      desc:"เบิกจ่าย ตรวจสอบรายการการเงินและบัญชี",
+    url:"https://eng.msu.ac.th/finacc/",             icon:"money",    group:"งานบริหาร", color:["#34D399","#047857"] },
+  { id:"dean",      name:"ติดตามงานเสนอคณบดี",   desc:"ติดตามเรื่องที่เสนอผู้บริหารพิจารณาและลงนาม",
+    url:"https://eng.msu.ac.th/deantracking/",       icon:"stamp",    group:"งานเอกสาร", color:["#B57BFF","#6D28D9"] },
+  { id:"dwms",      name:"ระบบ E-Service งานโสตทัศนศึกษา DWMS", desc:"ขอใช้บริการงานโสตทัศนศึกษาออนไลน์",
+    url:"https://panya-jeerachat.github.io/dwms/",   icon:"media",    group:"งานบริการ", color:["#22D3EE","#0E7490"] },
+  { id:"assistant", name:"ค้นหาบุคลากร",     desc:"ระบบผู้ช่วยค้นหาห้องพัก/ห้องทำงานบุคลากร",
+    url:"https://eng.msu.ac.th/assistantpersonnel/", icon:"users",    group:"งานบริหาร", color:["#FF6FB5","#BE185D"] },
+];
+
+/* =========================================================
+   ★ ระบบเด่น — แสดงต่อจาก "หน้าหลัก" ในเมนู และเป็นการ์ดใหญ่ก่อนระบบอื่นบนหน้าหลัก ★
+   เปิดในแท็บใหม่เสมอ เพราะหน้าเข้าสู่ระบบของ Google ไม่ยอมแสดงในกรอบ
+   และการขอตำแหน่ง GPS ทำงานได้แน่นอนกว่าเมื่อเปิดเป็นหน้าเต็ม
+   ========================================================= */
+const FEATURED = {
+  id:"attendance",
+  name:"ลงเวลาปฏิบัติราชการ",
+  desc:"ลงเวลาเข้า–ออกงานด้วย GPS ของโทรศัพท์",
+  note:"เปิดในแท็บใหม่ เข้าสู่ระบบด้วยบัญชี @msu.ac.th และกด \"อนุญาต\" เมื่อถูกถามตำแหน่ง",
+  url:"https://accounts.google.com/AccountChooser?hd=msu.ac.th&continue=https%3A%2F%2Fscript.google.com%2Fa%2Fmsu.ac.th%2Fmacros%2Fs%2FAKfycby5gd6TlW73dEnAp2REBzgNcqbs0Z9v8q_4ztyhW855glGKYfJEFS4lDqCXOgUITchVwQ%2Fexec&openExternalBrowser=1",
+  icon:"punch", color:["#FFD54A","#F29A05"]
+};
+
+/* ลิงก์เว็บไซต์คณะ (เปิดในแท็บใหม่ เพื่อให้งานใน EN-MSU Smart Office ยังค้างอยู่)
+   ถ้าต้องการให้เปิดแทนหน้าเดิม ให้เปลี่ยน newTab เป็น false */
+const FACULTY_SITE = { name:"เว็บไซต์คณะวิศวกรรมศาสตร์", url:"https://eng.msu.ac.th/", newTab:true };
+
+/* แสดงหัวข้อกลุ่ม (งานเอกสาร/งานบริหาร ฯลฯ) ในเมนูหรือไม่
+   false = เรียงตามลำดับความสำคัญใน SYSTEMS ใต้หัวข้อ "ระบบงาน" หัวข้อเดียว */
+const SHOW_GROUPS = false;
+
+const LOAD_HINT_MS = 10000; // ถ้าโหลดเกินเวลานี้ จะแสดงปุ่มให้เปิดในแท็บใหม่
+
+/* ---------------- ไอคอน ---------------- */
+const ICONS = {
+  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+  punch:'<path d="M12 21.5s-7-6.1-7-11.6a7 7 0 0 1 14 0c0 5.5-7 11.6-7 11.6z"/><path d="M12 6.3v3.7l2.4 1.5"/>',
+  doc:'<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/><path d="M8.5 13h7M8.5 17h5"/>',
+  stamp:'<path d="M9 13V9.5a3 3 0 1 1 6 0V13"/><path d="M5 13h14v4H5z"/><path d="M4 21h16"/>',
+  folder:'<path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 11h18"/>',
+  money:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v.01M17.5 14.5v.01"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M9 14.5l2 2 4-4"/>',
+  media:'<rect x="3" y="5" width="13" height="12" rx="2"/><path d="M16 9.5l5-3v9l-5-3"/><path d="M7 21h5"/><path d="M9.5 17v4"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>',
+  ext:'<path d="M14 4h6v6"/><path d="M20 4l-9 9"/>',
+  chart:'<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.5 14a5 5 0 0 1 3 5"/>',
+  box:'<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+};
+const svg = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||ICONS.link}</svg>`;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shortUrl = u => { const x=new URL(u); return x.host + x.pathname; };
+const DEFAULT_COLOR = ['#94A3B8','#475569'];
+const tint = s => { const c=s.color||DEFAULT_COLOR; return `--c1:${c[0]};--c2:${c[1]}`; };
+const APP_TITLE = 'EN-MSU Smart Office | คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม';
+
+/* ---------------- สร้างเมนูและหน้าหลัก ---------------- */
+function build(){
+  let html = `<button class="nav-item" data-id="home" title="หน้าหลัก"><span class="nav-ico" style="--c1:#FFD54A;--c2:#F29A05">${svg('home')}</span><span class="label">หน้าหลัก</span></button>`;
+  if(FEATURED){
+    html += `<a class="nav-item pin" href="${esc(FEATURED.url)}" target="_blank" rel="noopener" title="${esc(FEATURED.name)} (เปิดในแท็บใหม่)">
+      <span class="nav-ico" style="--c1:#E0243A;--c2:#6E0B22">${svg(FEATURED.icon)}</span>
+      <span class="label"><b>${esc(FEATURED.name)}</b><small>เข้า–ออกงานด้วย GPS</small></span>
+      <span class="ext" aria-hidden="true">${svg('ext')}</span>
+    </a>`;
+  }
+  let lastGroup = null;
+  SYSTEMS.forEach(s=>{
+    if(!SHOW_GROUPS){ if(lastGroup===null){ html += `<div class="nav-group">ระบบงาน</div>`; lastGroup=''; } }
+    else if(s.group && s.group!==lastGroup){ html += `<div class="nav-group">${esc(s.group)}</div>`; lastGroup=s.group; }
+    html += `<button class="nav-item" data-id="${esc(s.id)}" title="${esc(s.name)}"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="dot" aria-hidden="true"></span></button>`;
+  });
+  html += `<div class="nav-group">ลิงก์ภายนอก</div>
+    <a class="nav-item" href="${esc(FACULTY_SITE.url)}" ${FACULTY_SITE.newTab?'target="_blank" rel="noopener"':''} title="${esc(FACULTY_SITE.name)}">
+      <span class="nav-ico" style="--c1:#FFFFFF;--c2:#FFD9DE;color:#B3122E">${svg('globe')}</span>
+      <span class="label">${esc(FACULTY_SITE.name)}</span>
+      <span class="ext" aria-hidden="true">${svg('ext')}</span>
+    </a>`;
+  $('nav').innerHTML = html;
+
+  $('grid').innerHTML = SYSTEMS.map(s=>`
+    <button class="tile" data-id="${esc(s.id)}" style="${tint(s)}">
+      <span class="tile-icon">${svg(s.icon)}</span>
+      <span><h2>${esc(s.name)}</h2><p>${esc(s.desc||'')}</p><span class="host">${esc(shortUrl(s.url))}</span></span>
+    </button>`).join('');
+
+  $('featured').innerHTML = FEATURED ? `
+    <div class="punch" style="${tint(FEATURED)}">
+      <span class="tile-icon">${svg(FEATURED.icon)}</span>
+      <div>
+        <h2>${esc(FEATURED.name)}</h2>
+        <p>${esc(FEATURED.desc)}</p>
+        <a class="punch-go" href="${esc(FEATURED.url)}" target="_blank" rel="noopener">${svg('punch')}ลงเวลาเข้า–ออกงาน</a>
+        <span class="punch-note">${esc(FEATURED.note||'')}</span>
+      </div>
+      <div class="clock" aria-live="off"><time id="clock"></time><span id="clockDate"></span></div>
+    </div>` : '';
+
+  document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
+  document.querySelectorAll('.pin, .punch-go').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('drawer')));
+}
+
+/* นาฬิกาบนการ์ดลงเวลา (เดินเฉพาะตอนอยู่หน้าหลัก) */
+function tick(){
+  const c = $('clock'); if(!c || current!=='home') return;
+  const n = new Date(), p = x=>String(x).padStart(2,'0');
+  c.innerHTML = `${p(n.getHours())}:${p(n.getMinutes())}<span class="sec">${p(n.getSeconds())}</span>`;
+  c.setAttribute('datetime', n.toISOString());
+  $('clockDate').textContent = n.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+}
+
+/* ---------------- เปิดระบบ (เก็บ iframe ไว้ ไม่โหลดใหม่เมื่อสลับ) ---------------- */
+const frames = {};
+let current = 'home', hintTimer = null;
+
+/* หาว่า URL นี้เป็นของระบบไหน (เทียบจากต้นทางของ url ที่ตั้งไว้) */
+function findSystem(url){
+  let u; try{ u = new URL(url, location.href) }catch(e){ return null }
+  let best = null, bestLen = -1;
+  for(const s of SYSTEMS){
+    const b = new URL(s.url); const base = b.pathname.replace(/\/+$/,'');
+    if(u.origin!==b.origin) continue;
+    if(u.pathname===base || u.pathname.startsWith(base+'/')){
+      if(base.length>bestLen){ best=s; bestLen=base.length; }
+    }
+  }
+  return best;
+}
+const sameOrigin = (a,b)=>{ try{ return new URL(a,location.href).origin===new URL(b,location.href).origin }catch(e){ return false } };
+
+function frameFor(s, startUrl){
+  if(frames[s.id]) return frames[s.id];
+  const f = document.createElement('iframe');
+  f.className = 'view'; f.title = s.name; f.hidden = true;
+  f.setAttribute('allow','clipboard-read; clipboard-write; fullscreen');
+  f.dataset.loading = '1';
+  f.addEventListener('load',()=>{
+    f.dataset.loading = '';
+    document.querySelector(`.nav-item[data-id="${s.id}"]`)?.classList.add('loaded');
+    installGuard(f, s);
+    try{ f.contentWindow.postMessage({eoffice:'hello', systems:SYSTEMS.map(x=>x.url)}, '*'); }catch(e){}
+    if(current===s.id){ doneLoading(); showUrl(s); }
+  });
+  f.src = startUrl || s.url;
+  $('stage').insertBefore(f, $('notice'));
+  frames[s.id] = f;
+  return f;
+}
+
+/* ที่อยู่ปัจจุบันของหน้าในกรอบ (อ่านได้เมื่ออยู่โดเมนเดียวกัน) */
+function frameUrl(s){
+  const f = frames[s.id];
+  try{ const h = f.contentWindow.location.href; if(h && h!=='about:blank') return h; }catch(e){}
+  return f?.dataset.lastUrl || s.url;
+}
+function showUrl(s){ $('subtitle').textContent = shortUrl(frameUrl(s)); }
+
+/* เปิด URL ภายในกรอบ EN-MSU Smart Office — ใช้แทนการเปิดแท็บใหม่ / หลุดออกจากหน้าครอบ */
+function openInside(url, fallbackSys){
+  const s = findSystem(url) || fallbackSys || currentSys();
+  if(!s) return false;
+  const f = frames[s.id];
+  if(!f){ go(s.id, true, url); return true; }
+  go(s.id);
+  f.dataset.loading='1'; startLoading(s);
+  try{ f.contentWindow.location.href = url; }catch(e){ f.src = url; }
+  return true;
+}
+
+/* ---- ตัวกันหลุด: ติดตั้งลงในหน้าของระบบ (ทำได้เมื่อ EN-MSU Smart Office อยู่โดเมนเดียวกับระบบ) ---- */
+function installGuard(f, sys){
+  let win, doc;
+  try{ win = f.contentWindow; doc = win.document; if(!doc) return; }catch(e){ return; } // ต่างโดเมน: ใช้ eoffice-bridge.js แทน
+  if(win.__eofficeGuard) return; win.__eofficeGuard = true;
+  f.dataset.lastUrl = win.location.href;
+
+  const keep = url => {                // ลิงก์นี้ควรเปิดใน EN-MSU Smart Office หรือไม่
+    try{ const u = new URL(url, win.location.href);
+      if(!/^https?:$/.test(u.protocol)) return false;
+      return u.origin===win.location.origin || !!findSystem(u.href);
+    }catch(e){ return false; }
+  };
+  const namedFrame = t => { try{ return !!doc.querySelector(`iframe[name="${CSS.escape(t)}"],frame[name="${CSS.escape(t)}"]`) }catch(e){ return false } };
+  const leaks = t => { t=(t||'').trim().toLowerCase(); return t && t!=='_self' && !namedFrame(t); };
+  const baseTarget = () => doc.querySelector('base[target]')?.getAttribute('target') || '';
+  const go2 = url => { const abs = new URL(url, win.location.href).href;
+    if(findSystem(abs) && findSystem(abs)!==sys) openInside(abs); else win.location.href = abs; };
+
+  // 1) ลิงก์ target="_blank" / "_top" / "_parent"
+  doc.addEventListener('click', e=>{
+    if(e.defaultPrevented || e.button!==0 || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const a = e.target.closest && e.target.closest('a[href]'); if(!a || a.hasAttribute('download')) return;
+    const t = a.getAttribute('target') || baseTarget();
+    if(!leaks(t) && !(findSystem(a.href) && findSystem(a.href)!==sys)) return;
+    if(!keep(a.href)) return;          // ลิงก์ภายนอก (เช่น Google Drive) ปล่อยเปิดแท็บใหม่ตามเดิม
+    e.preventDefault(); go2(a.href);
+  }, true);
+
+  // 2) ฟอร์มที่ส่งออกไปหน้าต่างใหม่หรือหน้าบนสุด
+  const fixForm = (form, submitter) => {
+    const t = submitter?.getAttribute('formtarget') || form.getAttribute('target') || baseTarget();
+    const action = submitter?.getAttribute('formaction') || form.action || win.location.href;
+    if(leaks(t) && keep(action)){ form.setAttribute('target','_self'); submitter?.removeAttribute('formtarget'); }
+  };
+  doc.addEventListener('submit', e=>fixForm(e.target, e.submitter), true);
+  const origSubmit = win.HTMLFormElement.prototype.submit;
+  win.HTMLFormElement.prototype.submit = function(){ fixForm(this); return origSubmit.call(this); };
+
+  // 3) window.open(...) จากสคริปต์
+  const origOpen = win.open;
+  win.open = function(url, name, features){
+    if(url && keep(url) && !namedFrame(name||'')){ go2(url); return win; }
+    return origOpen.apply(win, arguments);
+  };
+}
+
+/* ---- กันหลุดขั้นสุดท้าย: ถ้าระบบสั่งเปลี่ยนหน้าทั้งหน้าต่าง (top.location) ให้ดึงกลับมาเปิดในกรอบ ---- */
+if(window.navigation && navigation.addEventListener){
+  navigation.addEventListener('navigate', e=>{
+    if(!e.cancelable || e.destination.sameDocument || e.hashChange || e.downloadRequest || e.formData) return;
+    if(e.navigationType==='traverse' || e.navigationType==='reload') return;
+    const url = e.destination.url;
+    const fromFrame = document.activeElement && document.activeElement.tagName==='IFRAME';
+    const s = findSystem(url) || (fromFrame && currentSys() && sameOrigin(url, currentSys().url) ? currentSys() : null);
+    if(!s) return;
+    e.preventDefault(); openInside(url, s);
+  });
+}
+
+/* ---- รับข้อความจาก eoffice-bridge.js (สำหรับระบบที่อยู่ต่างโดเมน เช่น GitHub) ---- */
+window.addEventListener('message', e=>{
+  const d = e.data; if(!d || typeof d!=='object' || !d.eoffice) return;
+  const s = Object.values(SYSTEMS).find(x=>frames[x.id] && frames[x.id].contentWindow===e.source);
+  if(!s || e.origin!==new URL(s.url).origin) return;
+  if(d.eoffice==='navigate' && typeof d.url==='string' && findSystem(d.url)) openInside(d.url);
+  if(d.eoffice==='location' && typeof d.url==='string'){ frames[s.id].dataset.lastUrl = d.url; if(current===s.id) showUrl(s); }
+});
+
+function startLoading(s){
+  const p=$('progress'); p.style.opacity=1; p.style.width='70%';
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(()=>{ if(current===s.id && frames[s.id]?.dataset.loading) $('notice').hidden=false; }, LOAD_HINT_MS);
+}
+function doneLoading(){
+  const p=$('progress'); p.style.width='100%';
+  setTimeout(()=>{p.style.opacity=0; p.style.width=0},350);
+  clearTimeout(hintTimer); $('notice').hidden=true;
+}
+
+function go(id, push=true, startUrl){
+  const s = SYSTEMS.find(x=>x.id===id);
+  if(!s) id='home';
+  current = id;
+
+  $('view-home').hidden = id!=='home';
+  Object.values(frames).forEach(f=>f.hidden=true);
+  $('notice').hidden = true;
+  document.body.classList.toggle('in-system', !!s);
+
+  if(s){
+    const f = frameFor(s, startUrl); f.hidden=false;
+    f.dataset.loading ? startLoading(s) : doneLoading();
+    $('title').textContent = s.name;
+    showUrl(s);
+    $('actions').hidden = false;
+    document.title = s.name + ' | EN-MSU Smart Office';
+  }else{
+    $('title').textContent='หน้าหลัก'; $('subtitle').textContent='';
+    setTimeout(tick);
+    $('actions').hidden = true;
+    document.title = APP_TITLE;
+  }
+  document.querySelectorAll('.nav-item[data-id]').forEach(b=>{
+    b.dataset.id===id ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current');
+  });
+  if(push){ const h = id==='home' ? '#/' : '#/'+id; if(location.hash!==h) history.pushState(null,'',h); }
+  document.body.classList.remove('drawer');
+}
+
+/* ---------------- ปุ่มต่าง ๆ ---------------- */
+const currentSys = () => SYSTEMS.find(x=>x.id===current);
+$('homeBtn').onclick = ()=>go('home');
+$('backBtn').onclick = ()=>{
+  const s=currentSys(); if(!s) return;
+  try{ frames[s.id].contentWindow.history.back(); }catch(e){ history.back(); }
+};
+$('startBtn').onclick = ()=>{ const s=currentSys(); if(s) openInside(s.url, s); };
+$('reloadBtn').onclick = ()=>{
+  const s=currentSys(); if(!s) return; const f=frames[s.id];
+  f.dataset.loading='1'; startLoading(s);
+  try{ f.contentWindow.location.reload(); }catch(e){ f.src = frameUrl(s); }
+};
+$('popBtn').onclick = ()=>{ const s=currentSys(); if(s) window.open(frameUrl(s),'_blank','noopener'); };
+$('noticeGo').onclick = ()=>$('popBtn').click();
+$('noticeX').onclick = ()=>{ $('notice').hidden=true; };
+
+const isMobile = ()=>matchMedia('(max-width:860px)').matches;
+$('menuBtn').onclick = ()=>{ isMobile() ? document.body.classList.toggle('drawer') : toggleMini(); };
+$('scrim').onclick = ()=>document.body.classList.remove('drawer');
+function toggleMini(){ document.body.classList.toggle('mini'); save('mini', document.body.classList.contains('mini')?'1':''); }
+$('miniBtn').onclick = toggleMini;
+
+$('themeBtn').onclick = ()=>{
+  const dark = document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme==='dark'
+    : matchMedia('(prefers-color-scheme:dark)').matches;
+  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+  save('theme', document.documentElement.dataset.theme);
+};
+
+function save(k,v){ try{ localStorage.setItem('eoffice-'+k,v) }catch(e){} }
+function load(k){ try{ return localStorage.getItem('eoffice-'+k) }catch(e){ return null } }
+
+window.addEventListener('popstate',()=>go(location.hash.replace(/^#\/?/,'')||'home', false));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.body.classList.remove('drawer'); });
+
+/* =========================================================
+   ★ ข่าวประชาสัมพันธ์ (สไลด์บนหน้าหลัก) ★
+   NEWS_API : URL ของ Web App จากไฟล์ Code.gs (ลงท้ายด้วย /exec)
+              เว้นว่างไว้ = แสดงแบนเนอร์คณะอย่างเดียวเหมือนเดิม
+   ========================================================= */
+const NEWS_API = "https://script.google.com/macros/s/AKfycbw3rvUK2QZAFQgFHyRzPkmQ9Z88lFugDFM-V32Tco7KM_T9hZ_BGT8-6mktL3LY2NueBA/exec";
+const NEWS_SECONDS = 7;        // เวลาที่แสดงแต่ละข่าว (วินาที)
+const NEWS_REFRESH_MIN = 5;    // ดึงข่าวใหม่ทุกกี่นาที
+
+const News = (()=>{
+  const box = $('news'), track = $('newsTrack'), dots = $('newsDots'), brand = $('brandSlide');
+  const dlg = $('newsDlg'), dlgBody = $('newsDlgBody');
+  let items = [], idx = 0, sig = '', hover = false, focus = false;
+  const imgCache = {};
+  box.style.setProperty('--dur', NEWS_SECONDS + 's');
+
+  const src = (n, w)=> n.img + '=w' + w;
+  function slide(n, k, total){
+    const label = `aria-roledescription="slide" aria-label="${k+1} จาก ${total}: ${esc(n.title)}"`;
+    if(n.type === 'image') return `<div class="slide img" role="group" ${label} data-k="${k}">
+        <img src="${esc(src(n,1920))}" srcset="${esc(src(n,960))} 960w, ${esc(src(n,1920))} 1920w"
+             sizes="(max-width:860px) 100vw, 60vw" alt="${esc(n.title)}" data-id="${esc(n.id)}" draggable="false" decoding="async"></div>`;
+    return `<div class="slide text t-${esc(n.theme||'red')}" role="group" ${label} data-k="${k}">
+        <span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span>
+        <h3>${esc(n.title)}</h3>${n.body ? `<p>${esc(n.body)}</p>` : ''}
+        ${n.link || (n.body && n.body.length > 120) ? `<span class="more">${esc(n.link ? (n.linkLabel || 'อ่านเพิ่มเติม') : 'อ่านต่อ')} ›</span>` : ''}</div>`;
+  }
+
+  function render(list){
+    const s = JSON.stringify(list);
+    if(s === sig) return;
+    sig = s; items = list;
+    if(!items.length){ track.replaceChildren(brand); }
+    else { track.innerHTML = items.map((n,k)=>slide(n,k,items.length)).join(''); }
+    const many = items.length > 1;
+    $('newsPrev').hidden = $('newsNext').hidden = !many;
+    dots.innerHTML = many ? items.map((n,k)=>`<button type="button" data-k="${k}" aria-label="ข่าวที่ ${k+1}"><span></span></button>`).join('') : '';
+    show(Math.min(idx, Math.max(items.length-1, 0)), false);
+  }
+
+  function show(k, anim = true){
+    const len = Math.max(items.length, 1);
+    idx = (k + len) % len;
+    track.classList.toggle('drag', !anim);
+    track.style.transform = `translateX(${-idx*100}%)`;
+    [...track.children].forEach((el,j)=>{ el.inert = j !== idx; });
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current', j === idx));
+    if(!anim) requestAnimationFrame(()=>track.classList.remove('drag'));
+  }
+
+  function open(k){
+    const n = items[k]; if(!n) return;
+    const link = /^https?:\/\//i.test(n.link||'') ? `<a class="dlg-link" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.linkLabel || 'อ่านเพิ่มเติม')} ↗</a>` : '';
+    dlgBody.innerHTML = n.type === 'image'
+      ? `<img src="${esc(imgCache[n.id] || src(n,1920))}" alt="${esc(n.title)}" data-id="${esc(n.id)}">
+         <div class="dlg-pad"><h3>${esc(n.title)}</h3><span class="meta">${esc(n.dept || '')}</span><br>${link}</div>`
+      : `<div class="dlg-head t-${esc(n.theme||'red')}"><span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span><h3>${esc(n.title)}</h3></div>
+         <div class="dlg-pad">${n.body ? `<p class="body">${esc(n.body)}</p>` : ''}${link}</div>`;
+    dlg.showModal(); sync();
+  }
+
+  /* ถ้าโดเมนไม่อนุญาตลิงก์ภาพ Drive แบบสาธารณะ ให้ขอภาพผ่าน Apps Script แทน */
+  function fallback(img){
+    if(img.dataset.fb || !NEWS_API || !img.dataset.id) return;
+    img.dataset.fb = '1'; img.removeAttribute('srcset');
+    const id = img.dataset.id;
+    if(imgCache[id]){ img.src = imgCache[id]; return; }
+    fetch(NEWS_API + '?action=image&id=' + encodeURIComponent(id)).then(r=>r.json())
+      .then(j=>{ if(j.ok){ imgCache[id] = j.data; img.src = j.data; } }).catch(()=>{});
+  }
+  track.addEventListener('error', e=>{ if(e.target.tagName === 'IMG') fallback(e.target); }, true);
+  dlgBody.addEventListener('error', e=>{ if(e.target.tagName === 'IMG') fallback(e.target); }, true);
+
+  /* ปัดซ้าย-ขวา / ลากเมาส์ */
+  let x0 = null, dx = 0, w = 1, moved = false;
+  track.addEventListener('pointerdown', e=>{
+    if(items.length < 2 || e.button > 0) return;
+    x0 = e.clientX; dx = 0; w = box.clientWidth; moved = false;
+  });
+  track.addEventListener('pointermove', e=>{
+    if(x0 === null) return;
+    dx = e.clientX - x0;
+    if(!moved && Math.abs(dx) > 8){ moved = true; track.classList.add('drag'); try{ track.setPointerCapture(e.pointerId) }catch(_){} }
+    if(moved) track.style.transform = `translateX(calc(${-idx*100}% + ${dx}px))`;
+  });
+  const end = ()=>{
+    if(x0 === null) return;
+    x0 = null; track.classList.remove('drag');
+    if(moved && Math.abs(dx) > Math.min(60, w*.12)) show(idx + (dx < 0 ? 1 : -1)); else show(idx);
+    setTimeout(()=>{ moved = false; }, 0);
+  };
+  track.addEventListener('pointerup', end);
+  track.addEventListener('pointercancel', end);
+  track.addEventListener('click', e=>{
+    if(moved) return;
+    const el = e.target.closest('.slide[data-k]'); if(el) open(+el.dataset.k);
+  });
+
+  $('newsPrev').onclick = ()=>show(idx-1);
+  $('newsNext').onclick = ()=>show(idx+1);
+  dots.addEventListener('click', e=>{ const b = e.target.closest('button'); if(b) show(+b.dataset.k); });
+  dots.addEventListener('animationend', e=>{ if(e.animationName === 'dotfill') show(idx+1); });
+  box.addEventListener('keydown', e=>{
+    if(e.target !== box) return;
+    if(e.key === 'ArrowRight'){ show(idx+1); e.preventDefault(); }
+    if(e.key === 'ArrowLeft'){ show(idx-1); e.preventDefault(); }
+    if(e.key === 'Enter' && items.length){ open(idx); e.preventDefault(); }
+  });
+  box.addEventListener('mouseenter', ()=>{ hover = true; sync(); });
+  box.addEventListener('mouseleave', ()=>{ hover = false; sync(); });
+  box.addEventListener('focusin',  ()=>{ focus = true;  sync(); });
+  box.addEventListener('focusout', ()=>{ focus = false; sync(); });
+  dlg.addEventListener('close', ()=>{ dlgBody.innerHTML = ''; sync(); });
+  dlg.addEventListener('click', e=>{ if(e.target === dlg) dlg.close(); });
+
+  /* หยุดเลื่อนอัตโนมัติเมื่อชี้เมาส์ อ่านข่าว ซ่อนแท็บ หรือเปิดระบบอื่นอยู่ */
+  function sync(){ box.classList.toggle('paused', hover || focus || dlg.open || document.hidden || current !== 'home'); }
+
+  async function fetchNews(){
+    if(!NEWS_API) return;
+    try{
+      const r = await fetch(NEWS_API + '?action=news', { cache:'no-store' });
+      const j = await r.json();
+      if(j.ok && Array.isArray(j.news)){ render(j.news); save('news', JSON.stringify(j.news)); }
+    }catch(e){ /* ใช้ข่าวชุดล่าสุดที่จำไว้ */ }
+  }
+  function start(){
+    if(NEWS_API){ try{ const c = JSON.parse(load('news') || '[]'); if(c.length) render(c); }catch(e){} }
+    fetchNews();
+    setInterval(fetchNews, NEWS_REFRESH_MIN * 60000);
+  }
+  return { start, sync };
+})();
+
+/* ---------------- เริ่มต้น ---------------- */
+(function init(){
+  document.documentElement.dataset.theme = load('theme') || 'light'; // เริ่มต้นโหมดสว่าง
+  if(load('mini')==='1') document.body.classList.add('mini');
+  $('today').textContent = new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  build();
+  go(location.hash.replace(/^#\/?/,'')||'home', false);
+  tick(); setInterval(()=>{ tick(); News.sync(); }, 1000);
+  News.start();
+})();
+</script>
+</body>
+</html>
