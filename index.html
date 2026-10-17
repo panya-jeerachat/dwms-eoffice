@@ -157,6 +157,16 @@ body.mini .nav-item.pin .nav-ico{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold)
 .icon-btn{width:40px;height:40px;border:0;background:none;border-radius:10px;display:grid;place-items:center;color:var(--muted)}
 .icon-btn:hover{background:var(--accent-soft);color:var(--accent)}
 .icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.post-news{display:inline-flex;align-items:center;gap:8px;flex:none;height:38px;padding:0 16px 0 12px;margin-left:8px;border-radius:999px;
+  text-decoration:none;font-weight:600;font-size:14.5px;color:var(--accent);background:var(--accent-soft);
+  border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);transition:background .15s,color .15s,box-shadow .15s}
+.post-news:hover{background:var(--grad-hot);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(179,18,46,.25)}
+.post-news svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* หน้าหลัก: แสดงปุ่มลงข่าวแทนชื่อหน้า / ในระบบงาน: แสดงชื่อระบบแทน */
+body:not(.in-system) .crumb{visibility:hidden}
+body.in-system .post-news{display:none}
+/* ปุ่มเมนู (☰) ใช้เฉพาะมือถือ บน PC มีปุ่ม "ย่อเมนู" ด้านล่างแถบซ้ายอยู่แล้ว */
+@media (min-width:861px){ #menuBtn{display:none} .topbar{padding-left:16px} .post-news{margin-left:0} }
 .crumb{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;overflow:hidden;white-space:nowrap}
 .crumb b{font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis}
 .crumb small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis}
@@ -229,6 +239,36 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
 .news .hero-logo{display:block;width:30cqw;padding:1cqw 2cqw;border-radius:2.6cqw}
 .logo-fallback .news .hero-logo{display:none}
 
+/* ข่าววิดีโอ / เอกสาร: ภาพปก + ป้ายประเภท + หัวข้อด้านล่าง */
+.cover-ph{position:absolute;inset:0}
+.slide.media .badge-type{position:absolute;top:max(8px,2.4cqw);left:max(8px,2.4cqw);z-index:2;display:inline-flex;align-items:center;gap:.4em;
+  font-size:max(11px,1.9cqw);font-weight:700;color:#fff;background:rgba(20,6,10,.62);backdrop-filter:blur(6px);padding:.35em .8em;border-radius:99px}
+.slide.media .badge-type svg{width:1.1em;height:1.1em;stroke:currentColor;fill:none;stroke-width:2}
+.slide.media .play{position:absolute;left:50%;top:46%;z-index:2;width:max(54px,13cqw);height:max(54px,13cqw);translate:-50% -50%;
+  display:grid;place-items:center;border-radius:50%;background:rgba(224,36,58,.92);color:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 0 max(5px,1.2cqw) rgba(255,255,255,.28);transition:transform .2s}
+.slide.media .play svg{width:42%;height:42%;margin-left:8%}
+.slide.media .play{border:0;cursor:pointer}
+.slide.media .play:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.info-btn{align-self:flex-start;margin-top:.4em;border:0;cursor:pointer;font:inherit;font-size:max(11px,1.9cqw);font-weight:600;color:#fff;
+  background:rgba(255,255,255,.18);border-radius:99px;padding:.35em .9em;backdrop-filter:blur(6px)}
+.info-btn:hover{background:rgba(255,255,255,.3)}
+.slide.playing{cursor:default;background:#000}
+.inline-player,.inline-player iframe,.inline-player video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.slide.playing .stop{position:absolute;top:max(8px,1.6cqw);right:max(8px,1.6cqw);z-index:3;width:36px;height:36px;border:0;border-radius:50%;
+  display:grid;place-items:center;background:rgba(0,0,0,.55);color:#fff;cursor:pointer}
+.slide.playing .stop svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.info-btn.floating{position:absolute;left:max(8px,1.6cqw);top:max(8px,1.6cqw);z-index:3;margin:0;background:rgba(0,0,0,.55)}
+.news:has(.slide.playing) .news-dots,.news:has(.slide.playing) .news-nav{opacity:0;pointer-events:none}
+.slide.media:hover .play{transform:scale(1.07)}
+.slide.media .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:9cqw 4.5cqw max(22px,5.4cqw);color:#fff;
+  background:linear-gradient(transparent,rgba(15,4,8,.82));display:flex;flex-direction:column;gap:.3em}
+.slide.media .cap b{font-size:max(14px,3.4cqw);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.att-note{display:inline-flex;align-items:center;gap:.35em;font-size:max(11px,1.9cqw);font-weight:600;opacity:.92}
+.att-note svg{width:1.15em;height:1.15em;stroke:currentColor;fill:none;stroke-width:2}
+.slide.text .att-note{margin-top:2cqw}
+.slide.img .att-note{position:absolute;right:max(8px,2.4cqw);top:max(8px,2.4cqw);color:#fff;background:rgba(20,6,10,.62);padding:.35em .8em;border-radius:99px}
+
 /* ข่าวแบบข้อความ */
 .slide.text{display:flex;flex-direction:column;justify-content:center;padding:6cqw 7.5cqw 8cqw;color:#fff}
 .slide.text::after,.dlg-head::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;
@@ -282,6 +322,20 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
 .dlg-pad h3{margin:0 0 4px;font-size:19px;line-height:1.4}
 .dlg-pad .meta{font-size:13px;color:var(--muted)}
 .dlg-pad .body{margin:0;white-space:pre-line;font-size:15.5px;line-height:1.7}
+.dlg-video{aspect-ratio:16/9;background:#000}
+.dlg-video iframe,.dlg-video video,.dlg-doc iframe{display:block;width:100%;height:100%;border:0;background:#000}
+.dlg-doc{height:min(74vh,900px);background:#525659}
+.news-dlg.wide{width:min(1200px,96vw)}
+.doc-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 26px;border-bottom:1px solid var(--line);font-size:14px}
+.doc-bar span{flex:1;min-width:160px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-bar a{color:var(--accent);font-weight:600;text-decoration:none}
+.att-h{margin:20px 0 8px;font-size:13px;font-weight:700;color:var(--muted)}
+.att{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.att a{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--text)}
+.att a:hover{border-color:var(--accent);background:var(--accent-soft)}
+.att .fi{flex:none;width:38px;height:24px;border-radius:5px;color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center}
+.att .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.att .fs{font-size:12.5px;color:var(--muted)}
 .dlg-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;text-decoration:none;color:#fff;font-weight:600;
   background:var(--grad-hot);border-radius:12px;padding:10px 18px}
 
@@ -463,6 +517,10 @@ a.tile{text-decoration:none;color:inherit}
     <button class="icon-btn" id="menuBtn" title="เมนู" aria-label="เปิดเมนู">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
+    <a class="post-news" id="postNews" href="news-admin.html" title="ลงข่าวประชาสัมพันธ์บนหน้า EN-MSU Smart Office">
+      <svg viewBox="0 0 24 24"><path d="M4 10.5v3a1 1 0 0 0 1 1h2l6 4.5V5L7 9.5H5a1 1 0 0 0-1 1z"/><path d="M16.5 9a4 4 0 0 1 0 6"/><path d="M19 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+      <span>ลงข่าวประชาสัมพันธ์</span>
+    </a>
     <div class="crumb"><b id="title">หน้าหลัก</b><small id="subtitle"></small></div>
     <div class="actions" id="actions" hidden>
       <button class="icon-btn" id="backBtn" title="ย้อนกลับ (ภายในระบบ)" aria-label="ย้อนกลับ">
@@ -561,7 +619,7 @@ const SYSTEMS = [
   { id:"dean",      name:"ติดตามงานเสนอคณบดี",   desc:"ติดตามเรื่องที่เสนอผู้บริหารพิจารณาและลงนาม",
     url:"https://eng.msu.ac.th/deantracking/",       icon:"stamp",    group:"งานเอกสาร", color:["#B57BFF","#6D28D9"] },
   { id:"dwms",      name:"ระบบ E-Service งานโสตทัศนศึกษา DWMS", desc:"ขอใช้บริการงานโสตทัศนศึกษาออนไลน์",
-    url:"https://panya-jeerachat.github.io/dwms/",   icon:"media",    group:"งานบริการ", color:["#22D3EE","#0E7490"] },
+    url:"https://eng.msu.ac.th/dwms/",              icon:"media",    group:"งานบริการ", color:["#22D3EE","#0E7490"] },
   { id:"meeting",   name:"ระบบจองห้องประชุม",  desc:"ตรวจสอบห้องว่างและจองห้องประชุมของคณะ",
     url:"https://script.google.com/a/macros/msu.ac.th/s/AKfycbzVlT2789uC8xLi78HhvyKdP0c7tIrxvdd6Z5vykmqASaLnhP_Wk8yxJ91JS5M7fkWD/exec",
     icon:"meeting", group:"งานบริการ", color:["#8B9BFF","#4338CA"], newTab:true },
@@ -606,6 +664,8 @@ const ICONS = {
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>',
   ext:'<path d="M14 4h6v6"/><path d="M20 4l-9 9"/>',
   chart:'<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  play:'<path d="M8 5.5v13l11-6.5z" fill="currentColor"/>',
+  clip:'<path d="M20 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/>',
   meeting:'<rect x="3.5" y="9" width="17" height="6" rx="2"/><path d="M7 15v4M17 15v4"/><circle cx="8" cy="5" r="1.8"/><circle cx="16" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/>',
   users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.5 14a5 5 0 0 1 3 5"/>',
   box:'<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
@@ -901,21 +961,37 @@ const News = (()=>{
   box.style.setProperty('--dur', NEWS_SECONDS + 's');
 
   const src = (n, w)=> n.img + '=w' + w;
+  /* ภาพปก: ภาพที่อัปโหลด หรือภาพจาก YouTube */
+  const ytThumb = (id, q) => `https://i.ytimg.com/vi/${id}/${q || 'maxresdefault'}.jpg`;
+  function coverTag(n, eager){
+    if(n.img) return `<img src="${esc(src(n,1920))}" srcset="${esc(src(n,960))} 960w, ${esc(src(n,1920))} 1920w"
+             sizes="(max-width:860px) 100vw, 60vw" alt="${esc(n.title)}" data-id="${esc(n.id)}" draggable="false" decoding="async">`;
+    if(n.media && n.media.kind === 'youtube')
+      return `<img src="${esc(ytThumb(n.media.id))}" alt="${esc(n.title)}" data-yt="${esc(n.media.id)}" draggable="false" decoding="async">`;
+    return `<div class="cover-ph t-${n.type === 'pdf' ? 'ink' : 'red'}"></div>`;
+  }
+  const attNote = n => n.files && n.files.length ? `<span class="att-note">${svg('clip')} ไฟล์แนบ ${n.files.length} ไฟล์</span>` : '';
+
   function slide(n, k, total){
     const label = `aria-roledescription="slide" aria-label="${k+1} จาก ${total}: ${esc(n.title)}"`;
-    if(n.type === 'image') return `<div class="slide img" role="group" ${label} data-k="${k}">
-        <img src="${esc(src(n,1920))}" srcset="${esc(src(n,960))} 960w, ${esc(src(n,1920))} 1920w"
-             sizes="(max-width:860px) 100vw, 60vw" alt="${esc(n.title)}" data-id="${esc(n.id)}" draggable="false" decoding="async"></div>`;
+    if(n.type === 'image') return `<div class="slide img" role="group" ${label} data-k="${k}">${coverTag(n)}${attNote(n)}</div>`;
+    if(n.type === 'video' || n.type === 'pdf') return `<div class="slide media ${n.type}" role="group" ${label} data-k="${k}">
+        ${coverTag(n)}
+        <span class="badge-type">${n.type === 'video' ? svg('play') + ' วิดีโอ' : svg('doc') + ' เอกสาร PDF'}</span>
+        ${n.type === 'video' ? `<button class="play" type="button" tabindex="-1" aria-label="เล่นวิดีโอ ${esc(n.title)}">${svg('play')}</button>` : ''}
+        <div class="cap"><b>${esc(n.title)}</b>${attNote(n)}
+          ${n.type === 'video' && (n.body || n.link || (n.files || []).length) ? `<button class="info-btn" type="button" tabindex="-1" data-info>รายละเอียด / ไฟล์แนบ ›</button>` : ''}</div></div>`;
     return `<div class="slide text t-${esc(n.theme||'red')}" role="group" ${label} data-k="${k}">
         <span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span>
         <h3>${esc(n.title)}</h3>${n.body ? `<p>${esc(n.body)}</p>` : ''}
-        ${n.link || (n.body && n.body.length > 120) ? `<span class="more">${esc(n.link ? (n.linkLabel || 'อ่านเพิ่มเติม') : 'อ่านต่อ')} ›</span>` : ''}</div>`;
+        ${n.link || (n.body && n.body.length > 120) ? `<span class="more">${esc(n.link ? (n.linkLabel || 'อ่านเพิ่มเติม') : 'อ่านต่อ')} ›</span>` : ''}
+        ${attNote(n)}</div>`;
   }
 
   function render(list){
     const s = JSON.stringify(list);
     if(s === sig) return;
-    sig = s; items = list;
+    sig = s; items = list; playingEl = null;
     if(!items.length){ track.replaceChildren(brand); }
     else { track.innerHTML = items.map((n,k)=>slide(n,k,items.length)).join(''); }
     const many = items.length > 1;
@@ -926,7 +1002,10 @@ const News = (()=>{
 
   function show(k, anim = true){
     const len = Math.max(items.length, 1);
-    idx = (k + len) % len;
+    const next = (k + len) % len;
+    if(next !== idx) stopInline();
+    idx = next;
+    warm(items[idx]);
     track.classList.toggle('drag', !anim);
     track.style.transform = `translateX(${-idx*100}%)`;
     [...track.children].forEach((el,j)=>{ el.inert = j !== idx; });
@@ -934,19 +1013,109 @@ const News = (()=>{
     if(!anim) requestAnimationFrame(()=>track.classList.remove('drag'));
   }
 
+  const fileIcon = name => {
+    const e = (String(name).split('.').pop() || '').toLowerCase();
+    return e === 'pdf' ? ['PDF','#D93025'] : /^docx?$/.test(e) ? ['DOC','#1A73E8'] : /^xlsx?$|^csv$/.test(e) ? ['XLS','#188038']
+         : /^pptx?$/.test(e) ? ['PPT','#E8710A'] : /^(jpe?g|png)$/.test(e) ? ['IMG','#9334E6'] : e === 'zip' ? ['ZIP','#5F6368'] : ['FILE','#5F6368'];
+  };
+  const fsize = b => b > 1048576 ? (b/1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b/1024)) + ' KB';
+  const driveView = id => `https://drive.google.com/file/d/${encodeURIComponent(id)}/view`;
+  const drivePrev = id => `https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`;
+  const driveDown = id => `https://drive.google.com/uc?export=download&id=${encodeURIComponent(id)}`;
+
+  /* ---------- เล่นวิดีโอ ----------
+     YouTube : ฝังผ่าน youtube-nocookie (เล่นจาก CDN ของ YouTube เร็วที่สุด)
+     ไฟล์ MP4 : เล่นด้วยตัวเล่นของเบราว์เซอร์โดยตรง ถ้าเล่นไม่ได้จะสลับไปใช้ตัวเล่นของ Google Drive */
+  const ytEmbed = m => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(m.id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1${m.start ? '&start=' + (+m.start) : ''}`;
+  const driveStream = id => `https://drive.google.com/uc?export=download&id=${encodeURIComponent(id)}`;
+  function player(n){
+    const m = n.media;
+    if(m.kind === 'youtube') return `<iframe title="${esc(n.title)}" src="${esc(ytEmbed(m))}"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+    const poster = n.img ? src(n, 1920) : '';
+    return `<video controls autoplay playsinline preload="auto" data-drive="${esc(m.id)}" ${poster ? `poster="${esc(poster)}"` : ''}
+        src="${esc(driveStream(m.id))}"></video>`;
+  }
+  /* ตัวเล่นของเบราว์เซอร์เปิดไฟล์ไม่ได้ (เช่น ต้องเข้าสู่ระบบ หรือรหัสวิดีโอไม่รองรับ) → ใช้ตัวเล่น Google Drive */
+  document.addEventListener('error', e=>{
+    const v = e.target;
+    if(v.tagName !== 'VIDEO' || !v.dataset.drive || v.dataset.fb) return;
+    v.dataset.fb = '1';
+    v.outerHTML = `<iframe src="${esc(drivePrev(v.dataset.drive))}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  }, true);
+
+  /* เตรียมการเชื่อมต่อล่วงหน้าเมื่อข่าววิดีโอขึ้นมา กดเล่นแล้วจึงเริ่มได้เร็วขึ้น */
+  const warmed = {};
+  function warm(n){
+    if(!n || n.type !== 'video' || !n.media) return;
+    const hosts = n.media.kind === 'youtube'
+      ? ['https://www.youtube-nocookie.com', 'https://www.google.com', 'https://i.ytimg.com', 'https://googleads.g.doubleclick.net', 'https://static.doubleclick.net']
+      : ['https://drive.google.com', 'https://drive.usercontent.google.com'];
+    hosts.forEach(h=>{
+      if(warmed[h]) return; warmed[h] = 1;
+      const l = document.createElement('link'); l.rel = 'preconnect'; l.href = h; l.crossOrigin = ''; document.head.appendChild(l);
+    });
+  }
+
+  /* เล่นในสไลด์ทันที (ไม่ต้องเปิดหน้าต่าง) */
+  let playingEl = null;
+  function playInline(k){
+    const n = items[k], el = track.children[k];
+    if(!n || !el || !n.media || playingEl === el) return;
+    stopInline(); hit(n);
+    el._cover = el.innerHTML;
+    el.classList.add('playing');
+    el.innerHTML = `<div class="inline-player">${player(n)}</div>
+      <button class="stop" type="button" aria-label="ปิดวิดีโอ" title="ปิดวิดีโอ"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      ${n.body || n.link || (n.files || []).length ? `<button class="info-btn floating" type="button" data-info>รายละเอียด ›</button>` : ''}`;
+    playingEl = el; sync();
+  }
+  function stopInline(){
+    if(!playingEl) return;
+    playingEl.innerHTML = playingEl._cover; playingEl.classList.remove('playing');
+    playingEl = null; sync();
+  }
+
+  /* นับยอดเปิดอ่านเพื่อทำสถิติ (ไม่เกิน 1 ครั้งต่อเครื่องต่อข่าวต่อวัน ไม่เก็บข้อมูลส่วนตัว) */
+  function hit(n){
+    if(!NEWS_API || !n || !n.id) return;
+    const day = new Date().toISOString().slice(0,10);
+    let seen = {};
+    try{ seen = JSON.parse(load('seen') || '{}'); }catch(e){}
+    if(seen[n.id] === day) return;
+    seen[n.id] = day;
+    Object.keys(seen).forEach(k=>{ if(seen[k] !== day) delete seen[k]; });
+    save('seen', JSON.stringify(seen));
+    fetch(NEWS_API + '?action=hit&id=' + encodeURIComponent(n.id), { mode:'no-cors', keepalive:true }).catch(()=>{});
+  }
+
   function open(k){
     const n = items[k]; if(!n) return;
+    stopInline(); hit(n);
     const link = /^https?:\/\//i.test(n.link||'') ? `<a class="dlg-link" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.linkLabel || 'อ่านเพิ่มเติม')} ↗</a>` : '';
-    dlgBody.innerHTML = n.type === 'image'
-      ? `<img src="${esc(imgCache[n.id] || src(n,1920))}" alt="${esc(n.title)}" data-id="${esc(n.id)}">
-         <div class="dlg-pad"><h3>${esc(n.title)}</h3><span class="meta">${esc(n.dept || '')}</span><br>${link}</div>`
-      : `<div class="dlg-head t-${esc(n.theme||'red')}"><span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span><h3>${esc(n.title)}</h3></div>
-         <div class="dlg-pad">${n.body ? `<p class="body">${esc(n.body)}</p>` : ''}${link}</div>`;
+    const files = (n.files || []).length ? `<div class="att-h">ไฟล์แนบ</div><ul class="att">${n.files.map(f=>{
+        const [t,c] = fileIcon(f.name);
+        return `<li><a href="${esc(driveView(f.id))}" target="_blank" rel="noopener">
+          <span class="fi" style="background:${c}">${t}</span><span class="fn">${esc(f.name)}</span><span class="fs">${fsize(f.size||0)}</span></a></li>`;
+      }).join('')}</ul>` : '';
+    const info = (head = true) => `<div class="dlg-pad">${head ? `<h3>${esc(n.title)}</h3><span class="meta">${esc(n.dept || '')}</span>` : ''}
+        ${n.body ? `<p class="body" ${head ? 'style="margin-top:10px"' : ''}>${esc(n.body)}</p>` : ''}${link}${files}</div>`;
+    let top;
+    if(n.type === 'image') top = `<img src="${esc(imgCache[n.id] || src(n,1920))}" alt="${esc(n.title)}" data-id="${esc(n.id)}">`;
+    else if(n.type === 'video' && n.media) top = `<div class="dlg-video">${player(n)}</div>`;
+    else if(n.type === 'pdf' && n.media) top = `<div class="dlg-doc"><iframe title="${esc(n.title)}" src="${esc(drivePrev(n.media.id))}"></iframe></div>
+        <div class="doc-bar"><span>${esc(n.media.name || 'เอกสาร PDF')}</span>
+          <a href="${esc(driveView(n.media.id))}" target="_blank" rel="noopener">เปิดเต็มจอ ↗</a>
+          <a href="${esc(driveDown(n.media.id))}" target="_blank" rel="noopener">ดาวน์โหลด</a></div>`;
+    dlgBody.innerHTML = top ? top + info(true)
+      : `<div class="dlg-head t-${esc(n.theme||'red')}"><span class="k">${esc(n.dept || 'ประชาสัมพันธ์')}</span><h3>${esc(n.title)}</h3></div>` + info(false);
+    dlg.classList.toggle('wide', n.type === 'pdf');
     dlg.showModal(); sync();
   }
 
   /* ถ้าโดเมนไม่อนุญาตลิงก์ภาพ Drive แบบสาธารณะ ให้ขอภาพผ่าน Apps Script แทน */
   function fallback(img){
+    if(img.dataset.yt){ if(!img.dataset.fb){ img.dataset.fb = '1'; img.src = ytThumb(img.dataset.yt, 'hqdefault'); } return; }
     if(img.dataset.fb || !NEWS_API || !img.dataset.id) return;
     img.dataset.fb = '1'; img.removeAttribute('srcset');
     const id = img.dataset.id;
@@ -979,8 +1148,15 @@ const News = (()=>{
   track.addEventListener('pointercancel', end);
   track.addEventListener('click', e=>{
     if(moved) return;
-    const el = e.target.closest('.slide[data-k]'); if(el) open(+el.dataset.k);
+    const el = e.target.closest('.slide[data-k]'); if(!el) return;
+    const k = +el.dataset.k, n = items[k];
+    if(e.target.closest('.stop')) return stopInline();
+    if(e.target.closest('[data-info]')) return open(k);
+    if(e.target.closest('.inline-player')) return;
+    if(n && n.type === 'video' && n.media) playInline(k); else open(k);
   });
+  /* ระหว่างเล่นวิดีโอ ไม่ให้การลากบนตัวเล่นกลายเป็นการเลื่อนสไลด์ */
+  track.addEventListener('pointerdown', e=>{ if(e.target.closest('.inline-player,.stop,.info-btn')) x0 = null; });
 
   $('newsPrev').onclick = ()=>show(idx-1);
   $('newsNext').onclick = ()=>show(idx+1);
@@ -990,7 +1166,8 @@ const News = (()=>{
     if(e.target !== box) return;
     if(e.key === 'ArrowRight'){ show(idx+1); e.preventDefault(); }
     if(e.key === 'ArrowLeft'){ show(idx-1); e.preventDefault(); }
-    if(e.key === 'Enter' && items.length){ open(idx); e.preventDefault(); }
+    if(e.key === 'Enter' && items.length){ const n = items[idx]; n.type === 'video' && n.media ? playInline(idx) : open(idx); e.preventDefault(); }
+    if(e.key === 'Escape' && playingEl){ stopInline(); e.preventDefault(); }
   });
   box.addEventListener('mouseenter', ()=>{ hover = true; sync(); });
   box.addEventListener('mouseleave', ()=>{ hover = false; sync(); });
@@ -1000,7 +1177,10 @@ const News = (()=>{
   dlg.addEventListener('click', e=>{ if(e.target === dlg) dlg.close(); });
 
   /* หยุดเลื่อนอัตโนมัติเมื่อชี้เมาส์ อ่านข่าว ซ่อนแท็บ หรือเปิดระบบอื่นอยู่ */
-  function sync(){ box.classList.toggle('paused', hover || focus || dlg.open || document.hidden || current !== 'home'); }
+  function sync(){
+    if(current !== 'home' && playingEl) stopInline();
+    box.classList.toggle('paused', !!playingEl || hover || focus || dlg.open || document.hidden || current !== 'home');
+  }
 
   async function fetchNews(){
     if(!NEWS_API) return;

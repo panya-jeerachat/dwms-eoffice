@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>รายงานผลการประชาสัมพันธ์ — EN-MSU Smart Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red-1:#E0243A; --red-2:#B3122E; --red-3:#6E0B22; --red-4:#3A0714; --coral:#FF6B5A; --gold:#F2B705;
+  --grad-hot:linear-gradient(120deg,var(--coral),var(--red-1) 40%,var(--red-2) 70%,var(--red-3));
+  --grad-rail:linear-gradient(165deg,var(--red-2) 0%,var(--red-3) 45%,var(--red-4) 100%);
+  --bg:#F5EFEF; --surface:#FFFFFF; --surface-2:#FBF7F7; --text:#2A1B1D; --muted:#76666A; --line:#EADADC;
+  --accent:#B3122E; --accent-soft:#FBE7EA; --ok:#0F7A4C; --ok-soft:#E3F6EC; --warn:#9A5B00; --warn-soft:#FFF3D6;
+  /* สีประเภทสื่อ */
+  --c-image:#E0243A; --c-text:#F2A505; --c-video:#2563EB; --c-pdf:#0F766E;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --bg:#1A1314; --surface:#251B1D; --surface-2:#2C2124; --text:#F5EAEB; --muted:#B39FA3; --line:#3D2B2F;
+  --accent:#FF6B7C; --accent-soft:#3F1B22; --ok:#5BD69B; --ok-soft:#173326; --warn:#F5C35B; --warn-soft:#3A2D12;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.num{font-variant-numeric:tabular-nums}
+
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:11px;
+  padding:8px 14px;font-weight:500;text-decoration:none;color:inherit;font-size:14px}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{border:0;color:#fff;background:var(--grad-hot);font-weight:600}
+.in{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;outline:none}
+.in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,32px);
+  padding-top:calc(10px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));background:var(--grad-rail);color:#fff}
+.bar .mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.14)}
+.bar h1{margin:0;font-size:16px;line-height:1.25;font-weight:600}
+.bar h1 small{display:block;font-size:12px;font-weight:400;opacity:.75}
+.bar .sp{flex:1}
+.bar .who{font-size:13px;text-align:right;line-height:1.3}
+.bar .who b{display:block;font-size:14px}
+.bar .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff;padding:6px 11px}
+.bar .btn:hover{background:rgba(255,255,255,.22)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:18px clamp(14px,3vw,32px) 60px}
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:10px 12px}
+.filters label{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
+.filters .sp{flex:1}
+
+/* หัวรายงาน */
+.rhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px;
+  padding:22px 24px;border-radius:18px;color:#fff;background:var(--grad-hot);position:relative;overflow:hidden}
+.rhead::after{content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.9) 1.3px,transparent 1.5px);background-size:16px 16px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 45%,#000);mask-image:linear-gradient(100deg,transparent 45%,#000)}
+.rhead .kick{font-size:13px;opacity:.9;font-weight:600;letter-spacing:.02em}
+.rhead h2{margin:2px 0 4px;font-size:clamp(22px,3vw,30px);line-height:1.25}
+.rhead .period{font-size:15px;font-weight:500}
+.rhead .asof{text-align:right;font-size:13px;opacity:.92;position:relative;z-index:1}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k,var(--accent))}
+.kpi .l{font-size:12.5px;color:var(--muted);font-weight:600}
+.kpi .v{font-size:30px;font-weight:700;line-height:1.15;margin-top:4px}
+.kpi .v small{font-size:14px;font-weight:600;color:var(--muted);margin-left:4px}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px;break-inside:avoid}
+.card h3{margin:0 0 2px;font-size:16px}
+.card .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.grid2 > .card{margin-bottom:16px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* กราฟรายเดือน */
+.cols{display:flex;align-items:flex-end;gap:6px;height:210px;padding-top:18px;border-bottom:1px solid var(--line);overflow-x:auto}
+.col{flex:1 0 26px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:26px}
+.col .stack{width:min(34px,80%);display:flex;flex-direction:column-reverse;border-radius:6px 6px 0 0;overflow:hidden}
+.col .stack span{display:block}
+.col .val{font-size:11.5px;font-weight:700;margin-bottom:3px}
+.xl{display:flex;gap:6px;overflow:hidden}
+.xl span{flex:1 0 26px;min-width:26px;text-align:center;font-size:11px;color:var(--muted);padding-top:4px;white-space:nowrap}
+
+/* สัดส่วนประเภท */
+.share{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--surface-2);margin:6px 0 14px}
+.trow{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 12px;align-items:center;font-size:14px;padding:7px 0;border-top:1px solid var(--line)}
+.trow:first-of-type{border-top:0}
+.trow i{width:12px;height:12px;border-radius:3px}
+.trow .muted{color:var(--muted);font-size:12.5px}
+
+/* ตาราง */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12.5px;color:var(--muted);font-weight:700;background:var(--surface-2);white-space:nowrap;position:sticky;top:0}
+td.r,th.r{text-align:right}
+tr.zero td{color:var(--muted)}
+.barcell{display:flex;align-items:center;gap:8px;min-width:150px}
+.barcell .b{flex:1;height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.barcell .b span{display:block;height:100%;background:var(--grad-hot);border-radius:99px}
+.barcell em{font-style:normal;font-size:12.5px;font-weight:600;min-width:42px;text-align:right}
+.chip{display:inline-block;font-size:12px;font-weight:600;border-radius:99px;padding:1px 9px;white-space:nowrap}
+.chip.live{background:var(--ok-soft);color:var(--ok)}
+.chip.expired{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.chip.deleted{background:var(--accent-soft);color:var(--accent)}
+.chip.hidden,.chip.scheduled{background:var(--warn-soft);color:var(--warn)}
+.tdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.logbox{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.logtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+
+ol.top{margin:0;padding:0;list-style:none;counter-reset:t}
+ol.top li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);counter-increment:t}
+ol.top li:first-child{border-top:0}
+ol.top li::before{content:counter(t);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--accent-soft);color:var(--accent)}
+ol.top b{display:block;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ol.top small{color:var(--muted);font-size:12px}
+ol.top .v{font-weight:700;font-size:15px;text-align:right}
+ul.ins{margin:0;padding-left:18px}
+ul.ins li{margin:6px 0;font-size:14px}
+.notes{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:8px}
+.notes b{color:var(--text)}
+.notes ul{margin:4px 0 0;padding-left:18px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.gate{max-width:460px;margin:60px auto;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
+.loading{text-align:center;color:var(--muted);padding:60px 0}
+
+@media (max-width:1060px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .grid2{grid-template-columns:1fr} }
+@media (max-width:640px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .kpi .v{font-size:24px}
+  .bar .who,.bar .lbl{display:none}
+  .rhead .asof{text-align:left}
+}
+
+/* ---------- พิมพ์ / บันทึกเป็น PDF ---------- */
+@page{size:A4;margin:12mm}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface-2:#F6F1F1;--text:#1A1112;--muted:#5E5054;--line:#DDD0D2}
+  body{background:#fff;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar,.filters,.no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .kpis{grid-template-columns:repeat(6,1fr);gap:6px}
+  .kpi{padding:8px 10px}.kpi .v{font-size:20px}
+  .grid2{grid-template-columns:1.4fr 1fr;gap:8px}
+  .card{padding:10px 12px;margin-bottom:8px}
+  .logbox{max-height:none;overflow:visible;border:0}
+  th{position:static}
+  table{font-size:10.5px} th,td{padding:4px 6px}
+  .cols{height:150px}
+  .rhead{padding:14px 16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+  <h1>รายงานผลการประชาสัมพันธ์<small>EN-MSU Smart Office</small></h1>
+  <span class="sp"></span>
+  <div class="who" id="who"></div>
+  <a class="btn" href="news-admin.html" id="toAdmin" title="หน้าลงข่าว"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg><span class="lbl">ลงข่าว</span></a>
+  <a class="btn" href="index.html" title="หน้า EN-MSU Smart Office"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lbl">หน้าหลัก</span></a>
+  <button class="btn" id="logout" title="ออกจากระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg><span class="lbl">ออก</span></button>
+</header>
+
+<main class="wrap">
+  <div class="gate" id="gate" hidden>
+    <h2 style="margin-top:0">กรุณาเข้าสู่ระบบ</h2>
+    <p style="color:var(--muted)">รายงานนี้ดูได้เฉพาะบุคลากรที่มีบัญชีในระบบข่าวประชาสัมพันธ์</p>
+    <a class="btn primary" href="news-admin.html?next=dashboard">เข้าสู่ระบบ</a>
+  </div>
+  <div class="loading" id="loading">กำลังรวบรวมข้อมูล…</div>
+
+  <div id="app" hidden>
+    <div class="filters">
+      <label>ช่วงเวลา <select class="in" id="fy"></select></label>
+      <label id="qWrap">ไตรมาส <select class="in" id="q">
+        <option value="0">ทั้งปี</option><option value="1">ไตรมาส 1 (ต.ค.–ธ.ค.)</option><option value="2">ไตรมาส 2 (ม.ค.–มี.ค.)</option>
+        <option value="3">ไตรมาส 3 (เม.ย.–มิ.ย.)</option><option value="4">ไตรมาส 4 (ก.ค.–ก.ย.)</option></select></label>
+      <span id="custom" hidden><input class="in" type="date" id="from"> – <input class="in" type="date" id="to"></span>
+      <label>ฝ่าย <select class="in" id="dept"></select></label>
+      <span class="sp"></span>
+      <button class="btn" id="csv"><svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 18v2h16v-2"/></svg>ส่งออก Excel</button>
+      <button class="btn primary" id="print"><svg class="i" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg>พิมพ์ / บันทึก PDF</button>
+    </div>
+
+    <section id="report">
+      <div class="rhead">
+        <div style="position:relative;z-index:1">
+          <div class="kick">รายงานสรุปผลการประชาสัมพันธ์ผ่านระบบ EN-MSU Smart Office</div>
+          <h2 id="rTitle">ภาพรวมทั้งคณะ</h2>
+          <div class="period" id="rPeriod"></div>
+        </div>
+        <div class="asof">คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม<br>ข้อมูล ณ <span id="asOf"></span></div>
+      </div>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>จำนวนข่าวรายเดือน</h3><p class="sub">นับตามวันที่ลงข่าว แยกตามประเภทสื่อ</p>
+          <div id="monthly"></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="card">
+          <h3>ประเภทสื่อที่ใช้</h3><p class="sub">จำนวนข่าว และยอดเปิดอ่านเฉลี่ยต่อข่าว</p>
+          <div id="types"></div>
+        </div>
+      </div>
+
+      <div class="card" id="deptCard">
+        <h3>ผลการประชาสัมพันธ์รายฝ่าย</h3>
+        <p class="sub">เรียงตามจำนวนข่าว แสดงทุกฝ่ายรวมถึงฝ่ายที่ยังไม่มีข่าวในช่วงนี้</p>
+        <div class="tablewrap"><table id="deptTable"></table></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><h3>ข่าวที่มีผู้เปิดอ่านมากที่สุด</h3><p class="sub">10 อันดับแรกในช่วงเวลาที่เลือก</p><ol class="top" id="top"></ol></div>
+        <div class="card"><h3>ข้อสังเกตจากข้อมูล</h3><p class="sub">สรุปอัตโนมัติจากตัวเลขในรายงานนี้</p><ul class="ins" id="insights"></ul></div>
+      </div>
+
+      <div class="card">
+        <h3 id="logTitle">ทะเบียนข่าว</h3>
+        <p class="sub">รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุ และข่าวที่ถูกนำออก ใช้เป็นหลักฐานอ้างอิงได้</p>
+        <div class="logtools no-print"><input class="in" id="logQ" type="search" placeholder="ค้นหาหัวข้อ ฝ่าย ผู้ลงข่าว" style="flex:1;max-width:360px"></div>
+        <div class="logbox"><table id="log"></table></div>
+      </div>
+
+      <div class="notes" id="notes"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+/* URL ของ Web App — ต้องเป็นค่าเดียวกับ NEWS_API ใน index.html และ news-admin.html */
+const NEWS_API = "https://script.google.com/macros/s/AKfycbw3rvUK2QZAFQgFHyRzPkmQ9Z88lFugDFM-V32Tco7KM_T9hZ_BGT8-6mktL3LY2NueBA/exec";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf = n => Number(n || 0).toLocaleString('th-TH');
+const pct = (a, b) => b ? Math.round(a / b * 1000) / 10 : 0;
+const TYPES = [['image','ภาพข่าว','--c-image'], ['text','ข้อความ','--c-text'], ['video','วิดีโอ','--c-video'], ['pdf','เอกสาร PDF','--c-pdf']];
+const TYPE_NAME = Object.fromEntries(TYPES.map(t => [t[0], t[1]]));
+const STATE = { live:'กำลังแสดง', hidden:'ซ่อนอยู่', scheduled:'รอเริ่มแสดง', expired:'หมดอายุ (จัดเก็บ)', deleted:'นำออกโดยผู้ลงข่าว' };
+const MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const NO_DEPT = 'ไม่ระบุฝ่าย';
+try{ const t = localStorage.getItem('eoffice-theme'); if(t) document.documentElement.dataset.theme = t; }catch(e){}
+let token = null; try{ token = sessionStorage.getItem('eoffice-news-token'); }catch(e){}
+
+/* ---------- วันที่ ---------- */
+const D = s => new Date(s + 'T00:00:00');
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const thLong = s => s ? D(s).toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' }) : '';
+const thShort = s => s ? D(s).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' }) : '';
+const days = (a, b) => Math.round((D(b) - D(a)) / 86400000) + 1;
+const fyOf = s => { const d = D(s); return d.getFullYear() + (d.getMonth() >= 9 ? 1 : 0) + 543; };   // ปีงบประมาณไทย เริ่ม 1 ต.ค.
+function fyRange(fy, q){
+  const y = fy - 543;                     // ปีงบ 2570 = 1 ต.ค. 2026 – 30 ก.ย. 2027
+  let a = new Date(y - 1, 9, 1), b = new Date(y, 8, 30);
+  if(q){ a = new Date(y - 1, 9 + (q - 1) * 3, 1); b = new Date(a.getFullYear(), a.getMonth() + 3, 0); }
+  return [iso(a), iso(b)];
+}
+
+/* ---------- ข้อมูล ---------- */
+let DATA = null, DEPTS = [];
+async function api(action){
+  const r = await fetch(NEWS_API, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify({ action, token }) });
+  const j = await r.json();
+  if(!j.ok){ const e = new Error(j.error || 'เกิดข้อผิดพลาด'); e.code = j.code; throw e; }
+  return j;
+}
+
+/* เตรียมค่าคำนวณของแต่ละข่าว: วันที่ลง วันที่แสดง จำนวนวันที่แสดง */
+function prep(r, today){
+  const posted = (r.created || '').slice(0, 10) || r.start || today;
+  const s = r.start || posted;
+  let e = null;
+  if(r.state === 'live') e = r.end && r.end < today ? r.end : today;
+  else if(r.state === 'expired') e = r.end || (r.archivedAt || '').slice(0, 10);
+  else if(r.state === 'deleted'){ const a = (r.archivedAt || '').slice(0, 10); e = r.end && r.end < a ? r.end : a; }
+  const shown = e && e >= s ? days(s, e) : 0;
+  return Object.assign(r, { posted, shownFrom: s, shownTo: e, shown, dept: r.dept || NO_DEPT, views: Number(r.views) || 0 });
+}
+
+async function init(){
+  if(!token){ $('loading').hidden = true; $('gate').hidden = false; return; }
+  try{
+    const [st, me] = await Promise.all([api('stats'), api('me')]);
+    DATA = st; DATA.records.forEach(r => prep(r, st.today));
+    $('who').innerHTML = `<b>${esc(me.user.name || me.user.email)}</b>${esc(me.user.dept || '')}`;
+    if(me.user.role === 'viewer') $('toAdmin').hidden = true;
+    const seen = [...new Set(DATA.records.map(r => r.dept))];
+    DEPTS = [...new Set((st.departments || []).concat(seen.filter(d => d !== NO_DEPT)).concat(seen.includes(NO_DEPT) ? [NO_DEPT] : []))];
+    setupFilters();
+    $('loading').hidden = true; $('app').hidden = false;
+    render();
+  }catch(err){
+    $('loading').hidden = true;
+    if(err.code === 'AUTH'){ $('gate').hidden = false; return; }
+    $('loading').hidden = false; $('loading').textContent = err.message;
+  }
+}
+
+function setupFilters(){
+  const cur = fyOf(DATA.today);
+  const first = DATA.records.length ? Math.min(...DATA.records.map(r => fyOf(r.posted))) : cur;
+  let html = '';
+  for(let y = cur; y >= Math.min(first, cur); y--){
+    const [a, b] = fyRange(y);
+    html += `<option value="${y}">ปีงบประมาณ ${y}${y === cur ? ' (ปัจจุบัน)' : ''}</option>`;
+  }
+  html += '<option value="all">ข้อมูลทั้งหมด</option><option value="custom">กำหนดช่วงวันที่เอง</option>';
+  $('fy').innerHTML = html;
+  $('dept').innerHTML = '<option value="">ทุกฝ่าย (ภาพรวมคณะ)</option>' + DEPTS.map(d => `<option>${esc(d)}</option>`).join('');
+  const [a, b] = fyRange(cur); $('from').value = a; $('to').value = DATA.today < b ? DATA.today : b;
+  ['fy','q','dept','from','to'].forEach(id => $(id).addEventListener('change', render));
+  $('logQ').addEventListener('input', renderLog);
+}
+
+function period(){
+  const v = $('fy').value;
+  $('qWrap').hidden = v === 'all' || v === 'custom';
+  $('custom').hidden = v !== 'custom';
+  if(v === 'all'){
+    const first = DATA.records.length ? DATA.records.map(r => r.posted).sort()[0] : DATA.today;
+    return { a: first, b: DATA.today, label: `ข้อมูลทั้งหมด (${thLong(first)} – ${thLong(DATA.today)})` };
+  }
+  if(v === 'custom'){
+    const a = $('from').value || DATA.today, b = $('to').value || DATA.today;
+    return { a: a < b ? a : b, b: a < b ? b : a, label: `ระหว่างวันที่ ${thLong(a < b ? a : b)} – ${thLong(a < b ? b : a)}` };
+  }
+  const q = +$('q').value, [a, b] = fyRange(+v, q);
+  return { a, b, label: `ปีงบประมาณ ${v}${q ? ` ไตรมาสที่ ${q}` : ''} (${thLong(a)} – ${thLong(b)})` };
+}
+
+/* ---------- แสดงผล ---------- */
+let ROWS = [];
+function render(){
+  const P = period(), dept = $('dept').value;
+  ROWS = DATA.records.filter(r => r.posted >= P.a && r.posted <= P.b && (!dept || r.dept === dept))
+                     .sort((x, y) => (y.created || y.posted).localeCompare(x.created || x.posted));
+  $('rTitle').textContent = dept ? dept : 'ภาพรวมทั้งคณะ';
+  $('rPeriod').textContent = P.label;
+  $('asOf').textContent = thLong(DATA.today) + ' ' + (DATA.generated || '').slice(11, 16) + ' น.';
+  renderKpis(P, dept); renderMonthly(P); renderTypes(); renderDepts(dept); renderTop(); renderInsights(P, dept); renderLog(); renderNotes();
+}
+
+function renderKpis(P, dept){
+  const n = ROWS.length, live = ROWS.filter(r => r.state === 'live').length;
+  const views = ROWS.reduce((s, r) => s + r.views, 0);
+  const shownRows = ROWS.filter(r => r.shown > 0);
+  const avgDays = shownRows.length ? shownRows.reduce((s, r) => s + r.shown, 0) / shownRows.length : 0;
+  const deptsActive = new Set(ROWS.filter(r => r.dept !== NO_DEPT).map(r => r.dept)).size;
+  const deptsAll = DEPTS.filter(d => d !== NO_DEPT).length;
+  const authors = new Set(ROWS.map(r => r.author)).size;
+  const K = [
+    ['ข่าวทั้งหมด', nf(n), 'เรื่อง', 'ลงในช่วงเวลาที่เลือก', 'var(--accent)'],
+    ['กำลังแสดงอยู่', nf(live), 'เรื่อง', 'บนหน้าหลักขณะนี้', 'var(--ok)'],
+    dept ? ['ผู้ลงข่าวของฝ่าย', nf(authors), 'คน', 'มีส่วนร่วมลงข่าว', '#7C3AED']
+         : ['ฝ่ายที่ประชาสัมพันธ์', nf(deptsActive), `/ ${deptsAll}`, `คิดเป็น ${pct(deptsActive, deptsAll)}% ของทุกฝ่าย`, '#7C3AED'],
+    ['ยอดเปิดอ่านรวม', nf(views), 'ครั้ง', n ? `เฉลี่ย ${(views / n).toFixed(1)} ครั้งต่อข่าว` : '-', 'var(--c-video)'],
+    ['ระยะเวลาแสดงเฉลี่ย', avgDays ? avgDays.toFixed(1) : '0', 'วัน', 'ต่อข่าว', 'var(--c-text)'],
+    ['ข่าวมัลติมีเดีย', nf(ROWS.filter(r => r.type === 'video' || r.type === 'pdf').length), 'เรื่อง',
+      `วิดีโอ/PDF ${pct(ROWS.filter(r => r.type === 'video' || r.type === 'pdf').length, n)}%`, 'var(--c-pdf)']
+  ];
+  $('kpis').innerHTML = K.map(([l, v, u, s, c]) => `<div class="kpi" style="--k:${c}"><div class="l">${l}</div>
+    <div class="v num">${v}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+}
+
+function renderMonthly(P){
+  const months = [];
+  let d = new Date(D(P.a).getFullYear(), D(P.a).getMonth(), 1);
+  const end = D(P.b);   // ปีงบประมาณ: แสดงครบ 12 เดือน (เดือนที่ยังไม่ถึงเป็นช่องว่าง)
+  while(d <= end){ months.push(iso(d).slice(0, 7)); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); }
+  if(!months.length) months.push(DATA.today.slice(0, 7));
+  const show = months.slice(-36);
+  const cnt = show.map(m => { const o = { total:0 }; TYPES.forEach(t => o[t[0]] = 0);
+    ROWS.forEach(r => { if(r.posted.slice(0, 7) === m){ o.total++; o[r.type] = (o[r.type] || 0) + 1; } }); return o; });
+  const max = Math.max(1, ...cnt.map(c => c.total));
+  $('monthly').innerHTML = `<div class="cols">${cnt.map((c, i) => `<div class="col" title="${monthName(show[i])}: ${c.total} เรื่อง">
+      <span class="val num">${c.total || ''}</span>
+      <div class="stack" style="height:${c.total / max * 88}%">${TYPES.map(t => c[t[0]] ? `<span style="height:${c[t[0]] / c.total * 100}%;background:var(${t[2]})"></span>` : '').join('')}</div>
+    </div>`).join('')}</div>
+    <div class="xl">${show.map(m => `<span>${monthShort(m)}</span>`).join('')}</div>`;
+  $('legend').innerHTML = TYPES.map(t => `<span><i style="background:var(${t[2]})"></i>${t[1]}</span>`).join('');
+}
+const monthShort = m => `${MON[+m.slice(5, 7) - 1]} ${String(+m.slice(0, 4) + 543).slice(2)}`;
+const monthName = m => `${MON[+m.slice(5, 7) - 1]} ${+m.slice(0, 4) + 543}`;
+
+function renderTypes(){
+  const n = ROWS.length;
+  const T = TYPES.map(t => { const rs = ROWS.filter(r => r.type === t[0]);
+    return { t, c: rs.length, v: rs.reduce((s, r) => s + r.views, 0) }; });
+  $('types').innerHTML = !n ? '<div class="empty">ไม่มีข่าวในช่วงนี้</div>' :
+    `<div class="share">${T.filter(x => x.c).map(x => `<span style="width:${x.c / n * 100}%;background:var(${x.t[2]})" title="${x.t[1]} ${x.c}"></span>`).join('')}</div>` +
+    T.map(x => `<div class="trow"><i style="background:var(${x.t[2]})"></i><span>${x.t[1]}</span>
+      <span class="num"><b>${nf(x.c)}</b> เรื่อง <span class="muted">(${pct(x.c, n)}%)</span></span>
+      <span class="muted num">${x.c ? (x.v / x.c).toFixed(1) : '0'} ครั้ง/ข่าว</span></div>`).join('');
+}
+
+function deptStats(){
+  const n = ROWS.length;
+  const list = ($('dept').value ? [$('dept').value] : DEPTS).map(d => {
+    const rs = ROWS.filter(r => r.dept === d);
+    const o = { d, c: rs.length, p: pct(rs.length, n), views: rs.reduce((s, r) => s + r.views, 0), shown: rs.reduce((s, r) => s + r.shown, 0),
+                last: rs.length ? rs[0].posted : '', live: rs.filter(r => r.state === 'live').length };
+    TYPES.forEach(t => o[t[0]] = rs.filter(r => r.type === t[0]).length);
+    return o;
+  });
+  return list.filter(o => o.c || o.d !== NO_DEPT).sort((a, b) => b.c - a.c || b.views - a.views || a.d.localeCompare(b.d, 'th'));
+}
+function renderDepts(dept){
+  const L = deptStats(), maxP = Math.max(1, ...L.map(o => o.p));
+  $('deptTable').innerHTML = `<thead><tr><th>#</th><th>ฝ่าย / หน่วยงาน</th><th class="r">จำนวนข่าว</th><th>สัดส่วนของทั้งคณะ</th>
+      ${TYPES.map(t => `<th class="r"><span class="tdot" style="background:var(${t[2]})"></span>${t[1]}</th>`).join('')}
+      <th class="r">กำลังแสดง</th><th class="r">วันแสดงรวม</th><th class="r">ยอดเปิดอ่าน</th><th>ข่าวล่าสุด</th></tr></thead>
+    <tbody>${L.map((o, i) => `<tr class="${o.c ? '' : 'zero'}"><td class="num">${o.c ? i + 1 : '–'}</td><td><b>${esc(o.d)}</b></td>
+      <td class="r num"><b>${nf(o.c)}</b></td>
+      <td><div class="barcell"><span class="b"><span style="width:${o.p / maxP * 100}%"></span></span><em class="num">${o.p}%</em></div></td>
+      ${TYPES.map(t => `<td class="r num">${o[t[0]] || '·'}</td>`).join('')}
+      <td class="r num">${o.live || '·'}</td><td class="r num">${nf(o.shown)}</td><td class="r num">${nf(o.views)}</td>
+      <td>${o.last ? thShort(o.last) : '<span style="color:var(--muted)">ยังไม่มีข่าว</span>'}</td></tr>`).join('')}</tbody>`;
+}
+
+function renderTop(){
+  const T = ROWS.filter(r => r.views > 0).sort((a, b) => b.views - a.views).slice(0, 10);
+  $('top').innerHTML = T.length ? T.map(r => `<li><div style="min-width:0"><b title="${esc(r.title)}">${esc(r.title)}</b>
+      <small>${esc(r.dept)} · ${TYPE_NAME[r.type] || ''} · ${thShort(r.posted)}</small></div><span class="v num">${nf(r.views)}</span></li>`).join('')
+    : '<div class="empty">ยังไม่มียอดเปิดอ่านในช่วงนี้</div>';
+}
+
+function renderInsights(P, dept){
+  const I = [], n = ROWS.length;
+  if(!n){ $('insights').innerHTML = '<li>ยังไม่มีข่าวในช่วงเวลาที่เลือก</li>'; return; }
+  const L = deptStats().filter(o => o.c);
+  if(!dept && L.length){
+    I.push(`ฝ่ายที่ประชาสัมพันธ์มากที่สุดคือ <b>${esc(L[0].d)}</b> จำนวน ${nf(L[0].c)} เรื่อง (${L[0].p}% ของทั้งคณะ)`);
+    const zero = DEPTS.filter(d => d !== NO_DEPT && !ROWS.some(r => r.dept === d));
+    if(zero.length) I.push(`ฝ่ายที่ยังไม่มีข่าวในช่วงนี้ ${zero.length} ฝ่าย: ${zero.map(esc).join(', ')}`);
+    if(L.length >= 3){ const top3 = L.slice(0, 3).reduce((s, o) => s + o.c, 0);
+      I.push(`3 ฝ่ายแรกลงข่าวรวมกัน ${pct(top3, n)}% ของทั้งหมด${pct(top3, n) >= 70 ? ' แสดงว่าการประชาสัมพันธ์ยังกระจุกอยู่ไม่กี่ฝ่าย' : ''}`); }
+  }
+  const mc = {}; ROWS.forEach(r => mc[r.posted.slice(0, 7)] = (mc[r.posted.slice(0, 7)] || 0) + 1);
+  const best = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
+  if(best) I.push(`เดือนที่มีข่าวมากที่สุดคือ ${monthName(best[0])} (${nf(best[1])} เรื่อง)`);
+  const avg = t => { const rs = ROWS.filter(r => r.type === t); return rs.length ? rs.reduce((s, r) => s + r.views, 0) / rs.length : null; };
+  const vImg = avg('image'), vVid = avg('video');
+  if(vImg && vVid) I.push(`ข่าววิดีโอมียอดเปิดอ่านเฉลี่ย ${vVid.toFixed(1)} ครั้ง/ข่าว เทียบกับภาพข่าว ${vImg.toFixed(1)} ครั้ง/ข่าว`);
+  const noEnd = ROWS.filter(r => r.state === 'live' && !r.end).length;
+  if(noEnd) I.push(`ข่าวที่กำลังแสดงแต่ไม่ได้กำหนดวันสิ้นสุด ${nf(noEnd)} เรื่อง แนะนำให้กำหนด เพื่อให้ระบบจัดเก็บเข้าคลังอัตโนมัติ`);
+  const del = ROWS.filter(r => r.state === 'deleted').length;
+  if(del) I.push(`ข่าวที่ผู้ลงข่าวนำออกเอง ${nf(del)} เรื่อง (ยังนับในรายงานนี้)`);
+  $('insights').innerHTML = I.map(x => `<li>${x}</li>`).join('');
+}
+
+function logRows(){
+  const q = $('logQ').value.trim().toLowerCase();
+  return ROWS.filter(r => !q || [r.title, r.dept, r.authorName, r.author].join(' ').toLowerCase().includes(q));
+}
+function renderLog(){
+  const L = logRows();
+  $('logTitle').textContent = `ทะเบียนข่าว (${nf(L.length)} รายการ)`;
+  $('log').innerHTML = `<thead><tr><th>วันที่ลง</th><th>หัวข้อข่าว</th><th>ฝ่าย</th><th>ประเภท</th><th>ผู้ลงข่าว</th>
+      <th>ช่วงที่แสดง</th><th class="r">วัน</th><th class="r">เปิดอ่าน</th><th>สถานะ</th></tr></thead>
+    <tbody>${L.length ? L.map(r => `<tr><td class="num" style="white-space:nowrap">${thShort(r.posted)}</td><td>${esc(r.title)}${r.files ? ` <span style="color:var(--muted)">📎${r.files}</span>` : ''}</td>
+      <td>${esc(r.dept)}</td><td style="white-space:nowrap"><span class="tdot" style="background:var(${(TYPES.find(t => t[0] === r.type) || TYPES[0])[2]})"></span>${TYPE_NAME[r.type] || r.type}</td>
+      <td>${esc(r.authorName || r.author)}</td>
+      <td class="num" style="white-space:nowrap">${r.shown ? `${thShort(r.shownFrom)} – ${r.state === 'live' && !r.end ? 'ปัจจุบัน' : thShort(r.shownTo)}` : '–'}</td>
+      <td class="r num">${r.shown || '–'}</td><td class="r num">${nf(r.views)}</td>
+      <td><span class="chip ${r.state}">${STATE[r.state] || r.state}</span></td></tr>`).join('')
+      : '<tr><td colspan="9" class="empty">ไม่มีข้อมูล</td></tr>'}</tbody>`;
+}
+
+function renderNotes(){
+  $('notes').innerHTML = `<b>นิยามตัวชี้วัด</b><ul>
+    <li><b>ข่าวทั้งหมด</b> นับตามวันที่ลงข่าว รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุแล้ว (ระบบย้ายเข้าคลังอัตโนมัติ) และข่าวที่ผู้ลงข่าวนำออก ไม่รวมข่าวที่ผู้ดูแลลบถาวรเพราะลงผิดหรือซ้ำ</li>
+    <li><b>ยอดเปิดอ่าน</b> จำนวนครั้งที่ผู้ชมกดเปิดข่าวหรือกดเล่นวิดีโอบนหน้า EN-MSU Smart Office นับไม่เกิน 1 ครั้งต่อเครื่องต่อข่าวต่อวัน ไม่เก็บข้อมูลส่วนบุคคล
+      ${DATA.statsSince ? `เริ่มเก็บตั้งแต่ ${thLong(DATA.statsSince)}` : ''}</li>
+    <li><b>วันแสดง</b> นับจากวันเริ่มแสดงถึงวันสิ้นสุด หรือถึงวันที่นำออก ข่าวที่ซ่อนอยู่หรือยังไม่ถึงวันเริ่มแสดงนับเป็น 0</li>
+    <li><b>ปีงบประมาณ</b> นับตั้งแต่ 1 ตุลาคม ถึง 30 กันยายนของปีถัดไป</li>
+    <li>แหล่งข้อมูล: ฐานข้อมูลระบบข่าวประชาสัมพันธ์ EN-MSU Smart Office คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</li></ul>`;
+}
+
+/* ---------- ส่งออก / พิมพ์ ---------- */
+$('csv').onclick = () => {
+  const head = ['วันที่ลงข่าว','หัวข้อข่าว','ฝ่าย','ประเภท','ผู้ลงข่าว','อีเมลผู้ลงข่าว','วันเริ่มแสดง','วันสิ้นสุดการแสดง','จำนวนวันที่แสดง','ยอดเปิดอ่าน','ไฟล์แนบ','สถานะ'];
+  const rows = logRows().map(r => [r.posted, r.title, r.dept, TYPE_NAME[r.type] || r.type, r.authorName, r.author,
+    r.shown ? r.shownFrom : '', r.shown ? (r.state === 'live' && !r.end ? '' : r.shownTo) : '', r.shown, r.views, r.files, STATE[r.state] || r.state]);
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csv = '\uFEFF' + [head].concat(rows).map(r => r.map(q).join(',')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv;charset=utf-8' }));
+  a.download = `รายงานประชาสัมพันธ์_${$('fy').value}_${DATA.today}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+};
+$('print').onclick = () => window.print();
+$('logout').onclick = async () => {
+  try{ await api('logout'); }catch(e){}
+  try{ sessionStorage.removeItem('eoffice-news-token'); }catch(e){}
+  location.href = 'news-admin.html';
+};
+
+init();
+</script>
+</body>
+</html>
