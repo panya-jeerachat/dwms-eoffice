@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="light">
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,22 +10,29 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --red-1:#E0243A; --red-2:#B3122E; --red-3:#6E0B22; --red-4:#3A0714; --coral:#FF6B5A; --gold:#F2B705;
-  --grad-hot:linear-gradient(120deg,var(--coral),var(--red-1) 40%,var(--red-2) 70%,var(--red-3));
-  --grad-rail:linear-gradient(165deg,var(--red-2) 0%,var(--red-3) 45%,var(--red-4) 100%);
-  --bg:#F5EFEF; --surface:#FFFFFF; --surface-2:#FBF7F7; --text:#2A1B1D; --muted:#76666A; --line:#EADADC;
-  --accent:#B3122E; --accent-soft:#FBE7EA; --ok:#0F7A4C; --ok-soft:#E3F6EC; --warn:#9A5B00; --warn-soft:#FFF3D6;
-  /* สีประเภทสื่อ */
-  --c-image:#E0243A; --c-text:#F2A505; --c-video:#2563EB; --c-pdf:#0F766E;
+  --bg:#F6F3F8; --surface:rgba(255,255,255,.82); --solid:#FFFFFF; --surface-2:#F4EFF5; --text:#21151C; --muted:#6F6370; --line:rgba(80,40,70,.12);
+  --red:#E0243A; --wine:#7A0D2A; --gold:#F5B400; --blue:#2F6BFF; --teal:#0EA5A4; --violet:#7C4DFF; --green:#10B981; --pink:#EC4899; --orange:#F97316;
+  --c-image:#E0243A; --c-text:#F5A300; --c-video:#2F6BFF; --c-pdf:#0EA5A4;
+  --g-red:linear-gradient(135deg,#FF7A59,#E0243A 55%,#9B0F33);
+  --g-green:linear-gradient(135deg,#34E3A5,#10B981 50%,#047857);
+  --g-violet:linear-gradient(135deg,#B18CFF,#7C4DFF 50%,#4C1D95);
+  --g-blue:linear-gradient(135deg,#6FB1FF,#2F6BFF 50%,#1E3A8A);
+  --g-gold:linear-gradient(135deg,#FFD66B,#F59E0B 55%,#B45309);
+  --g-teal:linear-gradient(135deg,#5EEAD4,#0EA5A4 50%,#115E59);
+  --shadow:0 10px 30px rgba(60,10,40,.08);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#120D14; --surface:rgba(32,22,34,.78); --solid:#1E1520; --surface-2:#2A1E2C; --text:#F6ECF3; --muted:#B4A3B2; --line:rgba(255,255,255,.1);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}}
 :root[data-theme="dark"]{
-  --bg:#1A1314; --surface:#251B1D; --surface-2:#2C2124; --text:#F5EAEB; --muted:#B39FA3; --line:#3D2B2F;
-  --accent:#FF6B7C; --accent-soft:#3F1B22; --ok:#5BD69B; --ok-soft:#173326; --warn:#F5C35B; --warn-soft:#3A2D12;
+  --bg:#120D14; --surface:rgba(32,22,34,.78); --solid:#1E1520; --surface-2:#2A1E2C; --text:#F6ECF3; --muted:#B4A3B2; --line:rgba(255,255,255,.1);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
   font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -33,151 +40,232 @@ button{cursor:pointer}
 svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .num{font-variant-numeric:tabular-nums}
 
-.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:11px;
-  padding:8px 14px;font-weight:500;text-decoration:none;color:inherit;font-size:14px}
-.btn:hover{background:var(--surface-2)}
-.btn.primary{border:0;color:#fff;background:var(--grad-hot);font-weight:600}
-.in{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;outline:none}
-.in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+/* พื้นหลังสีเคลื่อนไหว */
+.mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.mesh span{position:absolute;width:52vmax;height:52vmax;border-radius:50%;filter:blur(80px);opacity:.30;animation:drift 28s ease-in-out infinite alternate}
+.mesh span:nth-child(1){background:#FF4D6D;left:-12vmax;top:-18vmax}
+.mesh span:nth-child(2){background:#FFC23D;right:-16vmax;top:-10vmax;animation-delay:-7s}
+.mesh span:nth-child(3){background:#4F7CFF;left:20vmax;bottom:-26vmax;animation-delay:-14s}
+.mesh span:nth-child(4){background:#22D3B6;right:-10vmax;bottom:-20vmax;animation-delay:-21s;opacity:.22}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
 
-.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,32px);
-  padding-top:calc(10px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));background:var(--grad-rail);color:#fff}
-.bar .mark{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.14)}
-.bar h1{margin:0;font-size:16px;line-height:1.25;font-weight:600}
-.bar h1 small{display:block;font-size:12px;font-weight:400;opacity:.75}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--solid);border-radius:12px;
+  padding:8px 14px;font-weight:600;text-decoration:none;color:inherit;font-size:14px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.primary{border:0;color:#fff;background:var(--g-red)}
+.in{border:1px solid var(--line);background:var(--solid);border-radius:11px;padding:8px 10px;outline:none}
+.in:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(224,36,58,.15)}
+
+.bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,32px);
+  padding-top:calc(10px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px));color:#fff;
+  background:linear-gradient(110deg,#9B0F33,#E0243A,#7C4DFF,#2F6BFF,#9B0F33);background-size:300% 100%;animation:flow 24s linear infinite}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:#9B0F33}
+@keyframes flow{to{background-position:300% 0}}
+.bar .mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.18)}
+.bar h1{margin:0;font-size:16px;line-height:1.25;font-weight:700}
+.bar h1 small{display:block;font-size:12px;font-weight:400;opacity:.8}
 .bar .sp{flex:1}
 .bar .who{font-size:13px;text-align:right;line-height:1.3}
 .bar .who b{display:block;font-size:14px}
-.bar .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff;padding:6px 11px}
-.bar .btn:hover{background:rgba(255,255,255,.22)}
+.bar .btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff;padding:6px 11px}
+.bar .btn:hover{background:rgba(255,255,255,.26);box-shadow:none}
 
-.wrap{max-width:1240px;margin:0 auto;padding:18px clamp(14px,3vw,32px) 60px}
-.filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:18px;background:var(--surface);border:1px solid var(--line);
-  border-radius:14px;padding:10px 12px}
+.wrap{max-width:1280px;margin:0 auto;padding:18px clamp(14px,3vw,32px) 60px}
+.glass{background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:var(--shadow)}
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:18px;border-radius:16px;padding:10px 12px}
 .filters label{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
 .filters .sp{flex:1}
 
 /* หัวรายงาน */
 .rhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px;
-  padding:22px 24px;border-radius:18px;color:#fff;background:var(--grad-hot);position:relative;overflow:hidden}
-.rhead::after{content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+  padding:24px 26px;border-radius:22px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#FF7A59,#E0243A 35%,#9B0F33 60%,#4C1D95);box-shadow:0 18px 40px rgba(155,15,51,.25)}
+.rhead::after{content:"";position:absolute;inset:0;opacity:.2;pointer-events:none;
   background-image:radial-gradient(rgba(255,255,255,.9) 1.3px,transparent 1.5px);background-size:16px 16px;
   -webkit-mask-image:linear-gradient(100deg,transparent 45%,#000);mask-image:linear-gradient(100deg,transparent 45%,#000)}
-.rhead .kick{font-size:13px;opacity:.9;font-weight:600;letter-spacing:.02em}
-.rhead h2{margin:2px 0 4px;font-size:clamp(22px,3vw,30px);line-height:1.25}
+.rhead .kick{font-size:13px;opacity:.92;font-weight:600}
+.rhead h2{margin:2px 0 4px;font-size:clamp(24px,3.2vw,34px);line-height:1.2}
 .rhead .period{font-size:15px;font-weight:500}
 .rhead .asof{text-align:right;font-size:13px;opacity:.92;position:relative;z-index:1}
 
-/* KPI */
+/* KPI การ์ดสีเต็ม */
 .kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
-.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k,var(--accent))}
-.kpi .l{font-size:12.5px;color:var(--muted);font-weight:600}
-.kpi .v{font-size:30px;font-weight:700;line-height:1.15;margin-top:4px}
-.kpi .v small{font-size:14px;font-weight:600;color:var(--muted);margin-left:4px}
-.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi{border:0;text-align:left;color:#fff;border-radius:18px;padding:14px 16px 12px;position:relative;overflow:hidden;
+  background:var(--g);box-shadow:0 12px 26px -10px var(--sh);transition:transform .2s,box-shadow .2s}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 18px 32px -10px var(--sh)}
+.kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.14)}
+.kpi .ic{position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.2)}
+.kpi .l{font-size:12.5px;font-weight:600;opacity:.95;padding-right:34px}
+.kpi .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:6px}
+.kpi .v small{font-size:14px;font-weight:600;opacity:.9;margin-left:4px}
+.kpi .s{font-size:12px;opacity:.92;margin-top:2px}
+.kpi .more{font-size:11.5px;opacity:.85;margin-top:6px;font-weight:600}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px;break-inside:avoid}
-.card h3{margin:0 0 2px;font-size:16px}
+.card{border-radius:20px;padding:16px 18px;margin-bottom:16px;break-inside:avoid}
+.card h3{margin:0 0 2px;font-size:16.5px;display:flex;align-items:center;gap:8px}
+.card h3 .dot{width:10px;height:10px;border-radius:4px;background:var(--g-red)}
 .card .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
 .grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
-.grid2 > .card{margin-bottom:16px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:10px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 
 /* กราฟรายเดือน */
-.cols{display:flex;align-items:flex-end;gap:6px;height:210px;padding-top:18px;border-bottom:1px solid var(--line);overflow-x:auto}
-.col{flex:1 0 26px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:26px}
-.col .stack{width:min(34px,80%);display:flex;flex-direction:column-reverse;border-radius:6px 6px 0 0;overflow:hidden}
+.cols{display:flex;align-items:flex-end;gap:6px;height:220px;padding-top:20px;border-bottom:1px solid var(--line);overflow-x:auto}
+.col{flex:1 0 26px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:26px;border:0;background:none;padding:0;border-radius:8px}
+.col:hover{background:var(--surface-2)}
+.col .stack{width:min(34px,78%);display:flex;flex-direction:column-reverse;border-radius:8px 8px 3px 3px;overflow:hidden;height:0;transition:height .9s cubic-bezier(.2,.8,.2,1)}
 .col .stack span{display:block}
 .col .val{font-size:11.5px;font-weight:700;margin-bottom:3px}
 .xl{display:flex;gap:6px;overflow:hidden}
 .xl span{flex:1 0 26px;min-width:26px;text-align:center;font-size:11px;color:var(--muted);padding-top:4px;white-space:nowrap}
 
-/* สัดส่วนประเภท */
-.share{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--surface-2);margin:6px 0 14px}
-.trow{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 12px;align-items:center;font-size:14px;padding:7px 0;border-top:1px solid var(--line)}
-.trow:first-of-type{border-top:0}
-.trow i{width:12px;height:12px;border-radius:3px}
-.trow .muted{color:var(--muted);font-size:12.5px}
+/* ประเภทสื่อ */
+.share{display:flex;height:18px;border-radius:99px;overflow:hidden;background:var(--surface-2);margin:6px 0 12px}
+.share span{transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.trow{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 12px;align-items:center;font-size:14px;padding:8px 6px;border-top:1px solid var(--line);
+  border-radius:10px;width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.trow:hover{background:var(--surface-2)}
+.trow i{width:12px;height:12px;border-radius:4px}
+.muted{color:var(--muted);font-size:12.5px}
 
-/* ตาราง */
+/* รายฝ่าย */
+.deptwrap{display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:start}
+.donut{position:relative;width:210px;height:210px;margin:6px auto}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut circle{transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)}
+.donut .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.donut .c b{display:block;font-size:30px;line-height:1}
+.donut .c span{font-size:12px;color:var(--muted)}
 .tablewrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
-th{font-size:12.5px;color:var(--muted);font-weight:700;background:var(--surface-2);white-space:nowrap;position:sticky;top:0}
+th{font-size:12.5px;color:var(--muted);font-weight:700;white-space:nowrap;background:var(--surface-2);position:sticky;top:0;z-index:1}
 td.r,th.r{text-align:right}
+tbody tr.click{cursor:pointer;transition:background .15s}
+tbody tr.click:hover{background:var(--surface-2)}
 tr.zero td{color:var(--muted)}
+.dname{display:flex;align-items:center;gap:9px;font-weight:600;white-space:nowrap}
+.tmix{display:flex;width:120px;height:9px;border-radius:99px;overflow:hidden;gap:2px}
+.tmix span{display:block;border-radius:2px}
+.tmix-l{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap}
+.dname i{width:12px;height:12px;border-radius:4px;flex:none;background:var(--dc)}
 .barcell{display:flex;align-items:center;gap:8px;min-width:150px}
 .barcell .b{flex:1;height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
-.barcell .b span{display:block;height:100%;background:var(--grad-hot);border-radius:99px}
-.barcell em{font-style:normal;font-size:12.5px;font-weight:600;min-width:42px;text-align:right}
+.barcell .b span{display:block;height:100%;border-radius:99px;background:var(--dc);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.barcell em{font-style:normal;font-size:12.5px;font-weight:700;min-width:44px;text-align:right}
+.people{display:inline-flex;align-items:center;gap:4px;font-weight:600}
 .chip{display:inline-block;font-size:12px;font-weight:600;border-radius:99px;padding:1px 9px;white-space:nowrap}
-.chip.live{background:var(--ok-soft);color:var(--ok)}
-.chip.expired{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
-.chip.deleted{background:var(--accent-soft);color:var(--accent)}
-.chip.hidden,.chip.scheduled{background:var(--warn-soft);color:var(--warn)}
+.chip.live{background:rgba(16,185,129,.14);color:#0B8A61}
+.chip.expired{background:var(--surface-2);color:var(--muted)}
+.chip.deleted{background:rgba(224,36,58,.12);color:#C21431}
+.chip.hidden,.chip.scheduled{background:rgba(245,180,0,.16);color:#9A6200}
 .tdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.logbox{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.logbox{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--solid)}
 .logtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 
 ol.top{margin:0;padding:0;list-style:none;counter-reset:t}
-ol.top li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);counter-increment:t}
-ol.top li:first-child{border-top:0}
-ol.top li::before{content:counter(t);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--accent-soft);color:var(--accent)}
+ol.top li{counter-increment:t}
+ol.top button{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 6px;border:0;border-top:1px solid var(--line);background:none;text-align:left;border-radius:10px}
+ol.top li:first-child button{border-top:0}
+ol.top button:hover{background:var(--surface-2)}
+ol.top button::before{content:counter(t);width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;background:var(--g-red)}
+ol.top li:nth-child(2) button::before{background:var(--g-gold)}
+ol.top li:nth-child(3) button::before{background:var(--g-blue)}
 ol.top b{display:block;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 ol.top small{color:var(--muted);font-size:12px}
 ol.top .v{font-weight:700;font-size:15px;text-align:right}
-ul.ins{margin:0;padding-left:18px}
-ul.ins li{margin:6px 0;font-size:14px}
+ul.ins{margin:0;padding:0;list-style:none}
+ul.ins li{margin:0 0 8px;font-size:14px;padding:9px 12px 9px 40px;border-radius:12px;background:var(--surface-2);position:relative}
+ul.ins li::before{content:"";position:absolute;left:14px;top:14px;width:12px;height:12px;border-radius:4px;background:var(--ic,var(--red))}
 .notes{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:8px}
 .notes b{color:var(--text)}
 .notes ul{margin:4px 0 0;padding-left:18px}
-.empty{text-align:center;color:var(--muted);padding:30px 10px}
-.gate{max-width:460px;margin:60px auto;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
-.loading{text-align:center;color:var(--muted);padding:60px 0}
+.empty{text-align:center;color:var(--muted);padding:26px 10px}
+.gate{max-width:460px;margin:60px auto;text-align:center;border-radius:20px;padding:28px}
+.loading{text-align:center;color:var(--muted);padding:80px 0}
+.flowcta{display:flex;align-items:center;gap:16px;border-radius:20px;padding:16px 20px;margin-bottom:16px;color:#fff;text-decoration:none;
+  background:linear-gradient(110deg,#1E1B4B,#4C1D95 45%,#9B0F33);box-shadow:0 14px 30px -12px rgba(76,29,149,.6)}
+.flowcta .orb{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.14);flex:none}
+.flowcta b{display:block;font-size:16px}
+.flowcta span{font-size:13px;opacity:.85}
+.flowcta .go{margin-left:auto;font-weight:700;white-space:nowrap}
 
-@media (max-width:1060px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .grid2{grid-template-columns:1fr} }
+/* หน้าต่างรายละเอียด */
+dialog.pop{border:0;padding:0;border-radius:22px;width:min(860px,94vw);max-height:90vh;background:var(--solid);color:var(--text);
+  box-shadow:0 30px 80px rgba(20,0,20,.45);overflow:hidden}
+dialog.pop[open]{display:flex;flex-direction:column;animation:popIn .28s cubic-bezier(.2,.9,.3,1.2)}
+dialog.pop::backdrop{background:rgba(20,6,24,.55);backdrop-filter:blur(3px)}
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.97)}}
+.pop-h{position:relative;padding:20px 22px 18px;color:#fff;background:var(--pg,var(--g-red))}
+.pop-h small{font-size:12.5px;opacity:.9;font-weight:600}
+.pop-h h3{margin:2px 40px 0 0;font-size:21px;line-height:1.3}
+.pop-x{position:absolute;right:14px;top:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center}
+.pop-b{padding:16px 22px 22px;overflow:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:14px}
+.stats div{background:var(--surface-2);border-radius:12px;padding:9px 12px}
+.stats span{display:block;font-size:12px;color:var(--muted)}
+.stats b{font-size:20px}
+.pop-b h4{margin:16px 0 8px;font-size:14px}
+.plist{display:grid;gap:6px}
+.prow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:none;text-align:left;width:100%}
+button.prow:hover{border-color:var(--red)}
+.prow b{display:block;font-size:14px;line-height:1.35}
+.prow small{color:var(--muted);font-size:12px}
+.prow .v{text-align:right;font-weight:700}
+.person{display:flex;align-items:center;gap:10px}
+.av{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex:none;background:var(--dc,var(--g-violet))}
+.mini{display:flex;align-items:flex-end;gap:3px;height:70px;border-bottom:1px solid var(--line)}
+.mini span{flex:1;background:var(--dc,var(--red));border-radius:4px 4px 0 0;min-height:2px;opacity:.9}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:500}
+
+@media (max-width:1100px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} .grid2{grid-template-columns:1fr} .deptwrap{grid-template-columns:1fr} }
 @media (max-width:640px){
-  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .kpi .v{font-size:24px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .kpi .v{font-size:26px}
   .bar .who,.bar .lbl{display:none}
   .rhead .asof{text-align:left}
+  .kv{grid-template-columns:1fr}
 }
 
 /* ---------- พิมพ์ / บันทึกเป็น PDF ---------- */
-@page{size:A4;margin:12mm}
+@page{size:A4;margin:11mm}
 @media print{
-  :root{--bg:#fff;--surface:#fff;--surface-2:#F6F1F1;--text:#1A1112;--muted:#5E5054;--line:#DDD0D2}
-  body{background:#fff;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .bar,.filters,.no-print{display:none!important}
+  :root{--bg:#fff;--surface:#fff;--solid:#fff;--surface-2:#F5F1F4;--text:#1A1218;--muted:#5E5260;--line:#DCD2DA;--shadow:none}
+  body{background:#fff;font-size:11.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mesh,.bar,.filters,.no-print,.flowcta,.kpi .more{display:none!important}
+  .glass{backdrop-filter:none;box-shadow:none}
   .wrap{max-width:none;padding:0}
   .kpis{grid-template-columns:repeat(6,1fr);gap:6px}
-  .kpi{padding:8px 10px}.kpi .v{font-size:20px}
+  .kpi{padding:8px 10px;box-shadow:none}.kpi .v{font-size:20px}
   .grid2{grid-template-columns:1.4fr 1fr;gap:8px}
+  .deptwrap{grid-template-columns:150px 1fr}.donut{width:140px;height:140px}
   .card{padding:10px 12px;margin-bottom:8px}
   .logbox{max-height:none;overflow:visible;border:0}
-  th{position:static}
-  table{font-size:10.5px} th,td{padding:4px 6px}
+  th{position:static} table{font-size:10px} th,td{padding:4px 6px}
   .cols{height:150px}
-  .rhead{padding:14px 16px}
+  .rhead{padding:14px 16px;box-shadow:none}
+  *{animation:none!important;transition:none!important}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
 <header class="bar">
   <span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
   <h1>รายงานผลการประชาสัมพันธ์<small>EN-MSU Smart Office</small></h1>
   <span class="sp"></span>
   <div class="who" id="who"></div>
+  <a class="btn" href="news-flow.html" title="เส้นทางการกำกับติดตาม (3D)"><svg class="i" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg><span class="lbl">เส้นทาง 3D</span></a>
   <a class="btn" href="news-admin.html" id="toAdmin" title="หน้าลงข่าว"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg><span class="lbl">ลงข่าว</span></a>
   <a class="btn" href="index.html" title="หน้า EN-MSU Smart Office"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lbl">หน้าหลัก</span></a>
   <button class="btn" id="logout" title="ออกจากระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg><span class="lbl">ออก</span></button>
 </header>
 
 <main class="wrap">
-  <div class="gate" id="gate" hidden>
+  <div class="gate glass" id="gate" hidden>
     <h2 style="margin-top:0">กรุณาเข้าสู่ระบบ</h2>
     <p style="color:var(--muted)">รายงานนี้ดูได้เฉพาะบุคลากรที่มีบัญชีในระบบข่าวประชาสัมพันธ์</p>
     <a class="btn primary" href="news-admin.html?next=dashboard">เข้าสู่ระบบ</a>
@@ -185,7 +273,7 @@ ul.ins li{margin:6px 0;font-size:14px}
   <div class="loading" id="loading">กำลังรวบรวมข้อมูล…</div>
 
   <div id="app" hidden>
-    <div class="filters">
+    <div class="filters glass">
       <label>ช่วงเวลา <select class="in" id="fy"></select></label>
       <label id="qWrap">ไตรมาส <select class="in" id="q">
         <option value="0">ทั้งปี</option><option value="1">ไตรมาส 1 (ต.ค.–ธ.ค.)</option><option value="2">ไตรมาส 2 (ม.ค.–มี.ค.)</option>
@@ -209,32 +297,41 @@ ul.ins li{margin:6px 0;font-size:14px}
 
       <div class="kpis" id="kpis"></div>
 
+      <a class="flowcta" href="news-flow.html">
+        <span class="orb"><svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></span>
+        <span><b>เส้นทางการกำกับติดตามข่าวประชาสัมพันธ์ (3D)</b><span>ดูขั้นตอนตั้งแต่ลงข่าวจนถึงรายงานผู้บริหาร พร้อมตัวเลขจริงในแต่ละขั้น</span></span>
+        <span class="go">เปิดดู ›</span>
+      </a>
+
       <div class="grid2">
-        <div class="card">
-          <h3>จำนวนข่าวรายเดือน</h3><p class="sub">นับตามวันที่ลงข่าว แยกตามประเภทสื่อ</p>
+        <div class="card glass">
+          <h3><span class="dot"></span>จำนวนข่าวรายเดือน</h3><p class="sub">นับตามวันที่ลงข่าว แยกตามประเภทสื่อ · กดที่แท่งเพื่อดูรายการข่าว</p>
           <div id="monthly"></div>
           <div class="legend" id="legend"></div>
         </div>
-        <div class="card">
-          <h3>ประเภทสื่อที่ใช้</h3><p class="sub">จำนวนข่าว และยอดเปิดอ่านเฉลี่ยต่อข่าว</p>
+        <div class="card glass">
+          <h3><span class="dot" style="background:var(--g-blue)"></span>ประเภทสื่อที่ใช้</h3><p class="sub">จำนวนข่าว และยอดเปิดอ่านเฉลี่ยต่อข่าว · กดเพื่อดูรายการ</p>
           <div id="types"></div>
         </div>
       </div>
 
-      <div class="card" id="deptCard">
-        <h3>ผลการประชาสัมพันธ์รายฝ่าย</h3>
-        <p class="sub">เรียงตามจำนวนข่าว แสดงทุกฝ่ายรวมถึงฝ่ายที่ยังไม่มีข่าวในช่วงนี้</p>
-        <div class="tablewrap"><table id="deptTable"></table></div>
+      <div class="card glass">
+        <h3><span class="dot" style="background:var(--g-violet)"></span>ผลการประชาสัมพันธ์รายฝ่าย</h3>
+        <p class="sub">รายชื่อฝ่ายดึงจากข้อมูลผู้ใช้งานจริงในระบบ (ผู้รับผิดชอบลงข่าวของแต่ละฝ่าย) · กดที่แถวเพื่อดูรายละเอียดฝ่าย</p>
+        <div class="deptwrap">
+          <div><div class="donut" id="donut"></div><div class="legend" id="dlegend" style="justify-content:center"></div></div>
+          <div class="tablewrap"><table id="deptTable"></table></div>
+        </div>
       </div>
 
       <div class="grid2">
-        <div class="card"><h3>ข่าวที่มีผู้เปิดอ่านมากที่สุด</h3><p class="sub">10 อันดับแรกในช่วงเวลาที่เลือก</p><ol class="top" id="top"></ol></div>
-        <div class="card"><h3>ข้อสังเกตจากข้อมูล</h3><p class="sub">สรุปอัตโนมัติจากตัวเลขในรายงานนี้</p><ul class="ins" id="insights"></ul></div>
+        <div class="card glass"><h3><span class="dot" style="background:var(--g-gold)"></span>ข่าวที่มีผู้เปิดอ่านมากที่สุด</h3><p class="sub">10 อันดับแรกในช่วงเวลาที่เลือก</p><ol class="top" id="top"></ol></div>
+        <div class="card glass"><h3><span class="dot" style="background:var(--g-teal)"></span>ข้อสังเกตจากข้อมูล</h3><p class="sub">สรุปอัตโนมัติจากตัวเลขในรายงานนี้</p><ul class="ins" id="insights"></ul></div>
       </div>
 
-      <div class="card">
-        <h3 id="logTitle">ทะเบียนข่าว</h3>
-        <p class="sub">รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุ และข่าวที่ถูกนำออก ใช้เป็นหลักฐานอ้างอิงได้</p>
+      <div class="card glass">
+        <h3 id="logTitle"><span class="dot" style="background:var(--g-green)"></span>ทะเบียนข่าว</h3>
+        <p class="sub">รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุ และข่าวที่ถูกนำออก ใช้เป็นหลักฐานอ้างอิงได้ · กดที่แถวเพื่อดูรายละเอียด</p>
         <div class="logtools no-print"><input class="in" id="logQ" type="search" placeholder="ค้นหาหัวข้อ ฝ่าย ผู้ลงข่าว" style="flex:1;max-width:360px"></div>
         <div class="logbox"><table id="log"></table></div>
       </div>
@@ -243,6 +340,12 @@ ul.ins li{margin:6px 0;font-size:14px}
     </section>
   </div>
 </main>
+
+<dialog class="pop" id="pop" aria-label="รายละเอียด">
+  <div class="pop-h" id="popH"><small id="popK"></small><h3 id="popT"></h3>
+    <button class="pop-x" type="button" aria-label="ปิด" onclick="this.closest('dialog').close()"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="pop-b" id="popB"></div>
+</dialog>
 
 <script>
 /* URL ของ Web App — ต้องเป็นค่าเดียวกับ NEWS_API ใน index.html และ news-admin.html */
@@ -254,9 +357,14 @@ const nf = n => Number(n || 0).toLocaleString('th-TH');
 const pct = (a, b) => b ? Math.round(a / b * 1000) / 10 : 0;
 const TYPES = [['image','ภาพข่าว','--c-image'], ['text','ข้อความ','--c-text'], ['video','วิดีโอ','--c-video'], ['pdf','เอกสาร PDF','--c-pdf']];
 const TYPE_NAME = Object.fromEntries(TYPES.map(t => [t[0], t[1]]));
+const TYPE_VAR = Object.fromEntries(TYPES.map(t => [t[0], t[2]]));
 const STATE = { live:'กำลังแสดง', hidden:'ซ่อนอยู่', scheduled:'รอเริ่มแสดง', expired:'หมดอายุ (จัดเก็บ)', deleted:'นำออกโดยผู้ลงข่าว' };
+const ROLE = { admin:'ผู้ดูแลระบบ', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน' };
 const MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const NO_DEPT = 'ไม่ระบุฝ่าย';
+/* ชุดสีประจำฝ่าย (สดใส แยกกันชัด) */
+const PALETTE = ['#E0243A','#2F6BFF','#10B981','#F59E0B','#7C4DFF','#EC4899','#0EA5A4','#F97316','#6366F1','#84CC16','#06B6D4','#A855F7','#EF4444','#14B8A6','#EAB308','#8B5CF6'];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 try{ const t = localStorage.getItem('eoffice-theme'); if(t) document.documentElement.dataset.theme = t; }catch(e){}
 let token = null; try{ token = sessionStorage.getItem('eoffice-news-token'); }catch(e){}
 
@@ -266,24 +374,24 @@ const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-$
 const thLong = s => s ? D(s).toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' }) : '';
 const thShort = s => s ? D(s).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' }) : '';
 const days = (a, b) => Math.round((D(b) - D(a)) / 86400000) + 1;
-const fyOf = s => { const d = D(s); return d.getFullYear() + (d.getMonth() >= 9 ? 1 : 0) + 543; };   // ปีงบประมาณไทย เริ่ม 1 ต.ค.
+const fyOf = s => { const d = D(s); return d.getFullYear() + (d.getMonth() >= 9 ? 1 : 0) + 543; };
 function fyRange(fy, q){
-  const y = fy - 543;                     // ปีงบ 2570 = 1 ต.ค. 2026 – 30 ก.ย. 2027
+  const y = fy - 543;
   let a = new Date(y - 1, 9, 1), b = new Date(y, 8, 30);
   if(q){ a = new Date(y - 1, 9 + (q - 1) * 3, 1); b = new Date(a.getFullYear(), a.getMonth() + 3, 0); }
   return [iso(a), iso(b)];
 }
+const monthShort = m => `${MON[+m.slice(5, 7) - 1]} ${String(+m.slice(0, 4) + 543).slice(2)}`;
+const monthName = m => `${MON[+m.slice(5, 7) - 1]} ${+m.slice(0, 4) + 543}`;
 
 /* ---------- ข้อมูล ---------- */
-let DATA = null, DEPTS = [];
+let DATA = null, DEPTS = [], USERS = [], DCOLOR = {};
 async function api(action){
   const r = await fetch(NEWS_API, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify({ action, token }) });
   const j = await r.json();
   if(!j.ok){ const e = new Error(j.error || 'เกิดข้อผิดพลาด'); e.code = j.code; throw e; }
   return j;
 }
-
-/* เตรียมค่าคำนวณของแต่ละข่าว: วันที่ลง วันที่แสดง จำนวนวันที่แสดง */
 function prep(r, today){
   const posted = (r.created || '').slice(0, 10) || r.start || today;
   const s = r.start || posted;
@@ -292,18 +400,29 @@ function prep(r, today){
   else if(r.state === 'expired') e = r.end || (r.archivedAt || '').slice(0, 10);
   else if(r.state === 'deleted'){ const a = (r.archivedAt || '').slice(0, 10); e = r.end && r.end < a ? r.end : a; }
   const shown = e && e >= s ? days(s, e) : 0;
-  return Object.assign(r, { posted, shownFrom: s, shownTo: e, shown, dept: r.dept || NO_DEPT, views: Number(r.views) || 0 });
+  return Object.assign(r, { posted, shownFrom: s, shownTo: e, shown, dept: (r.dept || '').trim() || NO_DEPT, views: Number(r.views) || 0 });
 }
+/* ผู้รับผิดชอบลงข่าว = ผู้ใช้ที่ยังเปิดใช้งาน สิทธิ์ผู้ลงข่าว/ผู้ดูแล */
+/* อักษรย่อสำหรับรูปโปรไฟล์: ตัดคำนำหน้าชื่อ/คำนำหน้าฝ่ายออกก่อน */
+const initial = s => String(s || '').trim()
+  .replace(/^(นางสาว|นาง|นาย|น\.ส\.|ว่าที่ร้อยตรี|ว่าที่ ร\.ต\.|ผศ\.|รศ\.|ศ\.|ดร\.|อ\.|ผู้ช่วยศาสตราจารย์|รองศาสตราจารย์|อาจารย์)\s*/g, '')
+  .replace(/^(ดร\.)\s*/, '').replace(/^(งาน|ฝ่าย|ภาควิชา|หน่วย|สำนักงาน)\s*/, '').slice(0, 1) || '•';
+const posters = d => USERS.filter(u => u.active && u.role !== 'viewer' && (u.dept || NO_DEPT) === d);
 
 async function init(){
   if(!token){ $('loading').hidden = true; $('gate').hidden = false; return; }
   try{
     const [st, me] = await Promise.all([api('stats'), api('me')]);
     DATA = st; DATA.records.forEach(r => prep(r, st.today));
+    USERS = (st.users || []).map(u => Object.assign(u, { dept: (u.dept || '').trim() }));
     $('who').innerHTML = `<b>${esc(me.user.name || me.user.email)}</b>${esc(me.user.dept || '')}`;
     if(me.user.role === 'viewer') $('toAdmin').hidden = true;
-    const seen = [...new Set(DATA.records.map(r => r.dept))];
-    DEPTS = [...new Set((st.departments || []).concat(seen.filter(d => d !== NO_DEPT)).concat(seen.includes(NO_DEPT) ? [NO_DEPT] : []))];
+    /* ฝ่าย = ฝ่ายของผู้ใช้งานจริง + ฝ่ายที่เคยมีข่าว (กรณีเปลี่ยนชื่อฝ่ายภายหลัง) */
+    const fromUsers = st.departments || [];
+    const fromNews = [...new Set(DATA.records.map(r => r.dept))].filter(d => d !== NO_DEPT && !fromUsers.includes(d)).sort((a, b) => a.localeCompare(b, 'th'));
+    const needNoDept = DATA.records.some(r => r.dept === NO_DEPT) || USERS.some(u => u.active && u.role !== 'viewer' && !u.dept);
+    DEPTS = fromUsers.concat(fromNews).concat(needNoDept ? [NO_DEPT] : []);
+    DEPTS.forEach((d, i) => DCOLOR[d] = d === NO_DEPT ? '#9CA3AF' : PALETTE[i % PALETTE.length]);
     setupFilters();
     $('loading').hidden = true; $('app').hidden = false;
     render();
@@ -318,10 +437,7 @@ function setupFilters(){
   const cur = fyOf(DATA.today);
   const first = DATA.records.length ? Math.min(...DATA.records.map(r => fyOf(r.posted))) : cur;
   let html = '';
-  for(let y = cur; y >= Math.min(first, cur); y--){
-    const [a, b] = fyRange(y);
-    html += `<option value="${y}">ปีงบประมาณ ${y}${y === cur ? ' (ปัจจุบัน)' : ''}</option>`;
-  }
+  for(let y = cur; y >= Math.min(first, cur); y--) html += `<option value="${y}">ปีงบประมาณ ${y}${y === cur ? ' (ปัจจุบัน)' : ''}</option>`;
   html += '<option value="all">ข้อมูลทั้งหมด</option><option value="custom">กำหนดช่วงวันที่เอง</option>';
   $('fy').innerHTML = html;
   $('dept').innerHTML = '<option value="">ทุกฝ่าย (ภาพรวมคณะ)</option>' + DEPTS.map(d => `<option>${esc(d)}</option>`).join('');
@@ -339,131 +455,192 @@ function period(){
     return { a: first, b: DATA.today, label: `ข้อมูลทั้งหมด (${thLong(first)} – ${thLong(DATA.today)})` };
   }
   if(v === 'custom'){
-    const a = $('from').value || DATA.today, b = $('to').value || DATA.today;
-    return { a: a < b ? a : b, b: a < b ? b : a, label: `ระหว่างวันที่ ${thLong(a < b ? a : b)} – ${thLong(a < b ? b : a)}` };
+    let a = $('from').value || DATA.today, b = $('to').value || DATA.today;
+    if(a > b) [a, b] = [b, a];
+    return { a, b, label: `ระหว่างวันที่ ${thLong(a)} – ${thLong(b)}` };
   }
   const q = +$('q').value, [a, b] = fyRange(+v, q);
   return { a, b, label: `ปีงบประมาณ ${v}${q ? ` ไตรมาสที่ ${q}` : ''} (${thLong(a)} – ${thLong(b)})` };
 }
 
 /* ---------- แสดงผล ---------- */
-let ROWS = [];
+let ROWS = [], PER = null;
 function render(){
-  const P = period(), dept = $('dept').value;
-  ROWS = DATA.records.filter(r => r.posted >= P.a && r.posted <= P.b && (!dept || r.dept === dept))
+  PER = period();
+  const dept = $('dept').value;
+  ROWS = DATA.records.filter(r => r.posted >= PER.a && r.posted <= PER.b && (!dept || r.dept === dept))
                      .sort((x, y) => (y.created || y.posted).localeCompare(x.created || x.posted));
   $('rTitle').textContent = dept ? dept : 'ภาพรวมทั้งคณะ';
-  $('rPeriod').textContent = P.label;
+  $('rPeriod').textContent = PER.label;
   $('asOf').textContent = thLong(DATA.today) + ' ' + (DATA.generated || '').slice(11, 16) + ' น.';
-  renderKpis(P, dept); renderMonthly(P); renderTypes(); renderDepts(dept); renderTop(); renderInsights(P, dept); renderLog(); renderNotes();
+  renderKpis(dept); renderMonthly(); renderTypes(); renderDepts(); renderTop(); renderInsights(dept); renderLog(); renderNotes();
+  grow();
+}
+/* แอนิเมชัน: ตัวเลขนับขึ้น และกราฟค่อยๆ ขยาย */
+function grow(){
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('[data-h]').forEach(el => el.style.height = el.dataset.h);
+    document.querySelectorAll('[data-w]').forEach(el => el.style.width = el.dataset.w);
+  }));
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const to = +el.dataset.count, dec = +(el.dataset.dec || 0);
+    if(RM || !to){ el.textContent = to.toLocaleString('th-TH', { minimumFractionDigits:dec, maximumFractionDigits:dec }); return; }
+    const t0 = performance.now(), dur = 900;
+    const step = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = (to * e).toLocaleString('th-TH', { minimumFractionDigits:dec, maximumFractionDigits:dec });
+      if(k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
 }
 
-function renderKpis(P, dept){
-  const n = ROWS.length, live = ROWS.filter(r => r.state === 'live').length;
+const ICON = {
+  news:'<path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 8h3v9a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5"/>',
+  live:'<circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/>',
+  dept:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5A5 5 0 0 1 21 19"/>',
+  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  media:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/>'
+};
+let KPI_ACT = [];
+function renderKpis(dept){
+  const n = ROWS.length, liveR = ROWS.filter(r => r.state === 'live');
   const views = ROWS.reduce((s, r) => s + r.views, 0);
   const shownRows = ROWS.filter(r => r.shown > 0);
   const avgDays = shownRows.length ? shownRows.reduce((s, r) => s + r.shown, 0) / shownRows.length : 0;
-  const deptsActive = new Set(ROWS.filter(r => r.dept !== NO_DEPT).map(r => r.dept)).size;
-  const deptsAll = DEPTS.filter(d => d !== NO_DEPT).length;
-  const authors = new Set(ROWS.map(r => r.author)).size;
+  const realDepts = DEPTS.filter(d => d !== NO_DEPT);
+  const active = realDepts.filter(d => ROWS.some(r => r.dept === d));
+  const mm = ROWS.filter(r => r.type === 'video' || r.type === 'pdf');
   const K = [
-    ['ข่าวทั้งหมด', nf(n), 'เรื่อง', 'ลงในช่วงเวลาที่เลือก', 'var(--accent)'],
-    ['กำลังแสดงอยู่', nf(live), 'เรื่อง', 'บนหน้าหลักขณะนี้', 'var(--ok)'],
-    dept ? ['ผู้ลงข่าวของฝ่าย', nf(authors), 'คน', 'มีส่วนร่วมลงข่าว', '#7C3AED']
-         : ['ฝ่ายที่ประชาสัมพันธ์', nf(deptsActive), `/ ${deptsAll}`, `คิดเป็น ${pct(deptsActive, deptsAll)}% ของทุกฝ่าย`, '#7C3AED'],
-    ['ยอดเปิดอ่านรวม', nf(views), 'ครั้ง', n ? `เฉลี่ย ${(views / n).toFixed(1)} ครั้งต่อข่าว` : '-', 'var(--c-video)'],
-    ['ระยะเวลาแสดงเฉลี่ย', avgDays ? avgDays.toFixed(1) : '0', 'วัน', 'ต่อข่าว', 'var(--c-text)'],
-    ['ข่าวมัลติมีเดีย', nf(ROWS.filter(r => r.type === 'video' || r.type === 'pdf').length), 'เรื่อง',
-      `วิดีโอ/PDF ${pct(ROWS.filter(r => r.type === 'video' || r.type === 'pdf').length, n)}%`, 'var(--c-pdf)']
+    { l:'ข่าวทั้งหมด', v:n, u:'เรื่อง', s:'ลงในช่วงเวลาที่เลือก', g:'--g-red', sh:'rgba(224,36,58,.55)', ic:'news',
+      act:()=>listPop('ข่าวทั้งหมดในช่วงเวลานี้', ROWS, 'var(--g-red)') },
+    { l:'กำลังแสดงอยู่', v:liveR.length, u:'เรื่อง', s:'บนหน้าหลักขณะนี้', g:'--g-green', sh:'rgba(16,185,129,.55)', ic:'live',
+      act:()=>listPop('ข่าวที่กำลังแสดงบนหน้าหลัก', liveR, 'var(--g-green)') },
+    dept ? { l:'ผู้รับผิดชอบของฝ่าย', v:posters(dept).length, u:'คน', s:'บัญชีที่ลงข่าวได้', g:'--g-violet', sh:'rgba(124,77,255,.55)', ic:'dept', act:()=>deptPop(dept) }
+         : { l:'ฝ่ายที่ประชาสัมพันธ์', v:active.length, u:`/ ${realDepts.length}`, s:`คิดเป็น ${pct(active.length, realDepts.length)}% ของฝ่ายในระบบ`, g:'--g-violet', sh:'rgba(124,77,255,.55)', ic:'dept', act:deptListPop },
+    { l:'ยอดเปิดอ่านรวม', v:views, u:'ครั้ง', s: n ? `เฉลี่ย ${(views / n).toFixed(1)} ครั้งต่อข่าว` : '-', g:'--g-blue', sh:'rgba(47,107,255,.55)', ic:'eye',
+      act:()=>listPop('ข่าวเรียงตามยอดเปิดอ่าน', ROWS.slice().sort((a, b) => b.views - a.views), 'var(--g-blue)') },
+    { l:'ระยะเวลาแสดงเฉลี่ย', v:avgDays, dec:1, u:'วัน', s:'ต่อข่าว', g:'--g-gold', sh:'rgba(245,158,11,.55)', ic:'clock',
+      act:()=>listPop('ข่าวเรียงตามจำนวนวันที่แสดง', ROWS.slice().sort((a, b) => b.shown - a.shown), 'var(--g-gold)', r => `${r.shown} วัน`) },
+    { l:'ข่าวมัลติมีเดีย', v:mm.length, u:'เรื่อง', s:`วิดีโอ/PDF ${pct(mm.length, n)}% ของข่าวทั้งหมด`, g:'--g-teal', sh:'rgba(14,165,164,.55)', ic:'media',
+      act:()=>listPop('ข่าววิดีโอและเอกสาร PDF', mm, 'var(--g-teal)') }
   ];
-  $('kpis').innerHTML = K.map(([l, v, u, s, c]) => `<div class="kpi" style="--k:${c}"><div class="l">${l}</div>
-    <div class="v num">${v}<small>${u}</small></div><div class="s">${s}</div></div>`).join('');
+  KPI_ACT = K.map(k => k.act);
+  $('kpis').innerHTML = K.map((k, i) => `<button class="kpi" data-k="${i}" style="--g:var(${k.g});--sh:${k.sh}">
+    <span class="ic"><svg class="i" viewBox="0 0 24 24">${ICON[k.ic]}</svg></span>
+    <div class="l">${k.l}</div><div class="v num"><span data-count="${k.v}" data-dec="${k.dec || 0}">0</span><small>${k.u}</small></div>
+    <div class="s">${k.s}</div><div class="more">ดูรายละเอียด ›</div></button>`).join('');
 }
+$('kpis').addEventListener('click', e => { const b = e.target.closest('.kpi'); if(b) KPI_ACT[+b.dataset.k](); });
 
-function renderMonthly(P){
-  const months = [];
-  let d = new Date(D(P.a).getFullYear(), D(P.a).getMonth(), 1);
-  const end = D(P.b);   // ปีงบประมาณ: แสดงครบ 12 เดือน (เดือนที่ยังไม่ถึงเป็นช่องว่าง)
-  while(d <= end){ months.push(iso(d).slice(0, 7)); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); }
-  if(!months.length) months.push(DATA.today.slice(0, 7));
-  const show = months.slice(-36);
-  const cnt = show.map(m => { const o = { total:0 }; TYPES.forEach(t => o[t[0]] = 0);
+let MONTHS = [];
+function renderMonthly(){
+  MONTHS = [];
+  let d = new Date(D(PER.a).getFullYear(), D(PER.a).getMonth(), 1);
+  const end = D(PER.b);
+  while(d <= end){ MONTHS.push(iso(d).slice(0, 7)); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); }
+  if(!MONTHS.length) MONTHS.push(DATA.today.slice(0, 7));
+  MONTHS = MONTHS.slice(-36);
+  const cnt = MONTHS.map(m => { const o = { total:0 }; TYPES.forEach(t => o[t[0]] = 0);
     ROWS.forEach(r => { if(r.posted.slice(0, 7) === m){ o.total++; o[r.type] = (o[r.type] || 0) + 1; } }); return o; });
   const max = Math.max(1, ...cnt.map(c => c.total));
-  $('monthly').innerHTML = `<div class="cols">${cnt.map((c, i) => `<div class="col" title="${monthName(show[i])}: ${c.total} เรื่อง">
+  $('monthly').innerHTML = `<div class="cols">${cnt.map((c, i) => `<button class="col" data-m="${MONTHS[i]}" title="${monthName(MONTHS[i])}: ${c.total} เรื่อง">
       <span class="val num">${c.total || ''}</span>
-      <div class="stack" style="height:${c.total / max * 88}%">${TYPES.map(t => c[t[0]] ? `<span style="height:${c[t[0]] / c.total * 100}%;background:var(${t[2]})"></span>` : '').join('')}</div>
-    </div>`).join('')}</div>
-    <div class="xl">${show.map(m => `<span>${monthShort(m)}</span>`).join('')}</div>`;
+      <div class="stack" data-h="${c.total / max * 86}%">${TYPES.map(t => c[t[0]] ? `<span style="height:${c[t[0]] / c.total * 100}%;background:var(${t[2]})"></span>` : '').join('')}</div>
+    </button>`).join('')}</div>
+    <div class="xl">${MONTHS.map(m => `<span>${monthShort(m)}</span>`).join('')}</div>`;
   $('legend').innerHTML = TYPES.map(t => `<span><i style="background:var(${t[2]})"></i>${t[1]}</span>`).join('');
 }
-const monthShort = m => `${MON[+m.slice(5, 7) - 1]} ${String(+m.slice(0, 4) + 543).slice(2)}`;
-const monthName = m => `${MON[+m.slice(5, 7) - 1]} ${+m.slice(0, 4) + 543}`;
+$('monthly').addEventListener('click', e => { const b = e.target.closest('.col'); if(!b) return;
+  listPop(`ข่าวเดือน ${monthName(b.dataset.m)}`, ROWS.filter(r => r.posted.slice(0, 7) === b.dataset.m), 'var(--g-red)'); });
 
 function renderTypes(){
   const n = ROWS.length;
-  const T = TYPES.map(t => { const rs = ROWS.filter(r => r.type === t[0]);
-    return { t, c: rs.length, v: rs.reduce((s, r) => s + r.views, 0) }; });
+  const T = TYPES.map(t => { const rs = ROWS.filter(r => r.type === t[0]); return { t, c: rs.length, v: rs.reduce((s, r) => s + r.views, 0) }; });
   $('types').innerHTML = !n ? '<div class="empty">ไม่มีข่าวในช่วงนี้</div>' :
-    `<div class="share">${T.filter(x => x.c).map(x => `<span style="width:${x.c / n * 100}%;background:var(${x.t[2]})" title="${x.t[1]} ${x.c}"></span>`).join('')}</div>` +
-    T.map(x => `<div class="trow"><i style="background:var(${x.t[2]})"></i><span>${x.t[1]}</span>
+    `<div class="share">${T.filter(x => x.c).map(x => `<span data-w="${x.c / n * 100}%" style="width:0;background:var(${x.t[2]})" title="${x.t[1]} ${x.c}"></span>`).join('')}</div>` +
+    T.map(x => `<button class="trow" data-t="${x.t[0]}"><i style="background:var(${x.t[2]})"></i><span>${x.t[1]}</span>
       <span class="num"><b>${nf(x.c)}</b> เรื่อง <span class="muted">(${pct(x.c, n)}%)</span></span>
-      <span class="muted num">${x.c ? (x.v / x.c).toFixed(1) : '0'} ครั้ง/ข่าว</span></div>`).join('');
+      <span class="muted num">${x.c ? (x.v / x.c).toFixed(1) : '0'} ครั้ง/ข่าว</span></button>`).join('');
 }
+$('types').addEventListener('click', e => { const b = e.target.closest('.trow'); if(!b) return;
+  listPop(`ข่าวประเภท${TYPE_NAME[b.dataset.t]}`, ROWS.filter(r => r.type === b.dataset.t), `var(${TYPE_VAR[b.dataset.t]})`); });
 
 function deptStats(){
   const n = ROWS.length;
   const list = ($('dept').value ? [$('dept').value] : DEPTS).map(d => {
     const rs = ROWS.filter(r => r.dept === d);
-    const o = { d, c: rs.length, p: pct(rs.length, n), views: rs.reduce((s, r) => s + r.views, 0), shown: rs.reduce((s, r) => s + r.shown, 0),
-                last: rs.length ? rs[0].posted : '', live: rs.filter(r => r.state === 'live').length };
+    const o = { d, rs, c: rs.length, p: pct(rs.length, n), views: rs.reduce((s, r) => s + r.views, 0), shown: rs.reduce((s, r) => s + r.shown, 0),
+                last: rs.length ? rs[0].posted : '', live: rs.filter(r => r.state === 'live').length, people: posters(d).length };
     TYPES.forEach(t => o[t[0]] = rs.filter(r => r.type === t[0]).length);
     return o;
   });
-  return list.filter(o => o.c || o.d !== NO_DEPT).sort((a, b) => b.c - a.c || b.views - a.views || a.d.localeCompare(b.d, 'th'));
+  return list.filter(o => o.c || o.people || o.d !== NO_DEPT).sort((a, b) => b.c - a.c || b.views - a.views || a.d.localeCompare(b.d, 'th'));
 }
-function renderDepts(dept){
-  const L = deptStats(), maxP = Math.max(1, ...L.map(o => o.p));
-  $('deptTable').innerHTML = `<thead><tr><th>#</th><th>ฝ่าย / หน่วยงาน</th><th class="r">จำนวนข่าว</th><th>สัดส่วนของทั้งคณะ</th>
-      ${TYPES.map(t => `<th class="r"><span class="tdot" style="background:var(${t[2]})"></span>${t[1]}</th>`).join('')}
-      <th class="r">กำลังแสดง</th><th class="r">วันแสดงรวม</th><th class="r">ยอดเปิดอ่าน</th><th>ข่าวล่าสุด</th></tr></thead>
-    <tbody>${L.map((o, i) => `<tr class="${o.c ? '' : 'zero'}"><td class="num">${o.c ? i + 1 : '–'}</td><td><b>${esc(o.d)}</b></td>
+function renderDepts(){
+  const L = deptStats(), maxP = Math.max(1, ...L.map(o => o.p)), n = ROWS.length;
+  /* โดนัทสัดส่วนข่าวรายฝ่าย */
+  const R = 70, C = 2 * Math.PI * R;
+  let off = 0;
+  const segs = L.filter(o => o.c).map(o => { const len = o.c / Math.max(1, n) * C;
+    const s = `<circle cx="90" cy="90" r="${R}" fill="none" stroke="${DCOLOR[o.d]}" stroke-width="26" stroke-dasharray="0 ${C}" data-da="${len} ${C - len}" stroke-dashoffset="${-off}"><title>${esc(o.d)} ${o.c}</title></circle>`;
+    off += len; return s; }).join('');
+  $('donut').innerHTML = `<svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="26"/>${segs}</svg>
+    <div class="c"><div><b class="num" data-count="${n}">0</b><span>ข่าวทั้งหมด</span></div></div>`;
+  requestAnimationFrame(() => requestAnimationFrame(() => $('donut').querySelectorAll('[data-da]').forEach(c => c.setAttribute('stroke-dasharray', c.dataset.da))));
+  $('dlegend').innerHTML = L.filter(o => o.c).slice(0, 8).map(o => `<span><i style="background:${DCOLOR[o.d]}"></i>${esc(o.d)}</span>`).join('');
+
+  $('deptTable').innerHTML = `<thead><tr><th>#</th><th>ฝ่าย / หน่วยงาน</th><th class="r">ผู้รับผิดชอบ</th><th class="r">จำนวนข่าว</th><th>สัดส่วนของทั้งคณะ</th>
+      <th>ประเภทสื่อ</th><th class="r">กำลังแสดง</th><th class="r">ยอดเปิดอ่าน</th><th>ข่าวล่าสุด</th></tr></thead>
+    <tbody>${L.length ? L.map((o, i) => `<tr class="click ${o.c ? '' : 'zero'}" data-d="${esc(o.d)}" style="--dc:${DCOLOR[o.d]}" tabindex="0">
+      <td class="num">${o.c ? i + 1 : '–'}</td><td><span class="dname"><i></i>${esc(o.d)}</span></td>
+      <td class="r"><span class="people num">${o.people}<svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px">${ICON.dept}</svg></span></td>
       <td class="r num"><b>${nf(o.c)}</b></td>
-      <td><div class="barcell"><span class="b"><span style="width:${o.p / maxP * 100}%"></span></span><em class="num">${o.p}%</em></div></td>
-      ${TYPES.map(t => `<td class="r num">${o[t[0]] || '·'}</td>`).join('')}
-      <td class="r num">${o.live || '·'}</td><td class="r num">${nf(o.shown)}</td><td class="r num">${nf(o.views)}</td>
-      <td>${o.last ? thShort(o.last) : '<span style="color:var(--muted)">ยังไม่มีข่าว</span>'}</td></tr>`).join('')}</tbody>`;
+      <td><div class="barcell"><span class="b"><span data-w="${o.p / maxP * 100}%"></span></span><em class="num">${o.p}%</em></div></td>
+      <td>${o.c ? `<span class="tmix" title="${TYPES.map(t => `${t[1]} ${o[t[0]]}`).join(' · ')}">${TYPES.filter(t => o[t[0]]).map(t => `<span style="flex:${o[t[0]]};background:var(${t[2]})"></span>`).join('')}</span>
+        <span class="tmix-l">${TYPES.filter(t => o[t[0]]).map(t => `${t[1].replace('เอกสาร ', '')} ${o[t[0]]}`).join(' · ')}</span>` : '<span class="muted">–</span>'}</td>
+      <td class="r num">${o.live || '·'}</td><td class="r num">${nf(o.views)}</td>
+      <td>${o.last ? thShort(o.last) : '<span class="muted">ยังไม่มีข่าว</span>'}</td></tr>`).join('')
+      : '<tr><td colspan="9" class="empty">ยังไม่มีผู้ใช้งานที่ระบุฝ่าย — เพิ่มได้ในหน้าลงข่าว แท็บผู้ใช้งาน</td></tr>'}</tbody>`;
 }
+$('deptTable').addEventListener('click', e => { const tr = e.target.closest('tr[data-d]'); if(tr) deptPop(tr.dataset.d); });
+$('deptTable').addEventListener('keydown', e => { if(e.key === 'Enter'){ const tr = e.target.closest('tr[data-d]'); if(tr) deptPop(tr.dataset.d); } });
 
 function renderTop(){
   const T = ROWS.filter(r => r.views > 0).sort((a, b) => b.views - a.views).slice(0, 10);
-  $('top').innerHTML = T.length ? T.map(r => `<li><div style="min-width:0"><b title="${esc(r.title)}">${esc(r.title)}</b>
-      <small>${esc(r.dept)} · ${TYPE_NAME[r.type] || ''} · ${thShort(r.posted)}</small></div><span class="v num">${nf(r.views)}</span></li>`).join('')
+  $('top').innerHTML = T.length ? T.map(r => `<li><button data-id="${esc(r.id)}"><span style="min-width:0"><b title="${esc(r.title)}">${esc(r.title)}</b>
+      <small>${esc(r.dept)} · ${TYPE_NAME[r.type] || ''} · ${thShort(r.posted)}</small></span><span class="v num">${nf(r.views)}</span></button></li>`).join('')
     : '<div class="empty">ยังไม่มียอดเปิดอ่านในช่วงนี้</div>';
 }
+$('top').addEventListener('click', e => { const b = e.target.closest('button[data-id]'); if(b) newsPop(b.dataset.id); });
 
-function renderInsights(P, dept){
+function renderInsights(dept){
   const I = [], n = ROWS.length;
-  if(!n){ $('insights').innerHTML = '<li>ยังไม่มีข่าวในช่วงเวลาที่เลือก</li>'; return; }
-  const L = deptStats().filter(o => o.c);
-  if(!dept && L.length){
-    I.push(`ฝ่ายที่ประชาสัมพันธ์มากที่สุดคือ <b>${esc(L[0].d)}</b> จำนวน ${nf(L[0].c)} เรื่อง (${L[0].p}% ของทั้งคณะ)`);
-    const zero = DEPTS.filter(d => d !== NO_DEPT && !ROWS.some(r => r.dept === d));
-    if(zero.length) I.push(`ฝ่ายที่ยังไม่มีข่าวในช่วงนี้ ${zero.length} ฝ่าย: ${zero.map(esc).join(', ')}`);
+  const realDepts = DEPTS.filter(d => d !== NO_DEPT);
+  if(!dept){
+    const L = deptStats().filter(o => o.c);
+    if(L.length) I.push(['var(--red)', `ฝ่ายที่ประชาสัมพันธ์มากที่สุดคือ <b>${esc(L[0].d)}</b> จำนวน ${nf(L[0].c)} เรื่อง (${L[0].p}% ของทั้งคณะ)`]);
+    const zero = realDepts.filter(d => !ROWS.some(r => r.dept === d));
+    if(zero.length) I.push(['var(--gold)', `ฝ่ายที่มีผู้รับผิดชอบแล้วแต่ยังไม่มีข่าวในช่วงนี้ ${zero.length} ฝ่าย: ${zero.map(esc).join(', ')}`]);
     if(L.length >= 3){ const top3 = L.slice(0, 3).reduce((s, o) => s + o.c, 0);
-      I.push(`3 ฝ่ายแรกลงข่าวรวมกัน ${pct(top3, n)}% ของทั้งหมด${pct(top3, n) >= 70 ? ' แสดงว่าการประชาสัมพันธ์ยังกระจุกอยู่ไม่กี่ฝ่าย' : ''}`); }
+      I.push(['var(--violet)', `3 ฝ่ายแรกลงข่าวรวมกัน ${pct(top3, n)}% ของทั้งหมด${pct(top3, n) >= 70 ? ' แสดงว่าการประชาสัมพันธ์ยังกระจุกอยู่ไม่กี่ฝ่าย' : ''}`]); }
+    const noDept = USERS.filter(u => u.active && u.role !== 'viewer' && !u.dept);
+    if(noDept.length) I.push(['#9CA3AF', `ผู้ใช้งาน ${noDept.length} คนยังไม่ได้ระบุฝ่าย ข่าวของผู้ใช้กลุ่มนี้จะนับเป็น "${NO_DEPT}" แก้ไขได้ในแท็บผู้ใช้งาน`]);
+  } else {
+    const ppl = posters(dept), act = new Set(ROWS.map(r => r.author));
+    if(ppl.length) I.push(['var(--violet)', `ผู้รับผิดชอบ ${ppl.length} คน มีผู้ลงข่าวในช่วงนี้ ${ppl.filter(p => act.has(p.email)).length} คน`]);
   }
-  const mc = {}; ROWS.forEach(r => mc[r.posted.slice(0, 7)] = (mc[r.posted.slice(0, 7)] || 0) + 1);
-  const best = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
-  if(best) I.push(`เดือนที่มีข่าวมากที่สุดคือ ${monthName(best[0])} (${nf(best[1])} เรื่อง)`);
-  const avg = t => { const rs = ROWS.filter(r => r.type === t); return rs.length ? rs.reduce((s, r) => s + r.views, 0) / rs.length : null; };
-  const vImg = avg('image'), vVid = avg('video');
-  if(vImg && vVid) I.push(`ข่าววิดีโอมียอดเปิดอ่านเฉลี่ย ${vVid.toFixed(1)} ครั้ง/ข่าว เทียบกับภาพข่าว ${vImg.toFixed(1)} ครั้ง/ข่าว`);
-  const noEnd = ROWS.filter(r => r.state === 'live' && !r.end).length;
-  if(noEnd) I.push(`ข่าวที่กำลังแสดงแต่ไม่ได้กำหนดวันสิ้นสุด ${nf(noEnd)} เรื่อง แนะนำให้กำหนด เพื่อให้ระบบจัดเก็บเข้าคลังอัตโนมัติ`);
-  const del = ROWS.filter(r => r.state === 'deleted').length;
-  if(del) I.push(`ข่าวที่ผู้ลงข่าวนำออกเอง ${nf(del)} เรื่อง (ยังนับในรายงานนี้)`);
-  $('insights').innerHTML = I.map(x => `<li>${x}</li>`).join('');
+  if(!n){ I.push(['var(--muted)', 'ยังไม่มีข่าวในช่วงเวลาที่เลือก']); }
+  else {
+    const mc = {}; ROWS.forEach(r => mc[r.posted.slice(0, 7)] = (mc[r.posted.slice(0, 7)] || 0) + 1);
+    const best = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
+    if(best) I.push(['var(--blue)', `เดือนที่มีข่าวมากที่สุดคือ ${monthName(best[0])} (${nf(best[1])} เรื่อง)`]);
+    const avg = t => { const rs = ROWS.filter(r => r.type === t); return rs.length ? rs.reduce((s, r) => s + r.views, 0) / rs.length : null; };
+    const vImg = avg('image'), vVid = avg('video');
+    if(vImg && vVid) I.push(['var(--c-video)', `ข่าววิดีโอมียอดเปิดอ่านเฉลี่ย ${vVid.toFixed(1)} ครั้ง/ข่าว เทียบกับภาพข่าว ${vImg.toFixed(1)} ครั้ง/ข่าว`]);
+    const noEnd = ROWS.filter(r => r.state === 'live' && !r.end).length;
+    if(noEnd) I.push(['var(--orange)', `ข่าวที่กำลังแสดงแต่ไม่ได้กำหนดวันสิ้นสุด ${nf(noEnd)} เรื่อง แนะนำให้กำหนด เพื่อให้ระบบจัดเก็บเข้าคลังอัตโนมัติ`]);
+  }
+  $('insights').innerHTML = I.map(([c, x]) => `<li style="--ic:${c}">${x}</li>`).join('');
 }
 
 function logRows(){
@@ -472,26 +649,107 @@ function logRows(){
 }
 function renderLog(){
   const L = logRows();
-  $('logTitle').textContent = `ทะเบียนข่าว (${nf(L.length)} รายการ)`;
+  $('logTitle').innerHTML = `<span class="dot" style="background:var(--g-green)"></span>ทะเบียนข่าว (${nf(L.length)} รายการ)`;
   $('log').innerHTML = `<thead><tr><th>วันที่ลง</th><th>หัวข้อข่าว</th><th>ฝ่าย</th><th>ประเภท</th><th>ผู้ลงข่าว</th>
       <th>ช่วงที่แสดง</th><th class="r">วัน</th><th class="r">เปิดอ่าน</th><th>สถานะ</th></tr></thead>
-    <tbody>${L.length ? L.map(r => `<tr><td class="num" style="white-space:nowrap">${thShort(r.posted)}</td><td>${esc(r.title)}${r.files ? ` <span style="color:var(--muted)">📎${r.files}</span>` : ''}</td>
-      <td>${esc(r.dept)}</td><td style="white-space:nowrap"><span class="tdot" style="background:var(${(TYPES.find(t => t[0] === r.type) || TYPES[0])[2]})"></span>${TYPE_NAME[r.type] || r.type}</td>
+    <tbody>${L.length ? L.map(r => `<tr class="click" data-id="${esc(r.id)}"><td class="num" style="white-space:nowrap">${thShort(r.posted)}</td>
+      <td>${esc(r.title)}${r.files ? ` <span class="muted">📎${r.files}</span>` : ''}</td>
+      <td><span class="dname" style="--dc:${DCOLOR[r.dept] || '#9CA3AF'};font-weight:500"><i></i>${esc(r.dept)}</span></td>
+      <td style="white-space:nowrap"><span class="tdot" style="background:var(${TYPE_VAR[r.type] || '--c-image'})"></span>${TYPE_NAME[r.type] || r.type}</td>
       <td>${esc(r.authorName || r.author)}</td>
       <td class="num" style="white-space:nowrap">${r.shown ? `${thShort(r.shownFrom)} – ${r.state === 'live' && !r.end ? 'ปัจจุบัน' : thShort(r.shownTo)}` : '–'}</td>
       <td class="r num">${r.shown || '–'}</td><td class="r num">${nf(r.views)}</td>
       <td><span class="chip ${r.state}">${STATE[r.state] || r.state}</span></td></tr>`).join('')
       : '<tr><td colspan="9" class="empty">ไม่มีข้อมูล</td></tr>'}</tbody>`;
 }
+$('log').addEventListener('click', e => { const tr = e.target.closest('tr[data-id]'); if(tr) newsPop(tr.dataset.id); });
 
 function renderNotes(){
   $('notes').innerHTML = `<b>นิยามตัวชี้วัด</b><ul>
-    <li><b>ข่าวทั้งหมด</b> นับตามวันที่ลงข่าว รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุแล้ว (ระบบย้ายเข้าคลังอัตโนมัติ) และข่าวที่ผู้ลงข่าวนำออก ไม่รวมข่าวที่ผู้ดูแลลบถาวรเพราะลงผิดหรือซ้ำ</li>
-    <li><b>ยอดเปิดอ่าน</b> จำนวนครั้งที่ผู้ชมกดเปิดข่าวหรือกดเล่นวิดีโอบนหน้า EN-MSU Smart Office นับไม่เกิน 1 ครั้งต่อเครื่องต่อข่าวต่อวัน ไม่เก็บข้อมูลส่วนบุคคล
+    <li><b>ฝ่าย / หน่วยงาน</b> ดึงจากข้อมูลผู้ใช้งานจริงในระบบ (ช่องฝ่ายของผู้รับผิดชอบลงข่าวแต่ละคน) <b>ผู้รับผิดชอบ</b> คือบัญชีผู้ลงข่าวหรือผู้ดูแลที่ยังเปิดใช้งาน</li>
+    <li><b>ข่าวทั้งหมด</b> นับตามวันที่ลงข่าว รวมข่าวที่กำลังแสดง ข่าวที่หมดอายุแล้ว (ย้ายเข้าคลังอัตโนมัติ) และข่าวที่ผู้ลงข่าวนำออก ไม่รวมข่าวที่ผู้ดูแลลบถาวรเพราะลงผิดหรือซ้ำ</li>
+    <li><b>ยอดเปิดอ่าน</b> จำนวนครั้งที่ผู้ชมกดเปิดข่าวหรือเล่นวิดีโอบนหน้า EN-MSU Smart Office นับไม่เกิน 1 ครั้งต่อเครื่องต่อข่าวต่อวัน ไม่เก็บข้อมูลส่วนบุคคล
       ${DATA.statsSince ? `เริ่มเก็บตั้งแต่ ${thLong(DATA.statsSince)}` : ''}</li>
     <li><b>วันแสดง</b> นับจากวันเริ่มแสดงถึงวันสิ้นสุด หรือถึงวันที่นำออก ข่าวที่ซ่อนอยู่หรือยังไม่ถึงวันเริ่มแสดงนับเป็น 0</li>
-    <li><b>ปีงบประมาณ</b> นับตั้งแต่ 1 ตุลาคม ถึง 30 กันยายนของปีถัดไป</li>
-    <li>แหล่งข้อมูล: ฐานข้อมูลระบบข่าวประชาสัมพันธ์ EN-MSU Smart Office คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</li></ul>`;
+    <li><b>ปีงบประมาณ</b> 1 ตุลาคม – 30 กันยายนของปีถัดไป · แหล่งข้อมูล: ฐานข้อมูลระบบข่าวประชาสัมพันธ์ EN-MSU Smart Office คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</li></ul>`;
+}
+
+/* ---------- หน้าต่างรายละเอียด ---------- */
+function openPop(kicker, title, bg, html){
+  $('popK').textContent = kicker; $('popT').textContent = title;
+  $('popH').style.setProperty('--pg', bg);
+  $('popB').innerHTML = html; $('popB').scrollTop = 0;
+  if(!$('pop').open) $('pop').showModal();
+}
+$('pop').addEventListener('click', e => {
+  if(e.target === $('pop')) return $('pop').close();
+  const n = e.target.closest('[data-news]'); if(n) return newsPop(n.dataset.news);
+  const d = e.target.closest('[data-dept]'); if(d) return deptPop(d.dataset.dept);
+});
+const newsRow = (r, right) => `<button class="prow" data-news="${esc(r.id)}"><span><b>${esc(r.title)}</b>
+  <small><span class="tdot" style="background:var(${TYPE_VAR[r.type] || '--c-image'})"></span>${TYPE_NAME[r.type] || ''} · ${esc(r.dept)} · ${thShort(r.posted)} · <span class="chip ${r.state}">${STATE[r.state]}</span></small></span>
+  <span class="v num">${right ? right(r) : `${nf(r.views)} <small class="muted">ครั้ง</small>`}</span></button>`;
+
+function listPop(title, rows, bg, right){
+  openPop(`${PER.label}`, `${title} (${nf(rows.length)})`, bg,
+    rows.length ? `<div class="plist">${rows.slice(0, 200).map(r => newsRow(r, right)).join('')}</div>${rows.length > 200 ? '<p class="muted">แสดง 200 รายการแรก ดูทั้งหมดในทะเบียนข่าว</p>' : ''}`
+                : '<div class="empty">ไม่มีข่าว</div>');
+}
+function deptListPop(){
+  const L = deptStats();
+  openPop(PER.label, 'ภาพรวมรายฝ่าย', 'var(--g-violet)', `<div class="plist">${L.map(o => `<button class="prow" data-dept="${esc(o.d)}" style="--dc:${DCOLOR[o.d]}">
+    <span class="person"><span class="av" style="background:${DCOLOR[o.d]}">${esc(initial(o.d))}</span>
+    <span><b>${esc(o.d)}</b><small>ผู้รับผิดชอบ ${o.people} คน · ${o.c ? `ข่าวล่าสุด ${thShort(o.last)}` : 'ยังไม่มีข่าว'}</small></span></span>
+    <span class="v num">${nf(o.c)} <small class="muted">เรื่อง</small></span></button>`).join('')}</div>`);
+}
+function deptPop(d){
+  const rs = ROWS.filter(r => r.dept === d), color = DCOLOR[d] || '#9CA3AF', ppl = posters(d);
+  const views = rs.reduce((s, r) => s + r.views, 0), shown = rs.reduce((s, r) => s + r.shown, 0);
+  const per = MONTHS.map(m => rs.filter(r => r.posted.slice(0, 7) === m).length), max = Math.max(1, ...per);
+  const byAuthor = {}; rs.forEach(r => byAuthor[r.author] = (byAuthor[r.author] || 0) + 1);
+  const known = new Set(ppl.map(p => p.email));
+  const others = Object.keys(byAuthor).filter(a => !known.has(a)).map(a => { const r = rs.find(x => x.author === a);
+    return { name: r.authorName || a, email: a, role: '', active: false, lastLogin: '', former: true }; });
+  openPop(PER.label, d, `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 55%, #1E1B4B))`, `
+    <div class="stats">
+      <div><span>จำนวนข่าว</span><b class="num">${nf(rs.length)}</b></div>
+      <div><span>สัดส่วนของคณะ</span><b class="num">${pct(rs.length, ROWS.length || DATA.records.length)}%</b></div>
+      <div><span>กำลังแสดง</span><b class="num">${rs.filter(r => r.state === 'live').length}</b></div>
+      <div><span>ยอดเปิดอ่าน</span><b class="num">${nf(views)}</b></div>
+      <div><span>วันแสดงรวม</span><b class="num">${nf(shown)}</b></div>
+      <div><span>ผู้รับผิดชอบ</span><b class="num">${ppl.length}</b></div>
+    </div>
+    <h4>ข่าวรายเดือน</h4>
+    <div class="mini" style="--dc:${color}">${per.map((c, i) => `<span title="${monthName(MONTHS[i])}: ${c}" style="height:${c / max * 100}%"></span>`).join('')}</div>
+    <div class="xl" style="font-size:10px">${MONTHS.length <= 14 ? MONTHS.map(m => `<span>${monthShort(m)}</span>`).join('') : ''}</div>
+    <h4>ประเภทสื่อ</h4>
+    <div class="legend" style="margin:0">${TYPES.map(t => `<span><i style="background:var(${t[2]})"></i>${t[1]} <b>${rs.filter(r => r.type === t[0]).length}</b></span>`).join('')}</div>
+    <h4>ผู้รับผิดชอบลงข่าว (${ppl.length} คน)</h4>
+    <div class="plist">${ppl.concat(others).map(u => `<div class="prow"><span class="person"><span class="av" style="background:${color}">${esc(initial(u.name || u.email))}</span>
+      <span><b>${esc(u.name || u.email)}</b><small>${esc(u.email)} · ${u.former ? 'ไม่ได้อยู่ในฝ่ายนี้แล้ว/ปิดใช้งาน' : ROLE[u.role] || ''}${u.lastLogin ? ` · เข้าล่าสุด ${esc(u.lastLogin)}` : ''}</small></span></span>
+      <span class="v num">${byAuthor[u.email] || 0} <small class="muted">ข่าว</small></span></div>`).join('') || '<div class="empty">ยังไม่มีผู้ใช้งานในฝ่ายนี้</div>'}</div>
+    <h4>ข่าวของฝ่าย (${nf(rs.length)})</h4>
+    <div class="plist">${rs.map(r => newsRow(r)).join('') || '<div class="empty">ยังไม่มีข่าวในช่วงนี้</div>'}</div>`);
+}
+function newsPop(id){
+  const r = DATA.records.find(x => x.id === id); if(!r) return;
+  const color = DCOLOR[r.dept] || '#9CA3AF';
+  openPop(`${TYPE_NAME[r.type] || ''} · ${r.dept}`, r.title, `linear-gradient(135deg, ${color}, color-mix(in srgb, ${color} 50%, #1E1B4B))`, `
+    <div class="stats">
+      <div><span>ยอดเปิดอ่าน</span><b class="num">${nf(r.views)}</b></div>
+      <div><span>จำนวนวันที่แสดง</span><b class="num">${r.shown}</b></div>
+      <div><span>ไฟล์แนบ</span><b class="num">${r.files || 0}</b></div>
+      <div><span>สถานะ</span><b style="font-size:15px"><span class="chip ${r.state}">${STATE[r.state]}</span></b></div>
+    </div>
+    <dl class="kv">
+      <dt>ฝ่าย</dt><dd><button class="btn" data-dept="${esc(r.dept)}" style="padding:3px 10px">${esc(r.dept)} ›</button></dd>
+      <dt>ผู้ลงข่าว</dt><dd>${esc(r.authorName || '')} <span class="muted">${esc(r.author || '')}</span></dd>
+      <dt>วันที่ลงข่าว</dt><dd>${thLong(r.posted)} ${esc((r.created || '').slice(11, 16))}</dd>
+      <dt>ช่วงที่แสดง</dt><dd>${r.shown ? `${thLong(r.shownFrom)} – ${r.state === 'live' && !r.end ? 'ปัจจุบัน' : thLong(r.shownTo)}` : '–'}</dd>
+      <dt>วันสิ้นสุดที่ตั้งไว้</dt><dd>${r.end ? thLong(r.end) : 'ไม่ได้กำหนด'}</dd>
+      ${r.archivedAt ? `<dt>ย้ายเข้าคลังเมื่อ</dt><dd>${esc(r.archivedAt)}</dd>` : ''}
+      <dt>รูปแบบสื่อ</dt><dd>${TYPE_NAME[r.type] || r.type}${r.media === 'youtube' ? ' (YouTube)' : r.media === 'drive' ? ' (ไฟล์ในระบบ)' : ''}</dd>
+    </dl>`);
 }
 
 /* ---------- ส่งออก / พิมพ์ ---------- */
@@ -507,6 +765,11 @@ $('csv').onclick = () => {
   document.body.appendChild(a); a.click(); a.remove();
 };
 $('print').onclick = () => window.print();
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('[data-h]').forEach(el => el.style.height = el.dataset.h);
+  document.querySelectorAll('[data-w]').forEach(el => el.style.width = el.dataset.w);
+  document.querySelectorAll('[data-count]').forEach(el => el.textContent = (+el.dataset.count).toLocaleString('th-TH', { maximumFractionDigits:+(el.dataset.dec||0), minimumFractionDigits:+(el.dataset.dec||0) }));
+});
 $('logout').onclick = async () => {
   try{ await api('logout'); }catch(e){}
   try{ sessionStorage.removeItem('eoffice-news-token'); }catch(e){}
