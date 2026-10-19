@@ -9,156 +9,178 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --act:#FF4D6D;
-  --ink:#F7F1FF; --muted:rgba(240,232,255,.72); --glass:rgba(22,14,44,.55); --line:rgba(255,255,255,.14);
+  --bg:#F7F3F6; --card:#FFFFFF; --text:#25161E; --muted:#7A6B73; --line:#EEE2E8; --floor:#FCE9E6;
+  --shadow:0 10px 30px rgba(90,20,50,.08);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-  color-scheme:dark;
 }
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#140E13; --card:#1F161D; --text:#F5EAF0; --muted:#B5A2AD; --line:#33242E; --floor:#2A1A22; --shadow:0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{ --bg:#140E13; --card:#1F161D; --text:#F5EAF0; --muted:#B5A2AD; --line:#33242E; --floor:#2A1A22; --shadow:0 10px 30px rgba(0,0,0,.35); }
 *,*::before,*::after{box-sizing:inherit}
-html,body{height:100%}
-body{margin:0;overflow:hidden;color:var(--ink);font-size:15px;line-height:1.5;
-  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif;
-  background:#0A0718}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
 button{font:inherit;color:inherit;cursor:pointer}
 [hidden]{display:none!important}
 svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
-/* ฉากหลังเปลี่ยนสีตามขั้นตอนที่กำลังแสดง */
-.sky{position:fixed;inset:0;z-index:0;background:
-  radial-gradient(60% 60% at 50% 58%, color-mix(in srgb, var(--act) 34%, transparent), transparent 70%),
-  radial-gradient(50% 50% at 12% 10%, rgba(131,56,236,.38), transparent 70%),
-  radial-gradient(45% 45% at 90% 15%, rgba(255,0,110,.28), transparent 70%),
-  linear-gradient(180deg,#0B0820 0%,#140A2E 50%,#1E0A24 100%);transition:background 1.2s}
-#scene{position:fixed;inset:0;z-index:1;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
-#scene.grab{cursor:grabbing}
-#scene.hover{cursor:pointer}
+.wrap{max-width:1240px;margin:0 auto;padding:18px clamp(12px,3vw,28px) 40px}
+.topnav{display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px}
+.topnav a{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  color:var(--text);text-decoration:none;font-weight:600;font-size:14px}
+.topnav a:hover{border-color:#E0243A;color:#E0243A}
 
-.glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line)}
-.top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;gap:14px;align-items:flex-start;justify-content:space-between;
-  padding:calc(16px + env(safe-area-inset-top,0px)) clamp(14px,3vw,30px) 0;pointer-events:none}
-.top > *{pointer-events:auto}
-.title{max-width:560px;padding:14px 18px;border-radius:18px}
-.title .k{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.02em}
-.title h1{margin:2px 0 4px;font-size:clamp(20px,2.6vw,28px);line-height:1.25;
-  background:linear-gradient(90deg,#fff,color-mix(in srgb, var(--act) 45%, #fff));-webkit-background-clip:text;background-clip:text;color:transparent}
-.title p{margin:0;font-size:13.5px;color:var(--muted)}
-.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.nav a,.nav button{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:12px;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px}
-.nav a:hover,.nav button:hover{background:rgba(255,255,255,.16)}
-.sumbar{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:flex-end}
-.sumbar span{font-size:12.5px;padding:5px 10px;border-radius:99px;color:var(--muted)}
-.sumbar b{color:#fff;font-size:14px;margin-right:3px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:22px clamp(14px,2.4vw,26px) 24px}
+.head{display:flex;gap:14px;align-items:center}
+.logo{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#FF7A59,#E0243A 55%,#7C4DFF);box-shadow:0 8px 18px -6px rgba(224,36,58,.6)}
+.logo svg{width:24px;height:24px}
+h1{margin:0;font-size:clamp(19px,2.3vw,25px);line-height:1.3}
+.desc{margin:8px 0 14px;color:var(--muted);font-size:14px;max-width:900px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:13.5px;color:var(--muted);background:var(--card)}
+.chip i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.chip b{color:var(--text);font-size:15px}
 
-/* ป้ายเหนือแต่ละขั้น (วางตามตำแหน่ง 3D) */
-#labels{position:fixed;inset:0;z-index:3;pointer-events:none}
-.lbl{position:absolute;left:0;top:0;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity .3s,filter .3s;will-change:transform}
-.lbl .bub{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:99px;white-space:nowrap;
-  background:rgba(14,8,30,.72);border:1px solid color-mix(in srgb, var(--c) 60%, transparent);box-shadow:0 6px 22px -6px var(--c);transition:transform .3s}
-.lbl .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#120A22;background:var(--c)}
-.lbl b{font-size:14px}
-.lbl .m{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;color:#fff;background:color-mix(in srgb, var(--c) 45%, transparent)}
-.lbl.on .bub{transform:scale(1.12);background:color-mix(in srgb, var(--c) 30%, rgba(14,8,30,.9))}
-.lbl.dim{opacity:.55;filter:saturate(.7)}
-.lbl.back{opacity:.25}
+/* ---------- เวที: การ์ดด้านบน + กล่อง 3 มิติด้านล่าง ---------- */
+.stage{position:relative;border-radius:22px;padding:22px 12px 6px;overflow:hidden;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--floor) 35%, var(--card)) 0%, var(--floor) 100%)}
+.flow{position:relative;z-index:2;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}
+.col{display:flex;flex-direction:column;align-items:center;min-width:0}
 
-/* แถบขั้นตอนด้านล่าง */
-.rail{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:0 clamp(10px,2vw,24px) calc(14px + env(safe-area-inset-bottom,0px));pointer-events:none}
-.rail-in{pointer-events:auto;max-width:1300px;margin:0 auto;border-radius:20px;padding:10px}
-.ctrl{display:flex;align-items:center;gap:8px;padding:0 4px 8px}
-.ctrl .hint{font-size:12.5px;color:var(--muted);flex:1}
-.ctrl button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:10px;padding:5px 11px;font-size:13px;font-weight:600}
-.ctrl button:hover{background:rgba(255,255,255,.14)}
-.steps{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px}
-.step{scroll-snap-align:start;position:relative;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px 10px;overflow:hidden;transition:background .3s,border-color .3s,transform .3s}
-.step::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
-.step .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;line-height:1.3}
-.step .t i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:#120A22;background:var(--c);flex:none}
-.step .v{font-size:20px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
-.step .v small{font-size:12px;font-weight:600;color:var(--muted);margin-left:3px}
-.step .d{font-size:12px;color:var(--muted);margin-top:1px}
-.step.on{background:color-mix(in srgb, var(--c) 22%, rgba(255,255,255,.04));border-color:color-mix(in srgb, var(--c) 70%, transparent);transform:translateY(-3px)}
-.step .bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--c)}
-.step.on .bar{animation:fill var(--dur,5s) linear forwards}
-.paused .step.on .bar{animation-play-state:paused}
-@keyframes fill{to{width:100%}}
+.card{position:relative;width:100%;min-height:var(--ch,0px);display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;cursor:pointer;
+  padding:22px 10px 12px;box-shadow:0 6px 18px rgba(90,20,50,.07);transition:transform .35s,box-shadow .35s,border-color .35s}
+.card:hover{transform:translateY(-3px)}
+.col.on .card{border-color:var(--c);box-shadow:0 14px 30px -10px color-mix(in srgb, var(--c) 70%, transparent);transform:translateY(-4px)}
+.badge{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);min-width:30px;height:28px;padding:0 10px;border-radius:9px;
+  display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;white-space:nowrap;
+  background:linear-gradient(135deg, color-mix(in srgb, var(--c) 70%, #fff), var(--c));box-shadow:0 4px 12px -4px var(--c)}
+.card .w{display:inline-block;white-space:nowrap}
+.card h3{margin:0;font-size:15px;line-height:1.35;min-height:2.7em;display:flex;align-items:center;justify-content:center;gap:5px}
+.card .who{font-size:12px;color:var(--muted);margin-top:3px;min-height:2.6em}
+.card .v{font-size:14px;font-weight:700;color:var(--c);margin-top:6px;line-height:1.35}
+.card .v b{font-size:22px}
+.card .sub{font-size:12px;color:var(--muted);margin-top:2px;min-height:2.6em}
+.card .more{display:inline-block;margin-top:auto;padding-top:8px !important;border:0;background:none;padding:2px 4px;font-size:13px;font-weight:600;color:var(--c);
+  text-decoration:underline;text-underline-offset:3px}
 
-/* หน้าต่างรายละเอียดขั้นตอน */
-dialog{border:0;padding:0;border-radius:22px;width:min(640px,94vw);max-height:88vh;color:var(--ink);background:#170F2C;overflow:auto;
-  box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px var(--line)}
-dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
-dialog::backdrop{background:rgba(5,2,14,.55);backdrop-filter:blur(3px)}
-@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}}
-.dh{position:relative;padding:22px 24px 20px;background:linear-gradient(135deg,var(--c),color-mix(in srgb, var(--c) 40%, #1E0A3C))}
-.dh small{font-weight:700;font-size:12.5px;color:rgba(255,255,255,.88)}
-.dh h2{margin:2px 40px 6px 0;font-size:22px;line-height:1.3}
-.dh p{margin:0;font-size:14.5px;color:rgba(255,255,255,.92)}
-.dx{position:absolute;right:14px;top:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(0,0,0,.25);display:grid;place-items:center}
-.db{padding:18px 24px 22px}
-.metric{display:flex;align-items:baseline;gap:8px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line);margin-bottom:14px}
-.metric b{font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:color-mix(in srgb, var(--c) 55%, #fff)}
+.stem{width:0;height:var(--stem,60px);border-left:2px dashed color-mix(in srgb, var(--c) 60%, transparent);margin-top:6px}
+
+/* กล่อง 3 มิติ (CSS 3D) */
+.box{position:relative;width:96px;height:100px;display:grid;place-items:end center;perspective:520px;cursor:pointer;border:0;background:none;padding:0}
+.float{position:relative;width:60px;height:60px;margin-bottom:24px;animation:bob 4s ease-in-out infinite;animation-delay:calc(var(--i) * -.55s);transition:transform .4s}
+.col.on .float{transform:translateY(-12px)}
+@keyframes bob{50%{translate:0 -6px}}
+.cube{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-20deg) rotateY(-34deg);transition:transform .6s}
+.box:hover .cube,.col.on .cube{transform:rotateX(-20deg) rotateY(-24deg)}
+.face{position:absolute;inset:0;border-radius:6px;display:grid;place-items:center;backface-visibility:hidden}
+.face.f{transform:translateZ(30px);background:linear-gradient(145deg, color-mix(in srgb, var(--c) 60%, #fff), var(--c) 70%);
+  color:#fff;font-weight:700;font-size:24px;text-shadow:0 2px 6px rgba(0,0,0,.25)}
+.face.r{transform:rotateY(90deg) translateZ(30px);background:linear-gradient(145deg, var(--c), color-mix(in srgb, var(--c) 58%, #000))}
+.face.t{transform:rotateX(90deg) translateZ(30px);background:linear-gradient(145deg, #fff, color-mix(in srgb, var(--c) 45%, #fff))}
+.shadow{position:absolute;bottom:8px;left:50%;width:74px;height:16px;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--c) 45%, transparent), transparent);transition:width .4s}
+.col.on .shadow{width:100px}
+.ring{position:absolute;bottom:2px;left:50%;width:112px;height:28px;transform:translateX(-50%) scale(.6);border-radius:50%;
+  border:2px solid var(--c);opacity:0;transition:opacity .4s,transform .4s}
+.col.on .ring{opacity:.55;transform:translateX(-50%) scale(1)}
+
+/* พื้นกระดาน + เส้นทาง */
+.floor{position:absolute;left:4%;right:4%;bottom:-30px;height:200px;z-index:0;border-radius:26px;
+  transform:perspective(700px) rotateX(60deg);transform-origin:50% 100%;border:1px solid color-mix(in srgb, #E0243A 12%, transparent);
+  background:
+    linear-gradient(rgba(224,36,58,.08) 1px, transparent 1px) 0 0/36px 36px,
+    linear-gradient(90deg, rgba(224,36,58,.08) 1px, transparent 1px) 0 0/36px 36px,
+    linear-gradient(180deg, color-mix(in srgb, #fff 55%, var(--floor)), var(--floor))}
+svg.path{position:absolute;left:0;top:0;z-index:1;pointer-events:none;overflow:visible}
+svg.path .seg{fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:12 9;animation:dash 1.4s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-21}}
+svg.path .glow{fill:none;stroke-width:12;stroke-linecap:round;opacity:.13}
+svg.path .node{stroke:#fff;stroke-width:3}
+.legend{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--muted)}
+.legend .ctrl{display:flex;gap:6px}
+.legend button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:5px 12px;font-size:13px;font-weight:600}
+.legend button:hover{border-color:#E0243A;color:#E0243A}
+.loopnote{display:flex;align-items:center;gap:8px}
+.loopnote svg{color:#7C4DFF}
+
+/* หน้าต่างรายละเอียด */
+dialog{border:0;padding:0;border-radius:22px;width:min(620px,94vw);max-height:88vh;background:var(--card);color:var(--text);overflow:auto;
+  box-shadow:0 30px 80px rgba(40,0,20,.35)}
+dialog[open]{animation:pop .28s cubic-bezier(.2,.9,.3,1.2)}
+dialog::backdrop{background:rgba(30,8,20,.45);backdrop-filter:blur(3px)}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}}
+.dh{position:relative;padding:20px 22px 18px;color:#fff;background:linear-gradient(135deg, color-mix(in srgb, var(--c) 75%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 55%, #000))}
+.dh small{font-size:12.5px;font-weight:700;opacity:.92}
+.dh h2{margin:2px 40px 6px 0;font-size:21px;line-height:1.3}
+.dh p{margin:0;font-size:14.5px;opacity:.95}
+.dx{position:absolute;right:14px;top:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(0,0,0,.2);color:#fff;display:grid;place-items:center}
+.db{padding:16px 22px 20px}
+.metric{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:12px 16px;border-radius:16px;margin-bottom:12px;
+  background:color-mix(in srgb, var(--c) 9%, var(--card));border:1px solid color-mix(in srgb, var(--c) 25%, transparent)}
+.metric b{font-size:34px;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}
 .metric span{color:var(--muted);font-size:14px}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-.facts div{padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
-.facts h4{margin:0 0 4px;font-size:12.5px;color:var(--muted);font-weight:700}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.facts div{padding:10px 12px;border-radius:14px;border:1px solid var(--line)}
+.facts h4{margin:0 0 3px;font-size:12.5px;color:var(--muted)}
 .facts p{margin:0;font-size:14px}
-.dnav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
-.dnav button{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:12px;padding:8px 14px;font-weight:600}
-.dnav button:hover{background:rgba(255,255,255,.14)}
-.loopnote{margin-top:12px;font-size:13px;color:var(--muted)}
+.dnav{display:flex;justify-content:space-between;margin-top:14px}
+.dnav button{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:7px 14px;font-weight:600}
+.dnav button:hover{border-color:var(--c);color:var(--c)}
 
-/* แสดงแบบ 2 มิติเมื่อเครื่องไม่รองรับ 3D */
-.fallback .sky{position:fixed}
-.fallback #scene,.fallback #labels{display:none}
-.fallback body{overflow:auto}
-.fallback .steps{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.fallback .rail{position:static;padding-top:180px}
-
-@media (max-width:760px){
-  .top{flex-direction:column;align-items:stretch;padding-top:calc(10px + env(safe-area-inset-top,0px))}
-  .title{padding:10px 14px}
-  .title p{display:none}
-  .nav{justify-content:flex-start}
-  .sumbar{display:none}
-  .steps{grid-template-columns:repeat(7,72%)}
-  .lbl b{display:none}
-  .lbl .bub{padding:4px 8px 4px 4px}
-  .ctrl .hint{display:none}
+/* มือถือ/แท็บเล็ตแนวตั้ง: เรียงขั้นตอนจากบนลงล่าง */
+@media (max-width:860px){
+  .stage{padding:18px 10px 14px}
+  .flow{grid-template-columns:1fr;gap:16px}
+  .col{flex-direction:row-reverse;align-items:center;gap:8px;position:relative}
+  .stem,.floor,svg.path{display:none}
+  .card{text-align:left;align-items:flex-start;padding:16px 12px 10px;min-height:0}
+  .ring{display:none}
+  .badge{left:12px;transform:translate(0,-50%)}
+  .card h3{justify-content:flex-start;min-height:0}
+  .card .who,.card .sub{min-height:0}
+  .box{width:66px;height:74px;flex:none}
+  .float{width:44px;height:44px;margin-bottom:16px}
+  .face.f{transform:translateZ(22px);font-size:18px}.face.r{transform:rotateY(90deg) translateZ(22px)}.face.t{transform:rotateX(90deg) translateZ(22px)}
+  .col:not(:last-child)::after{content:"";position:absolute;left:32px;top:calc(50% + 30px);height:calc(50% - 14px);border-left:2px dashed color-mix(in srgb, var(--c) 55%, transparent)}
 }
-@media (prefers-reduced-motion:reduce){ .step.on .bar{animation:none;width:100%} dialog[open]{animation:none} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
 </head>
 <body>
-<div class="sky" aria-hidden="true"></div>
-<canvas id="scene" aria-label="ภาพสามมิติแสดงเส้นทาง 7 ขั้นตอนของการกำกับติดตามข่าวประชาสัมพันธ์"></canvas>
-<div id="labels" aria-hidden="true"></div>
+<main class="wrap">
+  <nav class="topnav">
+    <a href="index.html"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>หน้าหลัก</a>
+    <a href="news-dashboard.html"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>รายงาน</a>
+  </nav>
 
-<header class="top">
-  <div class="title glass">
-    <div class="k">EN-MSU Smart Office · คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</div>
-    <h1>เส้นทางการกำกับติดตามข่าวประชาสัมพันธ์</h1>
-    <p>จากผู้ลงข่าวของแต่ละฝ่าย สู่บุคลากรทั้งคณะ จนถึงรายงานผู้บริหาร — ตัวเลขในแต่ละขั้นเป็นข้อมูลจริงจากระบบ <span id="asof"></span></p>
-  </div>
-  <div>
-    <nav class="nav">
-      <a class="glass" href="index.html"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>หน้าหลัก</a>
-      <a class="glass" href="news-dashboard.html"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>รายงาน</a>
-    </nav>
-    <div class="sumbar" id="sumbar"></div>
-  </div>
-</header>
-
-<section class="rail">
-  <div class="rail-in glass">
-    <div class="ctrl">
-      <span class="hint">ลากเพื่อหมุนมุมมอง · เลื่อนลูกกลิ้งเพื่อซูม · กดที่ขั้นตอนเพื่อดูรายละเอียด</span>
-      <button type="button" id="prev" aria-label="ขั้นก่อนหน้า"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button type="button" id="play" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" id="playIco"><path d="M8 5v14M16 5v14"/></svg><span id="playLbl">หยุดชั่วคราว</span></button>
-      <button type="button" id="next" aria-label="ขั้นถัดไป"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <section class="panel">
+    <div class="head">
+      <span class="logo"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+      <h1>เส้นทางการกำกับติดตามข่าวประชาสัมพันธ์</h1>
     </div>
-    <div class="steps" id="steps"></div>
-  </div>
-</section>
+    <p class="desc">ทุกข่าวเดินทางผ่าน 7 ขั้นตอน เรียงจากซ้ายไปขวา ระบบช่วยเผยแพร่ นับยอดเปิดอ่าน จัดเก็บ และสรุปผลให้อัตโนมัติ
+      ตัวเลขในแต่ละขั้นเป็นข้อมูลจริงจากระบบ EN-MSU Smart Office <span id="asof"></span> · กดที่การ์ดหรือกล่องเพื่อดูรายละเอียด</p>
+    <div class="chips" id="chips"></div>
+
+    <div class="stage" id="stage">
+      <div class="floor" aria-hidden="true"></div>
+      <svg class="path" id="path" aria-hidden="true"></svg>
+      <div class="flow" id="flow"></div>
+    </div>
+
+    <div class="legend">
+      <span class="loopnote"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+        เมื่อถึงขั้นที่ 7 ผลการประเมินจะย้อนกลับไปปรับปรุงการลงข่าวในขั้นที่ 1 เป็นวงจรพัฒนาต่อเนื่อง</span>
+      <span class="ctrl">
+        <button type="button" id="prev" aria-label="ขั้นก่อนหน้า">‹</button>
+        <button type="button" id="play" aria-pressed="true">หยุดชั่วคราว</button>
+        <button type="button" id="next" aria-label="ขั้นถัดไป">›</button>
+      </span>
+    </div>
+  </section>
+</main>
 
 <dialog id="dlg" aria-labelledby="dT">
   <div class="dh"><small id="dK"></small><h2 id="dT"></h2><p id="dP"></p>
@@ -166,109 +188,164 @@ dialog::backdrop{background:rgba(5,2,14,.55);backdrop-filter:blur(3px)}
   <div class="db">
     <div class="metric"><b id="dV">–</b><span id="dU"></span></div>
     <div class="facts" id="dF"></div>
-    <p class="loopnote" id="dL"></p>
     <div class="dnav"><button type="button" id="dPrev">‹ ขั้นก่อนหน้า</button><button type="button" id="dNext">ขั้นถัดไป ›</button></div>
   </div>
 </dialog>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* URL ของ Web App — ต้องเป็นค่าเดียวกับ NEWS_API ใน index.html */
 const NEWS_API = "https://script.google.com/macros/s/AKfycbw3rvUK2QZAFQgFHyRzPkmQ9Z88lFugDFM-V32Tco7KM_T9hZ_BGT8-6mktL3LY2NueBA/exec";
-const STEP_SECONDS = 5;
+const STEP_SECONDS = 4;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nf = n => (n == null || isNaN(n)) ? '–' : Number(n).toLocaleString('th-TH');
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+try{ const t = localStorage.getItem('eoffice-theme'); if(t) document.documentElement.dataset.theme = t; }catch(e){}
 
-/* ---------- 7 ขั้นตอนของการกำกับติดตาม (ตรงกับการทำงานจริงของระบบ) ---------- */
+/* ---------- 7 ขั้นตอน (ตรงกับการทำงานจริงของระบบ) ----------
+   m(S) คืนค่า [ตัวเลขหลัก, "หน่วย คำอธิบาย", บรรทัดรอง] จากข้อมูลสรุปของระบบ */
 const STEPS = [
-  { c:'#FF4D6D', t:'ลงข่าว', s:'ผู้รับผิดชอบแต่ละฝ่ายลงข่าว',
+  { c:'#7C5CFF', ic:'📝', t:'ลงข่าว', who:'ผู้รับผิดชอบแต่ละฝ่าย',
     p:'ผู้รับผิดชอบของแต่ละฝ่ายเข้าสู่ระบบด้วยอีเมล @msu.ac.th แล้วลงข่าวได้ทั้งภาพ ข้อความ วิดีโอ และเอกสาร PDF พร้อมไฟล์แนบ',
-    who:'ผู้รับผิดชอบลงข่าวของแต่ละฝ่าย', sys:'หน้าลงข่าว (news-admin)', ev:'ชื่อผู้ลงข่าว ฝ่าย วันเวลา ประเภทสื่อ',
-    m: S => [S.posters, 'คน ผู้รับผิดชอบ', `${nf(S.departments)} ฝ่าย`] },
-  { c:'#FF9F1C', t:'กำหนดการเผยแพร่', s:'ตั้งวันเริ่ม–สิ้นสุด และลำดับ',
-    p:'กำหนดวันเริ่มและวันสิ้นสุดการแสดง จัดลำดับความสำคัญของข่าว เลือกซ่อนหรือแสดง ระบบตรวจรูปแบบไฟล์และขนาดภาพให้อัตโนมัติ',
-    who:'ผู้ลงข่าว / ผู้ดูแลระบบ', sys:'หน้าลงข่าว · ปุ่มลัด 7/14/30 วัน', ev:'ช่วงเวลาเผยแพร่ ลำดับ สถานะ',
+    sys:'หน้าลงข่าว (news-admin)', ev:'ชื่อผู้ลงข่าว ฝ่าย วันเวลา ประเภทสื่อ',
+    m: S => [S.posters, 'คน ผู้รับผิดชอบ', `จาก ${nf(S.departments)} ฝ่าย`] },
+  { c:'#C04FD9', ic:'🗓️', t:'กำหนดการ|เผยแพร่', who:'ผู้ลงข่าว / ผู้ดูแลระบบ',
+    p:'กำหนดวันเริ่มและวันสิ้นสุดการแสดง จัดลำดับความสำคัญ เลือกซ่อนหรือแสดง ระบบตรวจรูปแบบไฟล์และปรับขนาดภาพให้อัตโนมัติ',
+    sys:'หน้าลงข่าว · ปุ่มลัด 7/14/30 วัน', ev:'ช่วงเวลาเผยแพร่ ลำดับ สถานะ',
     m: S => [S.scheduled, 'เรื่อง รอเริ่มแสดง', `ซ่อนไว้ ${nf(S.hidden)} เรื่อง`] },
-  { c:'#FFD23F', t:'เผยแพร่บนหน้าหลัก', s:'สไลด์บน EN-MSU Smart Office',
+  { c:'#F59E0B', ic:'📢', t:'เผยแพร่|บนหน้าหลัก', who:'ระบบอัตโนมัติ',
     p:'ข่าวขึ้นเป็นสไลด์บนหน้า EN-MSU Smart Office ซึ่งบุคลากรเข้าใช้ทุกวันเพื่อลงเวลาปฏิบัติราชการ จึงเห็นข่าวได้ทันทีทั้งบนคอมพิวเตอร์และมือถือ',
-    who:'ระบบ (อัตโนมัติ)', sys:'หน้าหลัก EN-MSU Smart Office', ev:'ข่าวที่กำลังเผยแพร่',
+    sys:'หน้าหลัก EN-MSU Smart Office', ev:'ข่าวที่กำลังเผยแพร่',
     m: S => [S.live, 'เรื่อง กำลังแสดง', 'อัปเดตทุก 5 นาที'] },
-  { c:'#2EC4B6', t:'บุคลากรรับชม', s:'เปิดอ่าน · ดูวิดีโอ · เปิดไฟล์',
+  { c:'#F05A28', ic:'👀', t:'บุคลากร|รับชม', who:'บุคลากร / ผู้เข้าชม',
     p:'บุคลากรกดเปิดอ่าน เล่นวิดีโอ หรือเปิดไฟล์แนบ ระบบนับยอดเปิดอ่านอัตโนมัติ ไม่เกิน 1 ครั้งต่อเครื่องต่อข่าวต่อวัน และไม่เก็บข้อมูลส่วนบุคคล',
-    who:'บุคลากรและผู้เข้าชม', sys:'สไลด์ข่าว · ตัวเล่นวิดีโอ · PDF', ev:'ยอดเปิดอ่านรายข่าว',
-    m: S => [S.views, 'ครั้ง ยอดเปิดอ่านสะสม', 'นับอัตโนมัติ'] },
-  { c:'#3A86FF', t:'จัดเก็บเข้าคลัง', s:'ครบกำหนดย้ายอัตโนมัติ',
-    p:'เมื่อเลยวันสิ้นสุด ระบบย้ายข่าวเข้าคลังข่าวอัตโนมัติทุกวัน ข่าวที่ผู้ลงข่าวนำออกก็เก็บไว้เช่นกัน รายการปัจจุบันจึงไม่รก และข้อมูลไม่สูญหาย',
-    who:'ระบบ (อัตโนมัติทุกวัน)', sys:'คลังข่าว (archive)', ev:'ประวัติข่าวทั้งหมด พร้อมไฟล์หลักฐาน',
-    m: S => [S.archived, 'เรื่อง ในคลังข่าว', `หมดอายุตามกำหนด ${nf(S.expired)} เรื่อง`] },
-  { c:'#8338EC', t:'ประมวลผลตัวชี้วัด', s:'Dashboard รายฝ่าย/รายเดือน',
+    sys:'สไลด์ข่าว · ตัวเล่นวิดีโอ · PDF', ev:'ยอดเปิดอ่านรายข่าว',
+    m: S => [S.views, 'ครั้ง เปิดอ่าน', 'นับอัตโนมัติ'] },
+  { c:'#E0245E', ic:'🗄️', t:'จัดเก็บ|เข้าคลัง', who:'ระบบอัตโนมัติทุกวัน',
+    p:'เมื่อเลยวันสิ้นสุด ระบบย้ายข่าวเข้าคลังข่าวอัตโนมัติ ข่าวที่ผู้ลงข่าวนำออกก็เก็บไว้เช่นกัน รายการปัจจุบันจึงไม่รก และข้อมูลไม่สูญหาย',
+    sys:'คลังข่าว (archive)', ev:'ประวัติข่าวทั้งหมด พร้อมไฟล์หลักฐาน',
+    m: S => [S.archived, 'เรื่อง ในคลัง', `หมดอายุตามกำหนด ${nf(S.expired)}`] },
+  { c:'#10B981', ic:'📊', t:'ประมวลผล|ตัวชี้วัด', who:'ผู้ดูแล / ผู้ดูรายงาน',
     p:'ระบบรวมข้อมูลข่าวปัจจุบันและคลังข่าว คำนวณตัวชี้วัดรายฝ่าย รายเดือน ประเภทสื่อ ยอดเปิดอ่าน และระยะเวลาเผยแพร่ ตามปีงบประมาณหรือไตรมาส',
-    who:'ผู้ดูแลระบบ / ผู้ดูรายงาน', sys:'หน้ารายงาน (news-dashboard)', ev:'ตัวชี้วัด KPI การประชาสัมพันธ์',
-    m: S => [S.totalFY, 'เรื่อง ในปีงบประมาณนี้', `${nf(S.deptsActiveFY)} ฝ่ายมีข่าว`] },
-  { c:'#FF006E', t:'รายงานและปรับปรุง', s:'เสนอผู้บริหาร · กรรมการประเมิน',
+    sys:'หน้ารายงาน (news-dashboard)', ev:'ตัวชี้วัด KPI การประชาสัมพันธ์',
+    m: S => [S.totalFY, 'เรื่อง ปีงบประมาณนี้', `${nf(S.deptsActiveFY)} ฝ่ายมีข่าว`] },
+  { c:'#2F80ED', ic:'🏛️', t:'รายงาน|และปรับปรุง', who:'ผู้บริหาร / กรรมการ',
     p:'พิมพ์หรือบันทึกรายงานเป็น PDF ส่งออก Excel นำเสนอผู้บริหารและกรรมการประเมินเป็นหลักฐานเชิงประจักษ์ แล้วนำข้อเสนอแนะกลับไปวางแผนการประชาสัมพันธ์ของแต่ละฝ่าย',
-    who:'ผู้บริหาร · กรรมการ · ทุกฝ่าย', sys:'รายงาน PDF / Excel', ev:'รายงานสรุปผล และข้อเสนอแนะ',
-    m: S => [S.total, 'เรื่อง ข้อมูลสะสมทั้งหมด', 'ย้อนกลับสู่ขั้นที่ 1'] }
+    sys:'รายงาน PDF / Excel', ev:'รายงานสรุปผล และข้อเสนอแนะ',
+    m: S => [S.total, 'เรื่อง ข้อมูลสะสม', 'ย้อนกลับสู่ขั้นที่ 1'] }
 ];
-let SUM = {};
-let active = 0, playing = !RM, timer = null;
-document.documentElement.style.setProperty('--dur', STEP_SECONDS + 's');
+let SUM = {}, active = 0, playing = !RM, timer = null, hovering = false;
+const plain = t => t.replace(/\|/g, '');
+const words = t => t.split('|').map(w => `<span class="w">${esc(w)}</span>`).join('');   // ตัดบรรทัดเฉพาะระหว่างคำ
 
-/* ---------- แถบขั้นตอน ---------- */
-function renderSteps(){
-  $('steps').innerHTML = STEPS.map((st, i) => { const [v, u, d] = st.m(SUM);
-    return `<button class="step ${i === active ? 'on' : ''}" data-i="${i}" style="--c:${st.c}">
-      <div class="t"><i>${i + 1}</i>${esc(st.t)}</div>
-      <div class="v">${nf(v)}<small>${esc(u.split(' ')[0])}</small></div>
-      <div class="d">${esc(st.s)}</div><span class="bar"></span></button>`; }).join('');
-  document.querySelectorAll('.lbl').forEach((el, i) => { const [v, u] = STEPS[i].m(SUM); el.querySelector('.m').textContent = `${nf(v)} ${u.split(' ')[0]}`; });
+/* ---------- แสดงขั้นตอน ---------- */
+function render(){
+  $('flow').innerHTML = STEPS.map((st, i) => { const [v, u, s] = st.m(SUM), unit = u.split(' ');
+    const badge = i === 0 ? 'เริ่ม · 1' : i === STEPS.length - 1 ? `${i + 1} · วนกลับ ↻` : i + 1;
+    return `<div class="col ${i === active ? 'on' : ''}" data-i="${i}" style="--c:${st.c};--i:${i}">
+      <div class="card" data-open="${i}">
+        <span class="badge">${badge}</span>
+        <h3><span aria-hidden="true">${st.ic}</span><span>${words(st.t)}</span></h3>
+        <div class="who">${esc(st.who)}</div>
+        <div class="v"><b>${nf(v)}</b> ${esc(unit[0])} ${esc(unit.slice(1).join(' '))}</div>
+        <div class="sub">${esc(s)}</div>
+        <button class="more" type="button" data-open="${i}">ดูรายละเอียด ›</button>
+      </div>
+      <div class="stem"></div>
+      <button class="box" type="button" data-open="${i}" aria-label="ขั้นที่ ${i + 1} ${esc(plain(st.t))}">
+        <span class="ring"></span><span class="shadow"></span>
+        <span class="float"><span class="cube"><span class="face t"></span><span class="face r"></span><span class="face f">${i + 1}</span></span></span>
+      </button>
+    </div>`; }).join('');
+  layout();
 }
-$('steps').addEventListener('click', e => { const b = e.target.closest('.step'); if(!b) return; setActive(+b.dataset.i, true); openStep(+b.dataset.i); });
-$('steps').addEventListener('animationend', e => { if(e.animationName === 'fill' && playing && !$('dlg').open) setActive(active + 1); });
 
+/* กล่องสูงขึ้นทีละขั้นจากซ้ายไปขวา แล้ววาดเส้นทางเชื่อมฐานกล่อง */
+function layout(){
+  const cols = [...document.querySelectorAll('.col')];
+  if(innerWidth <= 860){ $('path').innerHTML = ''; $('flow').style.removeProperty('--ch'); return; }
+  /* การ์ดสูงเท่ากันทุกใบ เพื่อให้กล่องไล่ระดับสูงขึ้นสม่ำเสมอ */
+  $('flow').style.setProperty('--ch', '0px');
+  const ch = Math.max(...cols.map(c => c.querySelector('.card').offsetHeight));
+  $('flow').style.setProperty('--ch', ch + 'px');
+  cols.forEach((c, i) => c.style.setProperty('--stem', `${118 - i * 14}px`));
+  requestAnimationFrame(() => {
+    const st = $('stage'), sr = st.getBoundingClientRect();
+    const pts = cols.map(c => { const r = c.querySelector('.box').getBoundingClientRect();
+      return [r.left + r.width / 2 - sr.left, r.bottom - sr.top - 14]; });
+    const all = [[14, pts[0][1] + 8]].concat(pts, [[sr.width - 14, pts[pts.length - 1][1] - 8]]);
+    let segs = '', glow = '';
+    for(let i = 0; i < all.length - 1; i++){
+      const [x1, y1] = all[i], [x2, y2] = all[i + 1], mx = (x1 + x2) / 2;
+      const d = `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;
+      const c = STEPS[Math.min(STEPS.length - 1, Math.max(0, i - 1))].c;
+      glow += `<path class="glow" d="${d}" stroke="${c}"/>`;
+      segs += `<path class="seg" d="${d}" stroke="${c}"/>`;
+    }
+    const svg = $('path');
+    svg.setAttribute('width', sr.width); svg.setAttribute('height', sr.height);
+    svg.setAttribute('viewBox', `0 0 ${sr.width} ${sr.height}`);
+    svg.innerHTML = glow + segs + `<path id="track" d="M${all.map(p => p.join(',')).join(' L')}" fill="none" stroke="none"/>` +
+      pts.map((p, i) => `<circle class="node" cx="${p[0]}" cy="${p[1]}" r="6" fill="${STEPS[i].c}"/>`).join('') +
+      `<circle id="mover" r="8" fill="#fff" stroke="${STEPS[active].c}" stroke-width="4"/>`;
+    moveDot(true);
+  });
+}
+addEventListener('resize', () => { clearTimeout(layout.t); layout.t = setTimeout(layout, 120); });
+
+/* จุด "ข่าว" วิ่งตามเส้นทางไปยังขั้นที่กำลังแสดง */
+let dotPos = 0, dotRaf = null;
+function moveDot(jump){
+  const track = $('track'), mover = $('mover'); if(!track || !mover) return;
+  const box = document.querySelectorAll('.col')[active].querySelector('.box');
+  const sr = $('stage').getBoundingClientRect(), r = box.getBoundingClientRect(), tx = r.left + r.width / 2 - sr.left;
+  const L = track.getTotalLength();
+  let lo = 0, hi = L;
+  for(let k = 0; k < 24; k++){ const m = (lo + hi) / 2; track.getPointAtLength(m).x < tx ? lo = m : hi = m; }
+  mover.setAttribute('stroke', STEPS[active].c);
+  cancelAnimationFrame(dotRaf);
+  const place = d => { const p = track.getPointAtLength(d); mover.setAttribute('cx', p.x); mover.setAttribute('cy', p.y); };
+  if(jump || RM || lo < dotPos){ dotPos = lo; place(dotPos); return; }
+  const from = dotPos, to = lo, t0 = performance.now(), dur = 900;
+  const step = t => { const k = Math.min(1, (t - t0) / dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    dotPos = from + (to - from) * e; place(dotPos); if(k < 1) dotRaf = requestAnimationFrame(step); };
+  dotRaf = requestAnimationFrame(step);
+}
+
+/* ---------- เล่นอัตโนมัติทีละขั้น (ไม่หมุนภาพ) ---------- */
 function setActive(i, user){
   active = (i + STEPS.length) % STEPS.length;
-  if(user && playing) setPlaying(false);
-  document.documentElement.style.setProperty('--act', STEPS[active].c);
-  document.querySelectorAll('.step').forEach((el, j) => el.classList.toggle('on', j === active));
-  document.querySelectorAll('.lbl').forEach((el, j) => el.classList.toggle('on', j === active));
-  const el = document.querySelector('.step.on');
-  if(el && el.scrollIntoView && innerWidth < 760) el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', inline:'center', block:'nearest' });
-  if(window.Scene3D) Scene3D.focus(active);
+  document.querySelectorAll('.col').forEach((c, j) => c.classList.toggle('on', j === active));
+  moveDot(false);
+  if(user && playing) setPlaying(false); else restart();
+}
+function restart(){
+  clearTimeout(timer);
+  if(playing) timer = setTimeout(() => { if(!$('dlg').open && !hovering) setActive(active + 1); else restart(); }, STEP_SECONDS * 1000);
 }
 function setPlaying(on){
-  playing = on;
-  document.body.classList.toggle('paused', !on);
-  $('play').setAttribute('aria-pressed', on);
-  $('playLbl').textContent = on ? 'หยุดชั่วคราว' : 'เล่นอัตโนมัติ';
-  $('playIco').innerHTML = on ? '<path d="M8 5v14M16 5v14"/>' : '<path d="M7 5l12 7-12 7z"/>';
-  /* เริ่มนับเวลาใหม่ของขั้นปัจจุบัน */
-  const el = document.querySelector('.step.on .bar'); if(el){ el.style.animation = 'none'; el.offsetWidth; el.style.animation = ''; }
+  playing = on; $('play').textContent = on ? 'หยุดชั่วคราว' : 'เล่นอัตโนมัติ'; $('play').setAttribute('aria-pressed', on); restart();
 }
+$('stage').addEventListener('mouseenter', () => hovering = true);
+$('stage').addEventListener('mouseleave', () => hovering = false);
 $('play').onclick = () => setPlaying(!playing);
 $('prev').onclick = () => setActive(active - 1, true);
 $('next').onclick = () => setActive(active + 1, true);
-addEventListener('keydown', e => {
-  if($('dlg').open) return;
-  if(e.key === 'ArrowRight') setActive(active + 1, true);
-  if(e.key === 'ArrowLeft') setActive(active - 1, true);
-  if(e.key === 'Enter') openStep(active);
-  if(e.key === ' '){ e.preventDefault(); setPlaying(!playing); }
+$('flow').addEventListener('click', e => {
+  const b = e.target.closest('[data-open]'); if(!b) return;
+  setActive(+b.dataset.open, true); openStep(+b.dataset.open);
 });
 
 /* ---------- หน้าต่างรายละเอียด ---------- */
 function openStep(i){
-  const st = STEPS[i], [v, u, d] = st.m(SUM);
+  const st = STEPS[i], [v, u, s] = st.m(SUM);
   $('dlg').style.setProperty('--c', st.c);
   $('dK').textContent = `ขั้นที่ ${i + 1} จาก ${STEPS.length}`;
-  $('dT').textContent = st.t; $('dP').textContent = st.p;
-  $('dV').textContent = nf(v); $('dU').textContent = `${u} · ${d}`;
+  $('dT').textContent = `${st.ic} ${plain(st.t)}`; $('dP').textContent = st.p;
+  $('dV').textContent = nf(v); $('dU').textContent = `${u} · ${s}`;
   $('dF').innerHTML = [['ผู้รับผิดชอบ', st.who], ['ระบบที่ใช้', st.sys], ['หลักฐานที่ได้', st.ev]]
     .map(([h, p]) => `<div><h4>${h}</h4><p>${esc(p)}</p></div>`).join('');
-  $('dL').textContent = i === STEPS.length - 1 ? 'ผลการประเมินและข้อเสนอแนะจะย้อนกลับไปสู่ขั้นที่ 1 เพื่อวางแผนการประชาสัมพันธ์รอบถัดไป (วงจรพัฒนาต่อเนื่อง)' : '';
   if(!$('dlg').open) $('dlg').showModal();
 }
 $('dPrev').onclick = () => { setActive(active - 1, true); openStep(active); };
@@ -276,236 +353,27 @@ $('dNext').onclick = () => { setActive(active + 1, true); openStep(active); };
 $('dlg').addEventListener('click', e => { if(e.target === $('dlg')) $('dlg').close(); });
 
 /* ---------- ข้อมูลจริง ---------- */
-async function loadSummary(){
+function renderChips(){
+  const C = [['#7C5CFF', 'ลำดับการดำเนินงาน', `${STEPS.length} ขั้นตอน`], ['#F59E0B', 'กำลังแสดง', `${nf(SUM.live)} ข่าว`],
+             ['#F05A28', 'ยอดเปิดอ่าน', `${nf(SUM.views)} ครั้ง`], ['#10B981', 'ปีงบประมาณนี้', `${nf(SUM.totalFY)} เรื่อง`],
+             ['#2F80ED', 'ผู้รับผิดชอบ', `${nf(SUM.posters)} คน · ${nf(SUM.departments)} ฝ่าย`]];
+  $('chips').innerHTML = C.map(([c, l, v]) => `<span class="chip" style="--c:${c}"><i></i>${l} <b>${v}</b></span>`).join('');
+}
+async function load(){
   try{
     const r = await fetch(NEWS_API + '?action=summary', { cache:'no-store' });
     const j = await r.json();
     if(j.ok){
-      SUM = j; renderSteps();
+      SUM = j;
       $('asof').textContent = `(ข้อมูล ณ ${new Date(j.generated.replace(' ', 'T')).toLocaleString('th-TH', { dateStyle:'medium', timeStyle:'short' })} น.)`;
-      $('sumbar').innerHTML = [[j.departments, 'ฝ่าย'], [j.posters, 'ผู้รับผิดชอบ'], [j.live, 'ข่าวกำลังแสดง'], [j.views, 'ยอดเปิดอ่าน']]
-        .map(([v, l]) => `<span class="glass"><b>${nf(v)}</b>${l}</span>`).join('');
+      renderChips(); render();
     }
-  }catch(e){ /* แสดงขั้นตอนได้แม้ไม่มีตัวเลข */ }
+  }catch(e){ /* แสดงขั้นตอนได้แม้ยังไม่มีตัวเลข */ }
 }
 
-/* =========================================================
-   ฉาก 3 มิติ (three.js)
-   ========================================================= */
-window.Scene3D = (() => {
-  const canvas = $('scene');
-  let renderer;
-  try{
-    if(!window.THREE) throw new Error('no three');
-    renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
-  }catch(e){
-    document.documentElement.classList.add('fallback');
-    return null;
-  }
-  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
-  const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0B0820, 0.028);
-  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.position.set(6, 12, 8); scene.add(sun);
-  const spot = new THREE.PointLight(0xffffff, 2.2, 14, 2); scene.add(spot);
-
-  /* เส้นทางวงรอบ 7 จุด (ขึ้นลงเล็กน้อยให้เห็นมิติ) */
-  const RX = 7.4, RZ = 5.2, N = STEPS.length;
-  const ang = i => -Math.PI / 2 - i / N * Math.PI * 2 + Math.PI;     // ขั้นที่ 1 อยู่ด้านหน้า
-  const P = STEPS.map((_, i) => new THREE.Vector3(Math.cos(ang(i)) * RX, 0.55 * Math.sin(i / N * Math.PI * 4), Math.sin(ang(i)) * RZ));
-  const curve = new THREE.CatmullRomCurve3(P, true, 'centripetal');
-  const col = STEPS.map(s => new THREE.Color(s.c));
-  const colorAt = u => { const x = ((u % 1) + 1) % 1 * N, i = Math.floor(x) % N; return col[i].clone().lerp(col[(i + 1) % N], x - Math.floor(x)); };
-  /* u บนเส้นโค้งของแต่ละจุด (เส้นแบบปิด ผ่านจุดที่ i/N) */
-  const uOf = i => i / N;
-
-  function tube(radius, opacity, additive){
-    const g = new THREE.TubeGeometry(curve, 420, radius, 10, true);
-    const c = [], pos = g.attributes.position;
-    for(let k = 0; k < pos.count; k++){ const seg = Math.floor(k / 11) / 420; const cc = colorAt(seg); c.push(cc.r, cc.g, cc.b); }
-    g.setAttribute('color', new THREE.Float32BufferAttribute(c, 3));
-    const m = new THREE.MeshBasicMaterial({ vertexColors:true, transparent:true, opacity, depthWrite:!additive,
-      blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending });
-    const mesh = new THREE.Mesh(g, m); scene.add(mesh); return mesh;
-  }
-  tube(0.07, 0.95, false);
-  tube(0.22, 0.18, true);
-
-  /* พื้นวงแหวนเรืองแสง */
-  const floorTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
-    const g = x.createRadialGradient(128,128,0,128,128,128); g.addColorStop(0,'rgba(170,110,255,.55)'); g.addColorStop(.55,'rgba(120,60,200,.18)'); g.addColorStop(1,'rgba(0,0,0,0)');
-    x.fillStyle = g; x.fillRect(0,0,256,256); return new THREE.CanvasTexture(c); })();
-  const floor = new THREE.Mesh(new THREE.CircleGeometry(13, 64), new THREE.MeshBasicMaterial({ map:floorTex, transparent:true, depthWrite:false }));
-  floor.rotation.x = -Math.PI / 2; floor.position.y = -1.25; scene.add(floor);
-  const grid = new THREE.PolarGridHelper(12, 14, 7, 72, 0x6b4bb8, 0x3a2a6b);
-  grid.position.y = -1.24; grid.material.transparent = true; grid.material.opacity = 0.35; scene.add(grid);
-
-  /* ดาวพื้นหลัง */
-  { const g = new THREE.BufferGeometry(), v = [];
-    for(let i = 0; i < 700; i++){ const r = 30 + Math.random() * 40, t = Math.random() * Math.PI * 2, p = Math.random() * Math.PI * .5;
-      v.push(Math.cos(t) * Math.cos(p) * r, Math.sin(p) * r - 4, Math.sin(t) * Math.cos(p) * r); }
-    g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
-    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color:0xd9c8ff, size:0.12, transparent:true, opacity:.75 }))); }
-
-  /* แท่นแต่ละขั้น: ฐานหกเหลี่ยม + อัญมณีลอย + วงแหวน */
-  const nodes = STEPS.map((st, i) => {
-    const g = new THREE.Group(); g.position.copy(P[i]);
-    const c = col[i];
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 1.12, 0.38, 6),
-      new THREE.MeshStandardMaterial({ color:c, emissive:c, emissiveIntensity:.35, metalness:.35, roughness:.35 }));
-    base.position.y = -0.2;
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.78, 0.78, 0.05, 6),
-      new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:.25 }));
-    cap.position.y = 0.0;
-    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.42, 0),
-      new THREE.MeshStandardMaterial({ color:c, emissive:c, emissiveIntensity:.9, metalness:.2, roughness:.15, flatShading:true }));
-    gem.position.y = 0.95;
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.32, 0.035, 8, 80), new THREE.MeshBasicMaterial({ color:c, transparent:true, opacity:.75 }));
-    ring.rotation.x = Math.PI / 2; ring.position.y = -0.02;
-    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 3.2, 8, 1, true),
-      new THREE.MeshBasicMaterial({ color:c, transparent:true, opacity:.0, blending:THREE.AdditiveBlending, depthWrite:false }));
-    beam.position.y = 1.6;
-    g.add(base, cap, gem, ring, beam);
-    base.userData.i = gem.userData.i = cap.userData.i = i;
-    scene.add(g);
-    return { g, base, gem, ring, beam, pick:[base, gem, cap] };
-  });
-  const pickables = nodes.flatMap(n => n.pick);
-
-  /* อนุภาค "ข่าว" ไหลไปตามเส้นทาง */
-  const flow = [];
-  const pg = new THREE.SphereGeometry(0.075, 10, 10);
-  for(let k = 0; k < 54; k++){
-    const m = new THREE.Mesh(pg, new THREE.MeshBasicMaterial({ color:0xffffff }));
-    const glow = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 10), new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:.22, blending:THREE.AdditiveBlending, depthWrite:false }));
-    m.add(glow); scene.add(m);
-    flow.push({ m, glow, u: k / 54, sp: 0.018 + Math.random() * 0.012 });
-  }
-
-  /* ป้ายข้อความ HTML ติดตามตำแหน่งแท่น */
-  const labels = STEPS.map((st, i) => {
-    const el = document.createElement('div');
-    el.className = 'lbl' + (i === 0 ? ' on' : ''); el.style.setProperty('--c', st.c);
-    el.innerHTML = `<div class="bub"><span class="n">${i + 1}</span><b>${esc(st.t)}</b><span class="m">–</span></div>`;
-    el.addEventListener('click', () => { setActive(i, true); openStep(i); });
-    $('labels').appendChild(el); return el;
-  });
-
-  /* มุมกล้อง: ลากหมุน / ซูม / หมุนเข้าหาขั้นที่เลือก */
-  let az = 0.0, el = 0.62, dist = 19, tAz = 0, tEl = 0.62, tDist = 19, baseDist = 19, drag = null, idleT = 0, hover = -1;
-  const targetAzFor = i => ang(i) - ang(0);
-  function focus(i){ tAz = -targetAzFor(i); while(tAz - az > Math.PI) tAz -= Math.PI * 2; while(az - tAz > Math.PI) tAz += Math.PI * 2; }
-  canvas.addEventListener('pointerdown', e => { drag = { x:e.clientX, y:e.clientY, az:tAz, el:tEl, moved:false }; canvas.setPointerCapture(e.pointerId); canvas.classList.add('grab'); });
-  canvas.addEventListener('pointermove', e => {
-    if(drag){
-      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-      if(Math.abs(dx) + Math.abs(dy) > 4){ drag.moved = true; if(playing) setPlaying(false); }
-      tAz = drag.az + dx * 0.006; tEl = Math.max(0.15, Math.min(1.3, drag.el + dy * 0.004)); idleT = 0;
-    } else pickAt(e.clientX, e.clientY);
-  });
-  canvas.addEventListener('pointerup', e => {
-    canvas.classList.remove('grab');
-    if(drag && !drag.moved){ const i = pickAt(e.clientX, e.clientY); if(i >= 0){ setActive(i, true); openStep(i); } }
-    drag = null;
-  });
-  canvas.addEventListener('wheel', e => { e.preventDefault(); tDist = Math.max(baseDist * 0.6, Math.min(baseDist * 1.5, tDist + e.deltaY * 0.01)); }, { passive:false });
-  const ray = new THREE.Raycaster(), mv = new THREE.Vector2();
-  function pickAt(x, y){
-    mv.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1);
-    ray.setFromCamera(mv, camera);
-    const h = ray.intersectObjects(pickables)[0];
-    hover = h ? h.object.userData.i : -1;
-    canvas.classList.toggle('hover', hover >= 0);
-    return hover;
-  }
-
-  function resize(){
-    const w = innerWidth, h = innerHeight;
-    renderer.setSize(w, h, false); camera.aspect = w / h;
-    camera.fov = w < 760 ? 50 : 40;
-    /* ระยะกล้องพอดีให้เห็นวงรอบครบทั้งจอแนวนอนและแนวตั้ง */
-    const mob = w < 760;
-    tEl = mob ? 0.95 : 0.55;
-    /* เลื่อนจุดกึ่งกลางภาพให้อยู่ระหว่างหัวเรื่องกับแถบขั้นตอน */
-    const head = document.querySelector('.top').getBoundingClientRect().bottom;
-    const railTop = document.querySelector('.rail-in').getBoundingClientRect().top;
-    camera.setViewOffset(w, h, 0, Math.round(h / 2 - (head + railTop) / 2), w, h);
-    camera.updateProjectionMatrix();
-    /* หาระยะกล้องที่ใกล้ที่สุดที่ยังเห็นทุกขั้นตอนครบในพื้นที่ว่าง */
-    const cam = camera.clone(), q = new THREE.Vector3(), pts = [];
-    P.forEach(p => [[0, 2.5, 0], [0, -0.6, 1.3], [1.3, -0.6, 0], [-1.3, -0.6, 0], [0, -0.6, -1.3]]
-      .forEach(o => pts.push(p.clone().add(q.set(o[0], o[1], o[2])))));
-    const top = head + 30, bot = railTop - 6, pad = mob ? 48 : 100;   // เผื่อความกว้างป้ายข้อความ
-    baseDist = 40;
-    for(let d = 10; d <= 60; d += 0.5){
-      cam.position.set(0, Math.sin(tEl) * d * 0.9 + 1, Math.cos(tEl) * d); cam.lookAt(0, -0.3, 0); cam.updateMatrixWorld();
-      const ok = pts.every(p => { q.copy(p).project(cam); const x = (q.x * .5 + .5) * w, y = (-q.y * .5 + .5) * h;
-        return x > pad && x < w - pad && y > top && y < bot; });
-      if(ok){ baseDist = d; break; }
-    }
-    tDist = dist = baseDist; el = tEl;
-  }
-  addEventListener('resize', resize); resize();
-
-  const v = new THREE.Vector3(), clock = new THREE.Clock();
-  function frame(){
-    const dt = Math.min(0.05, clock.getDelta()), t = clock.elapsedTime;
-    /* หมุนช้าๆ เองเมื่อหยุดเล่นและไม่มีการลาก */
-    if(!playing && !drag && !RM){ idleT += dt; if(idleT > 6) tAz += dt * 0.05; }
-    az += (tAz - az) * Math.min(1, dt * 2.6); el += (tEl - el) * Math.min(1, dt * 3); dist += (tDist - dist) * Math.min(1, dt * 3);
-    camera.position.set(Math.sin(az) * Math.cos(el) * dist, Math.sin(el) * dist * 0.9 + 1, Math.cos(az) * Math.cos(el) * dist);
-    camera.lookAt(0, -0.3, 0);
-
-    nodes.forEach((n, i) => {
-      const on = i === active, hv = i === hover;
-      const k = on ? 1 : hv ? 0.6 : 0;
-      n.gem.rotation.y += dt * (on ? 1.8 : 0.6);
-      n.gem.position.y = 0.95 + (RM ? 0 : Math.sin(t * 2 + i) * 0.08) + k * 0.25;
-      const s = 1 + k * 0.45; n.gem.scale.lerp(v.set(s, s, s), Math.min(1, dt * 6));
-      const rs = 1 + (on && !RM ? (Math.sin(t * 4) * 0.5 + 0.5) * 0.18 : 0); n.ring.scale.set(rs, rs, 1);
-      n.ring.material.opacity = on ? 1 : 0.55;
-      n.base.material.emissiveIntensity += ((on ? .85 : hv ? .6 : .3) - n.base.material.emissiveIntensity) * Math.min(1, dt * 5);
-      n.beam.material.opacity += ((on ? .5 : 0) - n.beam.material.opacity) * Math.min(1, dt * 4);
-    });
-    spot.position.copy(P[active]).add(v.set(0, 2.4, 0)); spot.color.copy(col[active]);
-
-    flow.forEach(f => {
-      if(!RM) f.u = (f.u + f.sp * dt * (playing ? 1.4 : 0.8)) % 1;
-      curve.getPointAt(f.u, f.m.position);
-      const c = colorAt(f.u); f.m.material.color.copy(c).lerp(new THREE.Color(1, 1, 1), 0.35); f.glow.material.color.copy(c);
-    });
-
-    /* วางป้ายข้อความตามตำแหน่งบนจอ */
-    labels.forEach((lb, i) => {
-      v.copy(P[i]); v.y += 1.95; v.project(camera);
-      const x = (v.x * 0.5 + 0.5) * innerWidth, y = (-v.y * 0.5 + 0.5) * innerHeight;
-      lb.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
-      const front = v.z < 1;
-      /* ป้ายด้านหลังวง (ไกลกล้อง) จางลง */
-      const camSide = P[i].x * Math.sin(az) + P[i].z * Math.cos(az);
-      lb.classList.toggle('back', camSide < -2.5 && i !== active);
-      lb.classList.toggle('dim', i !== active && i !== hover && camSide >= -2.5);
-      lb.style.visibility = front ? 'visible' : 'hidden';
-      lb.style.zIndex = String(Math.round((camSide + 10) * 10));
-    });
-    renderer.render(scene, camera);
-    if(!document.hidden) requestAnimationFrame(frame);
-  }
-  document.addEventListener('visibilitychange', () => { if(!document.hidden){ clock.getDelta(); requestAnimationFrame(frame); } });
-  requestAnimationFrame(frame);
-  /* จัดกล้องใหม่เมื่อขนาดแถบด้านบน/ล่างเปลี่ยน (เช่น ฟอนต์โหลดเสร็จ) */
-  if(window.ResizeObserver){ const ro = new ResizeObserver(() => resize()); ro.observe(document.querySelector('.rail-in')); ro.observe(document.querySelector('.top')); }
-  return { focus, resize };
-})();
-
-renderSteps();
-if(window.Scene3D) Scene3D.resize();
-setActive(0);
-setPlaying(playing);
-loadSummary();
-setInterval(loadSummary, 5 * 60 * 1000);
+renderChips(); render(); setPlaying(playing);
+document.fonts && document.fonts.ready.then(layout);
+load(); setInterval(load, 5 * 60 * 1000);
 </script>
 </body>
 </html>
