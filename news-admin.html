@@ -203,6 +203,31 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .atts .new{font-size:11px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:99px;padding:1px 8px}
 #attAdd{cursor:pointer}
 
+/* สโลแกนหน้าหลัก (ให้ตรงกับ index.html) */
+.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.slpv{display:flex;align-items:baseline;gap:6px 16px;flex-wrap:wrap;padding:16px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.slpv-t{font-size:16px;font-weight:600}
+.slsw{display:flex;gap:8px;flex-wrap:wrap}
+.slsw label{cursor:pointer}
+.slsw input{position:absolute;opacity:0}
+.slsw span{display:block;width:40px;height:26px;border-radius:99px;background:var(--sl-g);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.slsw input:checked + span{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}
+.slsw input:focus-visible + span{outline:2px solid var(--accent);outline-offset:4px}
+.slogan{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-size:19px;line-height:1.3;font-weight:700}
+.slogan .sl-h{flex:none;font-weight:800;padding:3px 12px;border-radius:99px;color:#fff;font-size:.82em;background:var(--sl-g);align-self:center}
+.slogan .sl-m{min-width:0;display:inline-flex;flex-wrap:wrap;gap:0 .32em;background:var(--sl-g);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:slflow 8s linear infinite}
+.slogan .sl-m span{display:inline-block;animation:slin .55s cubic-bezier(.2,.8,.2,1.2) both;animation-delay:calc(var(--k) * 90ms);background:inherit;background-size:inherit;-webkit-background-clip:text;background-clip:text;color:transparent}
+.slogan.off{opacity:.4;filter:grayscale(1)}
+@keyframes slflow{to{background-position:220% 0}}
+@keyframes slin{from{opacity:0;transform:translateY(10px) scale(.92)}}
+.sl-fire   {--sl-g:linear-gradient(90deg,#E0243A,#FF7A59,#F5A300,#E0243A)}
+.sl-ocean  {--sl-g:linear-gradient(90deg,#1D4ED8,#06B6D4,#10B981,#1D4ED8)}
+.sl-royal  {--sl-g:linear-gradient(90deg,#6D28D9,#C026D3,#EC4899,#6D28D9)}
+.sl-rainbow{--sl-g:linear-gradient(90deg,#E0243A,#F59E0B,#10B981,#2F6BFF,#7C4DFF,#E0243A)}
+.sl-forest {--sl-g:linear-gradient(90deg,#047857,#10B981,#84CC16,#047857)}
+.sl-classic{--sl-g:linear-gradient(90deg,#9B0F33,#B3122E,#C9A227,#9B0F33)}
+@media (max-width:860px){ .setgrid{grid-template-columns:1fr} }
+
 /* ผู้ใช้งาน */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
 .card h3{margin:0 0 12px;font-size:16px}
@@ -342,6 +367,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <button role="tab" aria-selected="true" data-tab="tNews">ข่าวปัจจุบัน</button>
       <button role="tab" aria-selected="false" data-tab="tArch">คลังข่าว</button>
       <button role="tab" aria-selected="false" data-tab="tUsers" id="usersTab" hidden>ผู้ใช้งาน</button>
+      <button role="tab" aria-selected="false" data-tab="tSet" id="setTab" hidden>ข้อความหน้าหลัก</button>
     </div>
 
     <section id="tNews">
@@ -362,6 +388,37 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
         <span class="note">ข่าวที่เลยวันสิ้นสุดจะย้ายมาที่นี่อัตโนมัติทุกวัน และข่าวที่กด "ลบ" ก็มาเก็บที่นี่ ทุกข่าวยังนับในรายงานสถิติ</span>
       </div>
       <ul class="list" id="archList"></ul>
+    </section>
+
+    <section id="tSet" hidden>
+      <form class="card" id="setForm" novalidate>
+        <h3>สโลแกนบนหน้าหลัก</h3>
+        <p class="hint" style="margin:-6px 0 14px">แสดงข้างหัวข้อ "ระบบงานทั้งหมด" บนหน้า EN-MSU Smart Office กดบันทึกแล้วหน้าหลักจะเปลี่ยนเองภายในไม่กี่นาที ไม่ต้องอัปโหลดไฟล์ใหม่ขึ้นเว็บเซิร์ฟเวอร์</p>
+        <div class="setgrid">
+          <div>
+            <label class="check" style="margin:0 0 14px"><input type="checkbox" id="sOn" checked> แสดงสโลแกนบนหน้าหลัก</label>
+            <label class="f"><span>ป้ายหัวข้อ <small>(ไม่เกิน 40 ตัวอักษร เว้นว่างได้)</small></span>
+              <input class="in" id="sHead" maxlength="40" placeholder="เช่น En-Smart Office"></label>
+            <label class="f"><span>ข้อความสโลแกน <small id="sCount">(1 บรรทัด = 1 ข้อความ สูงสุด 5 ข้อความ)</small></span>
+              <textarea class="in" id="sText" rows="4" placeholder="สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍"></textarea>
+              <span class="hint">ใส่หลายบรรทัด ระบบจะสลับแสดงทีละข้อความ เว้นวรรคระหว่างคำเพื่อให้คำค่อยๆ ปรากฏทีละคำ</span></label>
+            <div class="row2">
+              <div class="f"><span style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px">โทนสี</span><div class="slsw" id="sStyle"></div></div>
+              <label class="f"><span>เวลาแสดงต่อข้อความ</span>
+                <select class="in" id="sSec"><option value="4">4 วินาที</option><option value="6" selected>6 วินาที</option><option value="8">8 วินาที</option><option value="12">12 วินาที</option></select></label>
+            </div>
+          </div>
+          <div>
+            <span style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px">ตัวอย่างบนหน้าหลัก</span>
+            <div class="slpv"><span class="slpv-t">ระบบงานทั้งหมด</span><div class="slogan" id="sPreview"></div></div>
+            <p class="hint" id="sMeta"></p>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+          <button class="btn" type="button" id="sReset">คืนค่าเริ่มต้น</button>
+          <button class="btn primary" id="sSave">บันทึกและเผยแพร่</button>
+        </div>
+      </form>
     </section>
 
     <section id="tUsers" hidden>
@@ -657,6 +714,7 @@ function enterApp(){
   if(me.role === 'viewer' || next === 'dashboard'){ location.href = 'news-dashboard.html'; return; }
   view('vApp');
   $('usersTab').hidden = me.role !== 'admin';
+  $('setTab').hidden = me.role !== 'admin';
   $('deptField').hidden = me.role !== 'admin';
   $('deptList').innerHTML = (meta.departments || []).map(d => `<option value="${esc(d)}">`).join('');
   tab('tNews'); loadNews();
@@ -666,7 +724,8 @@ function enterApp(){
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => tab(b.dataset.tab));
 function tab(id){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
-  $('tNews').hidden = id !== 'tNews'; $('tUsers').hidden = id !== 'tUsers'; $('tArch').hidden = id !== 'tArch';
+  $('tNews').hidden = id !== 'tNews'; $('tUsers').hidden = id !== 'tUsers'; $('tArch').hidden = id !== 'tArch'; $('tSet').hidden = id !== 'tSet';
+  if(id === 'tSet') loadSettings();
   if(id === 'tUsers') loadUsers();
   if(id === 'tArch') loadArchive();
 }
@@ -755,6 +814,53 @@ $('newsList').addEventListener('click', async e => {
     catch(err){ toast(err.message, true); busy(b, false); }
   }
 });
+
+/* ---------------- ข้อความหน้าหลัก (สโลแกน) ---------------- */
+const SL_STYLES = { fire:'แดง–ทอง', ocean:'น้ำเงิน–เขียว', royal:'ม่วง–ชมพู', rainbow:'สีรุ้ง', forest:'เขียว', classic:'แดงเลือดหมู–ทอง' };
+const SL_DEFAULT = { sloganOn:'Y', sloganHead:'En-Smart Office', sloganText:'สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍', sloganStyle:'fire', sloganSeconds:'6' };
+$('sStyle').innerHTML = Object.entries(SL_STYLES).map(([k, v]) =>
+  `<label class="sl-${k}" title="${v}"><input type="radio" name="slstyle" value="${k}" aria-label="${v}"><span></span></label>`).join('');
+const slLines = () => $('sText').value.split('\n').map(x => x.trim()).filter(Boolean);
+let slIdx = 0, slTimer = null;
+function slPreview(){
+  const lines = slLines(), style = document.querySelector('input[name="slstyle"]:checked');
+  const st = style ? style.value : 'fire', pv = $('sPreview');
+  pv.className = `slogan sl-${st}${$('sOn').checked ? '' : ' off'}`;
+  const line = lines[slIdx % Math.max(1, lines.length)] || '';
+  pv.innerHTML = `${$('sHead').value.trim() ? `<span class="sl-h">${esc($('sHead').value.trim())}</span>` : ''}<span class="sl-m">${
+    line.split(/\s+/).filter(Boolean).map((w, k) => `<span style="--k:${k}">${esc(w)}</span>`).join('')}</span>`;
+  $('sCount').textContent = `(${lines.length}/5 ข้อความ · 1 บรรทัด = 1 ข้อความ)`;
+  $('sCount').style.color = lines.length > 5 ? 'var(--accent)' : '';
+}
+function slFill(v){
+  $('sOn').checked = v.sloganOn !== 'N'; $('sHead').value = v.sloganHead || ''; $('sText').value = v.sloganText || '';
+  const r = document.querySelector(`input[name="slstyle"][value="${v.sloganStyle}"]`) || document.querySelector('input[name="slstyle"]');
+  r.checked = true; $('sSec').value = ['4','6','8','12'].includes(String(v.sloganSeconds)) ? String(v.sloganSeconds) : '6';
+  $('sMeta').textContent = v.updated ? `แก้ไขล่าสุด ${v.updated} โดย ${v.updatedBy}` : 'ยังไม่เคยแก้ไข (ใช้ค่าเริ่มต้น)';
+  slIdx = 0; slPreview();
+  clearInterval(slTimer);
+  slTimer = setInterval(() => { if(slLines().length > 1 && !$('tSet').hidden){ slIdx++; slPreview(); } }, +$('sSec').value * 1000);
+}
+async function loadSettings(){
+  try{ slFill((await api('getSettings')).settings); }catch(err){ toast(err.message, true); }
+}
+['sOn','sHead','sText','sSec'].forEach(i => $(i).addEventListener('input', slPreview));
+$('sStyle').addEventListener('change', slPreview);
+$('sReset').onclick = () => { slFill(Object.assign({}, SL_DEFAULT, { updated:'' })); $('sMeta').textContent = 'คืนค่าเริ่มต้นแล้ว กด "บันทึกและเผยแพร่" เพื่อใช้งาน'; };
+$('setForm').onsubmit = async e => {
+  e.preventDefault();
+  const lines = slLines();
+  if($('sOn').checked && !lines.length) return toast('กรุณาใส่ข้อความสโลแกนอย่างน้อย 1 ข้อความ', true);
+  if(lines.length > 5) return toast('ใส่ได้สูงสุด 5 ข้อความ', true);
+  if(lines.some(l => l.length > 90)) return toast('แต่ละข้อความยาวได้ไม่เกิน 90 ตัวอักษร', true);
+  const btn = $('sSave'); busy(btn, true, 'กำลังบันทึก…');
+  try{
+    const j = await api('saveSettings', { settings: { sloganOn: $('sOn').checked, sloganHead: $('sHead').value, sloganText: lines.join('\n'),
+      sloganStyle: document.querySelector('input[name="slstyle"]:checked').value, sloganSeconds: $('sSec').value } });
+    slFill(j.settings); toast('บันทึกแล้ว หน้าหลักจะแสดงข้อความใหม่ภายในไม่กี่นาที');
+  }catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
 
 /* ---------------- คลังข่าว ---------------- */
 let archive = [];

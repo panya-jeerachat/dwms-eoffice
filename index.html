@@ -340,6 +340,27 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
   background:var(--grad-hot);border-radius:12px;padding:10px 18px}
 
 .section-title{font-size:17px;font-weight:600;margin:0 0 14px}
+/* ---------- สโลแกน (แก้ข้อความได้จากหน้าลงข่าว แท็บ "ข้อความหน้าหลัก") ---------- */
+.sec-row{display:flex;align-items:baseline;gap:6px 18px;flex-wrap:wrap}
+.sec-row .section-title{flex:none}
+.slogan{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;margin:0 0 14px;font-size:clamp(15px,1.45vw,20px);line-height:1.3;font-weight:700}
+.slogan .sl-h{flex:none;font-weight:800;letter-spacing:.01em;padding:3px 12px;border-radius:99px;color:#fff;font-size:.82em;
+  background:var(--sl-g);box-shadow:0 6px 16px -8px var(--sl-c);align-self:center}
+.slogan .sl-m{min-width:0;display:inline-flex;flex-wrap:wrap;gap:0 .32em;
+  background:var(--sl-g);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:slflow 8s linear infinite}
+.slogan .sl-m span{display:inline-block;animation:slin .55s cubic-bezier(.2,.8,.2,1.2) both;animation-delay:calc(var(--k) * 90ms);
+  background:inherit;background-size:inherit;-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes slflow{to{background-position:220% 0}}
+@keyframes slin{from{opacity:0;transform:translateY(10px) scale(.92)}}
+.slogan.out .sl-m{opacity:0;transition:opacity .35s}
+.sl-fire   {--sl-c:#E0243A;--sl-g:linear-gradient(90deg,#E0243A,#FF7A59,#F5A300,#E0243A)}
+.sl-ocean  {--sl-c:#2F6BFF;--sl-g:linear-gradient(90deg,#1D4ED8,#06B6D4,#10B981,#1D4ED8)}
+.sl-royal  {--sl-c:#7C4DFF;--sl-g:linear-gradient(90deg,#6D28D9,#C026D3,#EC4899,#6D28D9)}
+.sl-rainbow{--sl-c:#E0243A;--sl-g:linear-gradient(90deg,#E0243A,#F59E0B,#10B981,#2F6BFF,#7C4DFF,#E0243A)}
+.sl-forest {--sl-c:#047857;--sl-g:linear-gradient(90deg,#047857,#10B981,#84CC16,#047857)}
+.sl-classic{--sl-c:#6E0B22;--sl-g:linear-gradient(90deg,#9B0F33,#B3122E,#C9A227,#9B0F33)}
+@media (prefers-reduced-motion:reduce){ .slogan .sl-m,.slogan .sl-m span{animation:none} }
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
 .tile{
   position:relative;overflow:hidden;display:flex;gap:16px;align-items:flex-start;text-align:left;width:100%;
@@ -473,6 +494,8 @@ a.tile{text-decoration:none;color:inherit}
   body.mini .nav-item{justify-content:flex-start;padding:7px 10px}
   .crumb small{display:none}
   .news{border-radius:16px;margin-bottom:16px}
+  .sec-row{flex-direction:column-reverse;align-items:stretch;gap:0}
+  .slogan{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);flex-wrap:wrap;font-size:16px}
   .punch{grid-template-columns:auto 1fr;padding:18px 18px 18px 24px}
   .punch > .tile-icon{align-self:start;width:48px;height:48px;flex-basis:48px}
   .clock{grid-column:1/-1;grid-row:1;text-align:left;padding:0 0 14px;border-left:0;border-bottom:1px dashed var(--line);
@@ -566,7 +589,10 @@ a.tile{text-decoration:none;color:inherit}
         </section>
         <div id="featured" class="featured"></div>
         </div>
-        <h2 class="section-title">ระบบงานทั้งหมด</h2>
+        <div class="sec-row">
+          <h2 class="section-title">ระบบงานทั้งหมด</h2>
+          <div class="slogan" id="slogan" aria-live="polite" hidden></div>
+        </div>
         <div class="grid" id="grid"></div>
       </div>
     </section>
@@ -958,6 +984,40 @@ const NEWS_API = "https://script.google.com/macros/s/AKfycbw3rvUK2QZAFQgFHyRzPkm
 const NEWS_SECONDS = 7;        // เวลาที่แสดงแต่ละข่าว (วินาที)
 const NEWS_REFRESH_MIN = 5;    // ดึงข่าวใหม่ทุกกี่นาที
 
+/* =========================================================
+   ★ สโลแกนข้างหัวข้อ "ระบบงานทั้งหมด" ★
+   ข้อความจริงตั้งค่าได้ที่หน้าลงข่าว → แท็บ "ข้อความหน้าหลัก" (ไม่ต้องอัปโหลดไฟล์ใหม่)
+   ค่าด้านล่างใช้เมื่อยังเชื่อมต่อระบบไม่ได้เท่านั้น
+   ========================================================= */
+const SLOGAN_DEFAULT = { on:true, head:'En-Smart Office', lines:['สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍'], style:'fire', seconds:6 };
+const Slogan = (()=>{
+  const el = $('slogan');
+  let cfg = null, idx = 0, timer = null;
+  function show(){
+    const line = cfg.lines[idx] || '';
+    const words = line.split(/\s+/).filter(Boolean).map((w, k) => `<span style="--k:${k}">${esc(w)}</span>`).join('');
+    el.innerHTML = `${cfg.head ? `<span class="sl-h">${esc(cfg.head)}</span>` : ''}<span class="sl-m">${words}</span>`;
+    el.classList.remove('out');
+  }
+  function set(c){
+    const next = Object.assign({}, SLOGAN_DEFAULT, c || {});
+    if(JSON.stringify(next) === JSON.stringify(cfg)) return;
+    cfg = next; idx = 0; clearInterval(timer);
+    el.className = 'slogan sl-' + (cfg.style || 'fire');
+    el.hidden = !cfg.on || !cfg.lines.length;
+    if(el.hidden) return;
+    show();
+    if(cfg.lines.length > 1) timer = setInterval(() => {
+      el.classList.add('out');
+      setTimeout(() => { idx = (idx + 1) % cfg.lines.length; show(); }, 350);
+    }, Math.max(3, cfg.seconds || 6) * 1000);
+    if(typeof fitHome === 'function') setTimeout(fitHome);
+  }
+  let cached = null; try{ cached = JSON.parse(load('slogan') || 'null'); }catch(e){}
+  set(cached || SLOGAN_DEFAULT);
+  return { set };
+})();
+
 const News = (()=>{
   const box = $('news'), track = $('newsTrack'), dots = $('newsDots'), brand = $('brandSlide');
   const dlg = $('newsDlg'), dlgBody = $('newsDlgBody');
@@ -1193,6 +1253,7 @@ const News = (()=>{
       const r = await fetch(NEWS_API + '?action=news', { cache:'no-store' });
       const j = await r.json();
       if(j.ok && Array.isArray(j.news)){ render(j.news); save('news', JSON.stringify(j.news)); }
+      if(j.ok && j.settings && j.settings.slogan){ Slogan.set(j.settings.slogan); save('slogan', JSON.stringify(j.settings.slogan)); }
     }catch(e){ /* ใช้ข่าวชุดล่าสุดที่จำไว้ */ }
   }
   function start(){
