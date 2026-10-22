@@ -204,29 +204,37 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 #attAdd{cursor:pointer}
 
 /* สโลแกนหน้าหลัก (ให้ตรงกับ index.html) */
-.setgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.slpv{display:flex;align-items:baseline;gap:6px 16px;flex-wrap:wrap;padding:16px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.setgrid{display:grid;grid-template-columns:1.05fr 1fr;gap:24px}
+.lab{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px}
+.lab small{font-weight:400;color:var(--muted)}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.preset{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 12px 4px 4px;font-size:13px;font-weight:600}
+.preset:hover{border-color:var(--accent)}
+.preset i{display:inline-flex;align-items:center;justify-content:center;height:22px;padding:0 8px;border-radius:99px;font-style:normal;font-size:11px;font-weight:700}
+.colors{display:grid;gap:10px;margin-top:6px}
+.crow{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center}
+.crow .lab{margin:0;font-weight:500}
+.sw{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.sw button{width:24px;height:24px;border-radius:7px;border:1px solid rgba(0,0,0,.15);padding:0}
+.sw button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}
+.sw label.cust{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-left:4px;cursor:pointer}
+.sw input[type=color]{width:30px;height:26px;padding:0;border:1px solid var(--line);border-radius:7px;background:none;cursor:pointer}
+.sw code{font-size:11.5px;color:var(--muted)}
+.slpv{display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap;padding:16px;border-radius:14px;background:#F5EFEF;color:#2A1B1D;border:1px solid var(--line)}
+.slpv.dark{background:#1A1314;color:#F5EAEB}
 .slpv-t{font-size:16px;font-weight:600}
-.slsw{display:flex;gap:8px;flex-wrap:wrap}
-.slsw label{cursor:pointer}
-.slsw input{position:absolute;opacity:0}
-.slsw span{display:block;width:40px;height:26px;border-radius:99px;background:var(--sl-g);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
-.slsw input:checked + span{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}
-.slsw input:focus-visible + span{outline:2px solid var(--accent);outline-offset:4px}
-.slogan{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-size:19px;line-height:1.3;font-weight:700}
-.slogan .sl-h{flex:none;font-weight:800;padding:3px 12px;border-radius:99px;color:#fff;font-size:.82em;background:var(--sl-g);align-self:center}
-.slogan .sl-m{min-width:0;display:inline-flex;flex-wrap:wrap;gap:0 .32em;background:var(--sl-g);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:slflow 8s linear infinite}
-.slogan .sl-m span{display:inline-block;animation:slin .55s cubic-bezier(.2,.8,.2,1.2) both;animation-delay:calc(var(--k) * 90ms);background:inherit;background-size:inherit;-webkit-background-clip:text;background-clip:text;color:transparent}
+.slogan{flex:1;min-width:0;display:flex}
+.slogan .sl-in{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:18px;line-height:1.35;font-weight:700}
+.slogan.boxed .sl-in{background:var(--sfb);border:1.5px solid var(--sfl);border-radius:18px;padding:4px 16px 4px 5px}
+.slogan.boxed.nohead .sl-in{padding-left:16px}
+.slogan .sl-h{font-weight:700;padding:3px 12px;border-radius:99px;font-size:.8em;background:var(--sbb);color:var(--sbf)}
+.slogan .sl-m{color:var(--stc)}
 .slogan.off{opacity:.4;filter:grayscale(1)}
-@keyframes slflow{to{background-position:220% 0}}
-@keyframes slin{from{opacity:0;transform:translateY(10px) scale(.92)}}
-.sl-fire   {--sl-g:linear-gradient(90deg,#E0243A,#FF7A59,#F5A300,#E0243A)}
-.sl-ocean  {--sl-g:linear-gradient(90deg,#1D4ED8,#06B6D4,#10B981,#1D4ED8)}
-.sl-royal  {--sl-g:linear-gradient(90deg,#6D28D9,#C026D3,#EC4899,#6D28D9)}
-.sl-rainbow{--sl-g:linear-gradient(90deg,#E0243A,#F59E0B,#10B981,#2F6BFF,#7C4DFF,#E0243A)}
-.sl-forest {--sl-g:linear-gradient(90deg,#047857,#10B981,#84CC16,#047857)}
-.sl-classic{--sl-g:linear-gradient(90deg,#9B0F33,#B3122E,#C9A227,#9B0F33)}
-@media (max-width:860px){ .setgrid{grid-template-columns:1fr} }
+.contrast{display:grid;gap:6px;margin-top:12px}
+.contrast div{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:7px 10px;border-radius:10px;background:var(--surface-2)}
+.contrast .ok{color:var(--ok);font-weight:700}
+.contrast .bad{color:var(--accent);font-weight:700}
+@media (max-width:860px){ .setgrid{grid-template-columns:1fr} .crow{grid-template-columns:1fr} }
 
 /* ผู้ใช้งาน */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
@@ -400,17 +408,30 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
             <label class="f"><span>ป้ายหัวข้อ <small>(ไม่เกิน 40 ตัวอักษร เว้นว่างได้)</small></span>
               <input class="in" id="sHead" maxlength="40" placeholder="เช่น En-Smart Office"></label>
             <label class="f"><span>ข้อความสโลแกน <small id="sCount">(1 บรรทัด = 1 ข้อความ สูงสุด 5 ข้อความ)</small></span>
-              <textarea class="in" id="sText" rows="4" placeholder="สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍"></textarea>
-              <span class="hint">ใส่หลายบรรทัด ระบบจะสลับแสดงทีละข้อความ เว้นวรรคระหว่างคำเพื่อให้คำค่อยๆ ปรากฏทีละคำ</span></label>
-            <div class="row2">
-              <div class="f"><span style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px">โทนสี</span><div class="slsw" id="sStyle"></div></div>
-              <label class="f"><span>เวลาแสดงต่อข้อความ</span>
-                <select class="in" id="sSec"><option value="4">4 วินาที</option><option value="6" selected>6 วินาที</option><option value="8">8 วินาที</option><option value="12">12 วินาที</option></select></label>
+              <textarea class="in" id="sText" rows="3" placeholder="สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍"></textarea>
+              <span class="hint">ใส่หลายบรรทัด ระบบจะสลับแสดงทีละข้อความ</span></label>
+            <label class="f" style="max-width:220px"><span>เวลาแสดงต่อข้อความ</span>
+              <select class="in" id="sSec"><option value="4">4 วินาที</option><option value="6" selected>6 วินาที</option><option value="8">8 วินาที</option><option value="12">12 วินาที</option></select></label>
+
+            <div class="f"><span class="lab">ชุดสีสำเร็จรูป <small>(กดเพื่อใช้ทั้งชุด แล้วปรับแต่ละสีต่อได้)</small></span>
+              <div class="presets" id="sPresets"></div></div>
+            <div class="colors">
+              <div class="crow" data-k="sloganBadgeBg"><span class="lab">สีพื้นป้ายหัวข้อ</span><div class="sw"></div></div>
+              <div class="crow" data-k="sloganBadgeFg"><span class="lab">สีตัวอักษรป้ายหัวข้อ</span><div class="sw"></div></div>
+              <div class="crow" data-k="sloganTextColor"><span class="lab">สีตัวอักษรข้อความ</span><div class="sw"></div></div>
+              <div class="crow"><span class="lab">กรอบข้อความ</span>
+                <div class="seg" style="margin:0"><label><input type="radio" name="sframe" value="N" checked><span>ไม่มีกรอบ</span></label>
+                  <label><input type="radio" name="sframe" value="Y"><span>มีกรอบ</span></label></div></div>
+              <div class="crow fr" data-k="sloganFrameBg"><span class="lab">สีพื้นกรอบ</span><div class="sw"></div></div>
+              <div class="crow fr" data-k="sloganFrameBorder"><span class="lab">สีเส้นกรอบ</span><div class="sw"></div></div>
             </div>
           </div>
           <div>
-            <span style="display:block;font-size:13.5px;font-weight:600;margin-bottom:6px">ตัวอย่างบนหน้าหลัก</span>
+            <span class="lab">ตัวอย่างบนหน้าหลัก</span>
             <div class="slpv"><span class="slpv-t">ระบบงานทั้งหมด</span><div class="slogan" id="sPreview"></div></div>
+            <span class="lab" style="margin-top:12px">เมื่อผู้ใช้เปิดโหมดมืด</span>
+            <div class="slpv dark"><span class="slpv-t">ระบบงานทั้งหมด</span><div class="slogan" id="sPreviewD"></div></div>
+            <div class="contrast" id="sContrast"></div>
             <p class="hint" id="sMeta"></p>
           </div>
         </div>
@@ -816,37 +837,94 @@ $('newsList').addEventListener('click', async e => {
 });
 
 /* ---------------- ข้อความหน้าหลัก (สโลแกน) ---------------- */
-const SL_STYLES = { fire:'แดง–ทอง', ocean:'น้ำเงิน–เขียว', royal:'ม่วง–ชมพู', rainbow:'สีรุ้ง', forest:'เขียว', classic:'แดงเลือดหมู–ทอง' };
-const SL_DEFAULT = { sloganOn:'Y', sloganHead:'En-Smart Office', sloganText:'สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍', sloganStyle:'fire', sloganSeconds:'6' };
-$('sStyle').innerHTML = Object.entries(SL_STYLES).map(([k, v]) =>
-  `<label class="sl-${k}" title="${v}"><input type="radio" name="slstyle" value="${k}" aria-label="${v}"><span></span></label>`).join('');
+const SL_DEFAULT = { sloganOn:'Y', sloganHead:'En-Smart Office', sloganText:'สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍', sloganSeconds:'6',
+  sloganBadgeBg:'#B3122E', sloganBadgeFg:'#FFFFFF', sloganTextColor:'#B3122E', sloganFrame:'N', sloganFrameBg:'#FFF4D6', sloganFrameBorder:'#F2B705' };
+const SL_PALETTE = ['#FFFFFF','#F5EFEF','#FFF4D6','#FDE2E4','#E0F2FE','#DCFCE7','#EDE9FE','#F2B705','#E0243A','#B3122E','#6E0B22',
+                    '#C2410C','#047857','#0E7490','#1D4ED8','#6D28D9','#BE185D','#334155','#111827'];
+/* ชุดสีสำเร็จรูป: [ชื่อ, พื้นป้าย, อักษรป้าย, อักษรข้อความ, มีกรอบ, พื้นกรอบ, เส้นกรอบ] */
+const SL_PRESETS = [
+  ['แดงคณะ',       '#B3122E','#FFFFFF','#B3122E','N','#FFF4D6','#F2B705'],
+  ['แดง–ทอง มีกรอบ','#B3122E','#FFFFFF','#6E0B22','Y','#FFF4D6','#F2B705'],
+  ['ทองคณะ',       '#F2B705','#3A0714','#8A4B00','N','#FFF4D6','#F2B705'],
+  ['น้ำเงิน',        '#1D4ED8','#FFFFFF','#1D4ED8','Y','#E0F2FE','#93C5FD'],
+  ['เขียว',          '#047857','#FFFFFF','#047857','N','#DCFCE7','#86EFAC'],
+  ['ม่วง',           '#6D28D9','#FFFFFF','#6D28D9','Y','#EDE9FE','#C4B5FD'],
+  ['เรียบ ขาว–ดำ',   '#111827','#FFFFFF','#111827','Y','#FFFFFF','#D1D5DB'],
+  ['พื้นเข้ม ตัวอักษรขาว','#F2B705','#3A0714','#FFFFFF','Y','#6E0B22','#6E0B22']
+];
+const SL_KEYS = ['sloganBadgeBg','sloganBadgeFg','sloganTextColor','sloganFrameBg','sloganFrameBorder'];
+let SL = Object.assign({}, SL_DEFAULT);
+
+/* ความต่างของสี (มาตรฐาน WCAG) — ตั้งแต่ 4.5 ขึ้นไปถือว่าอ่านง่าย */
+function lum(hex){ const c = [1,3,5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4));
+  return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; }
+function ratio(a, b){ const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
+
+$('sPresets').innerHTML = SL_PRESETS.map((p, i) => `<button type="button" class="preset" data-p="${i}">
+  <i style="background:${p[1]};color:${p[2]}">Aa</i><span style="color:${p[3]};${p[4] === 'Y' ? `background:${p[5]};border:1px solid ${p[6]};border-radius:99px;padding:0 8px` : ''}">${esc(p[0])}</span></button>`).join('');
+document.querySelectorAll('.crow[data-k] .sw').forEach(sw => {
+  const k = sw.parentElement.dataset.k;
+  sw.innerHTML = SL_PALETTE.map(c => `<button type="button" data-c="${c}" style="background:${c}" title="${c}" aria-label="สี ${c}"></button>`).join('') +
+    `<label class="cust" title="เลือกสีเอง"><input type="color" data-k="${k}"> สีอื่น</label><code></code>`;
+});
+function slSync(){
+  document.querySelectorAll('.crow[data-k]').forEach(row => {
+    const v = SL[row.dataset.k];
+    row.querySelectorAll('button[data-c]').forEach(b => b.setAttribute('aria-pressed', b.dataset.c.toUpperCase() === v.toUpperCase()));
+    row.querySelector('input[type=color]').value = v.toLowerCase();
+    row.querySelector('code').textContent = v.toUpperCase();
+  });
+  document.querySelector(`input[name="sframe"][value="${SL.sloganFrame}"]`).checked = true;
+  document.querySelectorAll('.crow.fr').forEach(r => r.hidden = SL.sloganFrame !== 'Y');
+  slPreview();
+}
 const slLines = () => $('sText').value.split('\n').map(x => x.trim()).filter(Boolean);
-let slIdx = 0, slTimer = null;
+function slPaint(pv){
+  const lines = slLines(), head = $('sHead').value.trim();
+  pv.className = 'slogan' + (SL.sloganFrame === 'Y' ? ' boxed' : '') + (head ? '' : ' nohead') + ($('sOn').checked ? '' : ' off');
+  [['--sbb','sloganBadgeBg'],['--sbf','sloganBadgeFg'],['--stc','sloganTextColor'],['--sfb','sloganFrameBg'],['--sfl','sloganFrameBorder']]
+    .forEach(([v, k]) => pv.style.setProperty(v, SL[k]));
+  pv.innerHTML = `<span class="sl-in">${head ? `<span class="sl-h">${esc(head)}</span>` : ''}<span class="sl-m">${esc(lines[0] || 'ข้อความสโลแกน')}</span></span>`;
+}
 function slPreview(){
-  const lines = slLines(), style = document.querySelector('input[name="slstyle"]:checked');
-  const st = style ? style.value : 'fire', pv = $('sPreview');
-  pv.className = `slogan sl-${st}${$('sOn').checked ? '' : ' off'}`;
-  const line = lines[slIdx % Math.max(1, lines.length)] || '';
-  pv.innerHTML = `${$('sHead').value.trim() ? `<span class="sl-h">${esc($('sHead').value.trim())}</span>` : ''}<span class="sl-m">${
-    line.split(/\s+/).filter(Boolean).map((w, k) => `<span style="--k:${k}">${esc(w)}</span>`).join('')}</span>`;
+  slPaint($('sPreview')); slPaint($('sPreviewD'));
+  const lines = slLines();
   $('sCount').textContent = `(${lines.length}/5 ข้อความ · 1 บรรทัด = 1 ข้อความ)`;
   $('sCount').style.color = lines.length > 5 ? 'var(--accent)' : '';
+  const framed = SL.sloganFrame === 'Y';
+  const rows = [
+    ['ตัวอักษรป้ายหัวข้อ บนพื้นป้าย', ratio(SL.sloganBadgeFg, SL.sloganBadgeBg)],
+    [framed ? 'ข้อความ บนพื้นกรอบ' : 'ข้อความ บนพื้นหน้าเว็บ (โหมดสว่าง)', ratio(SL.sloganTextColor, framed ? SL.sloganFrameBg : '#F5EFEF')]
+  ];
+  if(!framed) rows.push(['ข้อความ บนพื้นหน้าเว็บ (โหมดมืด)', ratio(SL.sloganTextColor, '#1A1314')]);
+  $('sContrast').innerHTML = '<span class="lab" style="margin:0">ตรวจความอ่านง่าย</span>' + rows.map(([l, r]) =>
+    `<div><span>${l}</span><span class="${r >= 4.5 ? 'ok' : 'bad'}">${r >= 4.5 ? '✓ อ่านง่าย' : r >= 3 ? '△ พอใช้' : '✕ อ่านยาก'} (${r.toFixed(1)}:1)</span></div>`).join('') +
+    (!framed && ratio(SL.sloganTextColor, '#1A1314') < 3 ? '<p class="hint" style="margin:2px 0 0">ผู้ใช้ที่เปิดโหมดมืดจะอ่านข้อความยาก แนะนำเลือก "มีกรอบ" เพื่อให้พื้นหลังข้อความเหมือนกันทุกโหมด</p>' : '');
 }
+$('setForm').addEventListener('click', e => {
+  const sw = e.target.closest('.sw button[data-c]');
+  if(sw){ SL[sw.closest('.crow').dataset.k] = sw.dataset.c; return slSync(); }
+  const pr = e.target.closest('.preset');
+  if(pr){ const p = SL_PRESETS[+pr.dataset.p];
+    Object.assign(SL, { sloganBadgeBg:p[1], sloganBadgeFg:p[2], sloganTextColor:p[3], sloganFrame:p[4], sloganFrameBg:p[5], sloganFrameBorder:p[6] }); slSync(); }
+});
+$('setForm').addEventListener('input', e => {
+  if(e.target.type === 'color'){ SL[e.target.dataset.k] = e.target.value.toUpperCase(); slSync(); }
+});
+document.querySelectorAll('input[name="sframe"]').forEach(r => r.onchange = () => { SL.sloganFrame = r.value; slSync(); });
+['sOn','sHead','sText'].forEach(i => $(i).addEventListener('input', slPreview));
+
 function slFill(v){
-  $('sOn').checked = v.sloganOn !== 'N'; $('sHead').value = v.sloganHead || ''; $('sText').value = v.sloganText || '';
-  const r = document.querySelector(`input[name="slstyle"][value="${v.sloganStyle}"]`) || document.querySelector('input[name="slstyle"]');
-  r.checked = true; $('sSec').value = ['4','6','8','12'].includes(String(v.sloganSeconds)) ? String(v.sloganSeconds) : '6';
+  SL = Object.assign({}, SL_DEFAULT, v);
+  $('sOn').checked = SL.sloganOn !== 'N'; $('sHead').value = SL.sloganHead || ''; $('sText').value = SL.sloganText || '';
+  $('sSec').value = ['4','6','8','12'].includes(String(SL.sloganSeconds)) ? String(SL.sloganSeconds) : '6';
   $('sMeta').textContent = v.updated ? `แก้ไขล่าสุด ${v.updated} โดย ${v.updatedBy}` : 'ยังไม่เคยแก้ไข (ใช้ค่าเริ่มต้น)';
-  slIdx = 0; slPreview();
-  clearInterval(slTimer);
-  slTimer = setInterval(() => { if(slLines().length > 1 && !$('tSet').hidden){ slIdx++; slPreview(); } }, +$('sSec').value * 1000);
+  slSync();
 }
 async function loadSettings(){
   try{ slFill((await api('getSettings')).settings); }catch(err){ toast(err.message, true); }
 }
-['sOn','sHead','sText','sSec'].forEach(i => $(i).addEventListener('input', slPreview));
-$('sStyle').addEventListener('change', slPreview);
-$('sReset').onclick = () => { slFill(Object.assign({}, SL_DEFAULT, { updated:'' })); $('sMeta').textContent = 'คืนค่าเริ่มต้นแล้ว กด "บันทึกและเผยแพร่" เพื่อใช้งาน'; };
+$('sReset').onclick = () => { slFill(Object.assign({}, SL_DEFAULT)); $('sMeta').textContent = 'คืนค่าเริ่มต้นแล้ว กด "บันทึกและเผยแพร่" เพื่อใช้งาน'; };
 $('setForm').onsubmit = async e => {
   e.preventDefault();
   const lines = slLines();
@@ -855,8 +933,9 @@ $('setForm').onsubmit = async e => {
   if(lines.some(l => l.length > 90)) return toast('แต่ละข้อความยาวได้ไม่เกิน 90 ตัวอักษร', true);
   const btn = $('sSave'); busy(btn, true, 'กำลังบันทึก…');
   try{
-    const j = await api('saveSettings', { settings: { sloganOn: $('sOn').checked, sloganHead: $('sHead').value, sloganText: lines.join('\n'),
-      sloganStyle: document.querySelector('input[name="slstyle"]:checked').value, sloganSeconds: $('sSec').value } });
+    const settings = { sloganOn: $('sOn').checked, sloganHead: $('sHead').value, sloganText: lines.join('\n'), sloganSeconds: $('sSec').value, sloganFrame: SL.sloganFrame };
+    SL_KEYS.forEach(k => settings[k] = SL[k]);
+    const j = await api('saveSettings', { settings });
     slFill(j.settings); toast('บันทึกแล้ว หน้าหลักจะแสดงข้อความใหม่ภายในไม่กี่นาที');
   }catch(err){ toast(err.message, true); }
   finally{ busy(btn, false); }

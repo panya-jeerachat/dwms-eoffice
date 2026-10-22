@@ -343,24 +343,14 @@ iframe.view{border:0;width:100%;height:100%;background:#fff;overflow:hidden}
 /* ---------- สโลแกน (แก้ข้อความได้จากหน้าลงข่าว แท็บ "ข้อความหน้าหลัก") ---------- */
 .sec-row{display:flex;align-items:baseline;gap:6px 18px;flex-wrap:wrap}
 .sec-row .section-title{flex:none}
-.slogan{flex:1;min-width:0;display:flex;align-items:baseline;gap:10px;margin:0 0 14px;font-size:clamp(15px,1.45vw,20px);line-height:1.3;font-weight:700}
-.slogan .sl-h{flex:none;font-weight:800;letter-spacing:.01em;padding:3px 12px;border-radius:99px;color:#fff;font-size:.82em;
-  background:var(--sl-g);box-shadow:0 6px 16px -8px var(--sl-c);align-self:center}
-.slogan .sl-m{min-width:0;display:inline-flex;flex-wrap:wrap;gap:0 .32em;
-  background:var(--sl-g);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-  animation:slflow 8s linear infinite}
-.slogan .sl-m span{display:inline-block;animation:slin .55s cubic-bezier(.2,.8,.2,1.2) both;animation-delay:calc(var(--k) * 90ms);
-  background:inherit;background-size:inherit;-webkit-background-clip:text;background-clip:text;color:transparent}
-@keyframes slflow{to{background-position:220% 0}}
-@keyframes slin{from{opacity:0;transform:translateY(10px) scale(.92)}}
-.slogan.out .sl-m{opacity:0;transition:opacity .35s}
-.sl-fire   {--sl-c:#E0243A;--sl-g:linear-gradient(90deg,#E0243A,#FF7A59,#F5A300,#E0243A)}
-.sl-ocean  {--sl-c:#2F6BFF;--sl-g:linear-gradient(90deg,#1D4ED8,#06B6D4,#10B981,#1D4ED8)}
-.sl-royal  {--sl-c:#7C4DFF;--sl-g:linear-gradient(90deg,#6D28D9,#C026D3,#EC4899,#6D28D9)}
-.sl-rainbow{--sl-c:#E0243A;--sl-g:linear-gradient(90deg,#E0243A,#F59E0B,#10B981,#2F6BFF,#7C4DFF,#E0243A)}
-.sl-forest {--sl-c:#047857;--sl-g:linear-gradient(90deg,#047857,#10B981,#84CC16,#047857)}
-.sl-classic{--sl-c:#6E0B22;--sl-g:linear-gradient(90deg,#9B0F33,#B3122E,#C9A227,#9B0F33)}
-@media (prefers-reduced-motion:reduce){ .slogan .sl-m,.slogan .sl-m span{animation:none} }
+.slogan{flex:1;min-width:0;display:flex;align-items:center;justify-content:flex-start;margin:0 0 14px}
+.slogan .sl-in{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:100%;font-size:clamp(15px,1.4vw,19px);line-height:1.35;font-weight:700}
+.slogan.boxed .sl-in{background:var(--sfb);border:1.5px solid var(--sfl);border-radius:18px;padding:4px 16px 4px 5px}
+.slogan.boxed.nohead .sl-in{padding-left:16px}
+.slogan .sl-h{flex:none;font-weight:700;padding:3px 12px;border-radius:99px;font-size:.8em;background:var(--sbb);color:var(--sbf)}
+.slogan .sl-m{min-width:0;color:var(--stc);transition:opacity .35s}
+.slogan.out .sl-m{opacity:0}
+@media (prefers-reduced-motion:reduce){ .slogan .sl-m{transition:none} }
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
 .tile{
   position:relative;overflow:hidden;display:flex;gap:16px;align-items:flex-start;text-align:left;width:100%;
@@ -495,7 +485,9 @@ a.tile{text-decoration:none;color:inherit}
   .crumb small{display:none}
   .news{border-radius:16px;margin-bottom:16px}
   .sec-row{flex-direction:column-reverse;align-items:stretch;gap:0}
-  .slogan{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);flex-wrap:wrap;font-size:16px}
+  .slogan{margin:0 0 12px}
+  .slogan .sl-in{font-size:16px}
+  .slogan.boxed .sl-in{border-radius:16px;padding:8px 12px}
   .punch{grid-template-columns:auto 1fr;padding:18px 18px 18px 24px}
   .punch > .tile-icon{align-self:start;width:48px;height:48px;flex-basis:48px}
   .clock{grid-column:1/-1;grid-row:1;text-align:left;padding:0 0 14px;border-left:0;border-bottom:1px dashed var(--line);
@@ -989,23 +981,26 @@ const NEWS_REFRESH_MIN = 5;    // ดึงข่าวใหม่ทุกก�
    ข้อความจริงตั้งค่าได้ที่หน้าลงข่าว → แท็บ "ข้อความหน้าหลัก" (ไม่ต้องอัปโหลดไฟล์ใหม่)
    ค่าด้านล่างใช้เมื่อยังเชื่อมต่อระบบไม่ได้เท่านั้น
    ========================================================= */
-const SLOGAN_DEFAULT = { on:true, head:'En-Smart Office', lines:['สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍'], style:'fire', seconds:6 };
+const SLOGAN_DEFAULT = { on:true, head:'En-Smart Office', lines:['สะดวก รวดเร็ว ถูกต้อง ทันใจ ใช้งานได้ 👍'], seconds:6,
+  badgeBg:'#B3122E', badgeFg:'#FFFFFF', color:'#B3122E', frame:false, frameBg:'#FFF4D6', frameBorder:'#F2B705' };
 const Slogan = (()=>{
   const el = $('slogan');
+  const okColor = c => /^#[0-9a-f]{6}$/i.test(c || '');
   let cfg = null, idx = 0, timer = null;
   function show(){
-    const line = cfg.lines[idx] || '';
-    const words = line.split(/\s+/).filter(Boolean).map((w, k) => `<span style="--k:${k}">${esc(w)}</span>`).join('');
-    el.innerHTML = `${cfg.head ? `<span class="sl-h">${esc(cfg.head)}</span>` : ''}<span class="sl-m">${words}</span>`;
+    el.innerHTML = `<span class="sl-in">${cfg.head ? `<span class="sl-h">${esc(cfg.head)}</span>` : ''}<span class="sl-m">${esc(cfg.lines[idx] || '')}</span></span>`;
     el.classList.remove('out');
   }
   function set(c){
     const next = Object.assign({}, SLOGAN_DEFAULT, c || {});
     if(JSON.stringify(next) === JSON.stringify(cfg)) return;
     cfg = next; idx = 0; clearInterval(timer);
-    el.className = 'slogan sl-' + (cfg.style || 'fire');
     el.hidden = !cfg.on || !cfg.lines.length;
     if(el.hidden) return;
+    el.className = 'slogan' + (cfg.frame ? ' boxed' : '') + (cfg.head ? '' : ' nohead');
+    [['--sbb', cfg.badgeBg, SLOGAN_DEFAULT.badgeBg], ['--sbf', cfg.badgeFg, SLOGAN_DEFAULT.badgeFg], ['--stc', cfg.color, SLOGAN_DEFAULT.color],
+     ['--sfb', cfg.frameBg, SLOGAN_DEFAULT.frameBg], ['--sfl', cfg.frameBorder, SLOGAN_DEFAULT.frameBorder]]
+      .forEach(([v, c, d]) => el.style.setProperty(v, okColor(c) ? c : d));
     show();
     if(cfg.lines.length > 1) timer = setInterval(() => {
       el.classList.add('out');
