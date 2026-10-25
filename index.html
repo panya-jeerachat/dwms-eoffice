@@ -753,6 +753,8 @@ const FEATURED = {
 /* ลิงก์เว็บไซต์คณะ (เปิดในแท็บใหม่ เพื่อให้งานใน EN-MSU Smart Office ยังค้างอยู่)
    ถ้าต้องการให้เปิดแทนหน้าเดิม ให้เปลี่ยน newTab เป็น false */
 const FACULTY_SITE = { name:"เว็บไซต์คณะวิศวกรรมศาสตร์", url:"https://eng.msu.ac.th/", newTab:true };
+/* ลิงก์ภายนอกในเมนู (ผู้ดูแลเพิ่ม/แก้ได้จากหน้าลงข่าว แท็บ "เมนูระบบงาน") */
+const EXTRA_LINKS = [{ id:"faculty", name:FACULTY_SITE.name, url:FACULTY_SITE.url, newTab:FACULTY_SITE.newTab, icon:"globe", color:["#FFFFFF","#FFD9DE"] }];
 
 /* แสดงหัวข้อกลุ่ม (งานเอกสาร/งานบริหาร ฯลฯ) ในเมนูหรือไม่
    false = เรียงตามลำดับความสำคัญใน SYSTEMS ใต้หัวข้อ "ระบบงาน" หัวข้อเดียว */
@@ -817,10 +819,10 @@ const APP_TITLE = 'EN-MSU Smart Office | คณะวิศวกรรมศา
 /* ---------------- สร้างเมนูและหน้าหลัก ---------------- */
 function build(){
   let html = `<button class="nav-item" data-id="home" title="หน้าหลัก"><span class="nav-ico" style="--c1:#FFD54A;--c2:#F29A05">${svg('home')}</span><span class="label">หน้าหลัก</span></button>`;
-  if(FEATURED){
+  if(FEATURED && !FEATURED.hidden){
     html += `<a class="nav-item pin" href="${esc(FEATURED.url)}" target="_blank" rel="noopener" title="${esc(FEATURED.name)} (เปิดในแท็บใหม่)">
       <span class="nav-ico" style="--c1:#E0243A;--c2:#6E0B22">${svg(FEATURED.icon)}</span>
-      <span class="label"><b>${esc(FEATURED.name)}</b><small>เข้า–ออกงานด้วย GPS</small></span>
+      <span class="label"><b>${esc(FEATURED.name)}</b><small>${esc(FEATURED.sub || 'เข้า–ออกงานด้วย GPS')}</small></span>
       <span class="ext" aria-hidden="true">${svg('ext')}</span>
     </a>`;
   }
@@ -832,12 +834,13 @@ function build(){
       ? `<a class="nav-item" href="${esc(s.url)}" target="_blank" rel="noopener" data-ext title="${esc(s.name)} (เปิดในแท็บใหม่)"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="ext" aria-hidden="true">${svg('ext')}</span></a>`
       : `<button class="nav-item" data-id="${esc(s.id)}" title="${esc(s.name)}"><span class="nav-ico" style="${tint(s)}">${svg(s.icon)}</span><span class="label">${esc(s.name)}</span><span class="dot" aria-hidden="true"></span></button>`;
   });
-  html += `<div class="nav-group">ลิงก์ภายนอก</div>
-    <a class="nav-item" href="${esc(FACULTY_SITE.url)}" ${FACULTY_SITE.newTab?'target="_blank" rel="noopener"':''} title="${esc(FACULTY_SITE.name)}">
-      <span class="nav-ico" style="--c1:#FFFFFF;--c2:#FFD9DE;color:#B3122E">${svg('globe')}</span>
-      <span class="label">${esc(FACULTY_SITE.name)}</span>
+  if(EXTRA_LINKS.length) html += `<div class="nav-group">ลิงก์ภายนอก</div>` + EXTRA_LINKS.map(l => {
+    const light = /^#(f|e)/i.test(l.color && l.color[0] || '');     // พื้นไอคอนสีอ่อน → ใช้เส้นสีแดงคณะ
+    return `<a class="nav-item" href="${esc(l.url)}" ${l.newTab !== false ? 'target="_blank" rel="noopener"' : ''} title="${esc(l.name)}">
+      <span class="nav-ico" style="--c1:${esc(l.color[0])};--c2:${esc(l.color[1])};${light ? 'color:#B3122E' : ''}">${svg(l.icon || 'globe')}</span>
+      <span class="label">${esc(l.name)}</span>
       <span class="ext" aria-hidden="true">${svg('ext')}</span>
-    </a>`;
+    </a>`; }).join('');
   $('nav').innerHTML = html;
 
   $('apps').innerHTML = SYSTEMS.map(s=>{
@@ -847,7 +850,7 @@ function build(){
       : `<button class="app" type="button" data-id="${esc(s.id)}" title="${esc(s.name)}">${inner}</button>`;
   }).join('');
 
-  $('featured').innerHTML = FEATURED ? `
+  $('featured').innerHTML = FEATURED && !FEATURED.hidden ? `
     <div class="pk" style="${tint(FEATURED)}">
       <div class="pk-top">
         <span class="pk-ic">${svg(FEATURED.icon)}</span>
@@ -1432,7 +1435,7 @@ const Menu = (()=>{
   let sig = null;
   const okHex = c => /^#[0-9a-f]{6}$/i.test(c || '');
   function toSystems(list){
-    return list.filter(m => m && m.id && /^https?:\/\//i.test(m.url || '')).map(m => ({
+    return list.filter(m => m && m.id && /^https?:\/\//i.test(m.url || '') && (!m.kind || m.kind === 'system')).map(m => ({
       id: String(m.id), name: m.name, short: m.short || m.name, desc: m.desc || '', url: m.url,
       icon: ICONS[m.icon] ? m.icon : 'link',
       color: [okHex(m.color && m.color[0]) ? m.color[0] : '#4F8BFF', okHex(m.color && m.color[1]) ? m.color[1] : '#1D4ED8'],
@@ -1440,11 +1443,21 @@ const Menu = (()=>{
   }
   /* ใช้ได้ทั้งก่อนสร้างหน้า (rebuild=false) และหลังโหลดข้อมูลใหม่ (rebuild=true) */
   function apply(list, rebuild = true){
-    const next = toSystems(list || []);
+    list = (list || []).filter(m => m && /^https?:\/\//i.test(m.url || ''));
+    const next = toSystems(list);
     if(!next.length) return;
-    const s = JSON.stringify(next);
+    const s = JSON.stringify(list);
     if(s === sig) return; sig = s;
     SYSTEMS.splice(0, SYSTEMS.length, ...next);
+    /* เมนูปักหมุด (ลงเวลาปฏิบัติราชการ) — ใช้ทั้งในเมนูและการ์ดลงเวลาบนหน้าหลัก */
+    const pin = list.find(m => m.kind === 'pin');
+    if(pin) Object.assign(FEATURED, { name: pin.name, sub: pin.short, desc: pin.desc || FEATURED.desc, url: pin.url,
+      icon: ICONS[pin.icon] ? pin.icon : 'punch', hidden: false });
+    else if(list.some(m => m.kind)) FEATURED.hidden = true;        // ผู้ดูแลซ่อนเมนูปักหมุดไว้
+    /* ลิงก์ภายนอก */
+    if(list.some(m => m.kind)) EXTRA_LINKS.splice(0, EXTRA_LINKS.length, ...list.filter(m => m.kind === 'link').map(m => ({
+      id: m.id, name: m.name, url: m.url, newTab: m.newTab !== false, icon: ICONS[m.icon] ? m.icon : 'globe',
+      color: [okHex(m.color && m.color[0]) ? m.color[0] : '#FFFFFF', okHex(m.color && m.color[1]) ? m.color[1] : '#FFD9DE'] })));
     if(!rebuild) return;
     build();
     if(current !== 'home' && !SYSTEMS.some(x => x.id === current && !x.newTab)) go('home');

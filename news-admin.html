@@ -266,6 +266,8 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 /* เมนูระบบงาน */
 .mico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));flex:none}
 .mico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mgrp{margin:18px 0 8px;font-size:13px;font-weight:700;color:var(--muted);list-style:none}
+.mgrp:first-child{margin-top:0}
 .mrow{display:grid;grid-template-columns:28px auto 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
 .mrow.off{opacity:.55}
 .mrow b{display:block;font-size:15px}
@@ -459,8 +461,9 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 
     <section id="tMenu" hidden>
       <div class="toolbar">
-        <button class="btn primary" id="mnAdd"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>เพิ่มระบบงาน</button>
-        <span class="note">เมนูด้านซ้ายของหน้า EN-MSU Smart Office (และไอคอนแอปบนมือถือ) เรียงตามรายการนี้ · ใช้ลูกศรจัดลำดับ · หน้าหลักอัปเดตภายในไม่กี่นาที</span>
+        <button class="btn primary" id="mnAdd"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>เพิ่มเมนู</button>
+        <button class="btn" id="mnImport" title="อ่านเมนูจากไฟล์ index.html ที่ใช้งานอยู่ แล้วนำเข้าระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 18v2h16v-2"/></svg>ดึงเมนูเดิมจากหน้าหลัก</button>
+        <span class="note">เมนูด้านซ้ายของหน้า EN-MSU Smart Office (และไอคอนแอปบนมือถือ) แสดงตามรายการนี้ · ใช้ลูกศรจัดลำดับภายในแต่ละกลุ่ม · หน้าหลักอัปเดตภายในไม่กี่นาที</span>
       </div>
       <ul class="list" id="mnList"></ul>
     </section>
@@ -535,13 +538,15 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <button class="btn ghost icon-only" type="button" id="mnClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="ed-body">
       <div>
-        <label class="f"><span>ชื่อระบบ <small>(แสดงในเมนูด้านซ้าย ไม่เกิน 60 ตัวอักษร)</small></span><input class="in" id="mnName" maxlength="60"></label>
+        <label class="f" id="mnKindBox"><span>กลุ่มเมนู</span><select class="in" id="mnKind">
+          <option value="system">ระบบงาน</option><option value="link">ลิงก์ภายนอก</option></select></label>
+        <label class="f"><span>ชื่อเมนู <small>(แสดงในเมนูด้านซ้าย ไม่เกิน 60 ตัวอักษร)</small></span><input class="in" id="mnName" maxlength="60"></label>
         <div class="row2">
-          <label class="f"><span>ชื่อสั้น <small>(ไอคอนแอปบนมือถือ ≤ 20)</small></span><input class="in" id="mnShort" maxlength="20"></label>
-          <label class="f"><span>การเปิดระบบ</span><select class="in" id="mnTab">
+          <label class="f"><span id="mnShortLab">ชื่อสั้น <small>(ไอคอนแอปบนมือถือ ≤ 20)</small></span><input class="in" id="mnShort" maxlength="20"></label>
+          <label class="f" id="mnTabBox"><span>การเปิดระบบ</span><select class="in" id="mnTab">
             <option value="N">เปิดในกรอบของหน้านี้</option><option value="Y">เปิดในแท็บใหม่</option></select></label>
         </div>
-        <label class="f"><span>คำอธิบายสั้น <small>(ไม่บังคับ)</small></span><input class="in" id="mnDesc" maxlength="120"></label>
+        <label class="f"><span id="mnDescLab">คำอธิบายสั้น <small>(ไม่บังคับ)</small></span><input class="in" id="mnDesc" maxlength="120"></label>
         <label class="f"><span>ลิงก์ระบบ</span><input class="in" id="mnUrl" inputmode="url" placeholder="https://">
           <span class="hint">ระบบที่อยู่นอก eng.msu.ac.th หรือ Google Apps Script ที่ต้องเข้าสู่ระบบ Google ควรเลือก "เปิดในแท็บใหม่" เพราะมักไม่ยอมแสดงในกรอบ</span></label>
         <div class="f"><span class="lab">ไอคอน</span><div class="icgrid" id="mnIcons"></div></div>
@@ -1040,32 +1045,79 @@ const MI = {
   food:'<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 3c-2 0-3 2.5-3 6v4h3v8"/>',
   settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
 };
-const MI_SKIP = ['home','punch','ext','play','clip'];
+const MI_SKIP = ['home','ext','play','clip'];
 const MI_COLORS = [['#FFC53D','#EA580C'],['#4F8BFF','#1D4ED8'],['#34D399','#047857'],['#B57BFF','#6D28D9'],['#22D3EE','#0E7490'],['#8B9BFF','#4338CA'],
   ['#FF6FB5','#BE185D'],['#FF8A65','#D32F2F'],['#FF6B5A','#9B0F33'],['#FFD54A','#B7791F'],['#A3E635','#4D7C0F'],['#5EEAD4','#0F766E'],['#94A3B8','#334155'],['#F472B6','#9D174D']];
 const misvg = k => `<svg viewBox="0 0 24 24">${MI[k] || MI.link}</svg>`;
 let MENU = [], mnItem = null, mnIcon = 'link', mnC = ['#4F8BFF','#1D4ED8'];
 async function loadMenu(){
   $('mnList').innerHTML = '<li class="empty">กำลังโหลด…</li>';
-  try{ MENU = (await api('listMenu')).items; renderMenu(); }
-  catch(err){ $('mnList').innerHTML = `<li class="empty">${esc(err.message)}</li>`; }
+  try{
+    MENU = (await api('listMenu')).items; renderMenu();
+    /* ยังไม่เคยมีใครแก้เมนูในระบบ → ดึงเมนูเดิมจากไฟล์หน้าหลักที่ใช้งานอยู่มาให้อัตโนมัติ */
+    if(!MENU.length || MENU.every(m => !m.updatedBy || m.updatedBy === 'system')) importFromIndex(true);
+  }catch(err){ $('mnList').innerHTML = `<li class="empty">${esc(err.message)}</li>`; }
 }
+/* อ่านเมนูเดิม (SYSTEMS, FEATURED, FACULTY_SITE) จากไฟล์ index.html ที่วางอยู่ข้างหน้านี้ */
+function readBlock(src, start, closer){
+  const a = src.indexOf(start); if(a < 0) return null;
+  const from = a + start.length - 1;                       // ตำแหน่ง [ หรือ {
+  const b = src.indexOf(closer, from); if(b < 0) return null;
+  const end = b + closer.indexOf(closer.trim()[0]) + 1;    // รวม ] หรือ }
+  try{ return new Function('return ' + src.slice(from, end))(); }catch(e){ return null; }
+}
+async function importFromIndex(auto){
+  let src;
+  try{ src = await (await fetch('index.html', { cache:'no-store' })).text(); }
+  catch(e){ if(!auto) toast('อ่านไฟล์ index.html ไม่ได้', true); return; }
+  const systems = readBlock(src, 'const SYSTEMS = [', '\n];');
+  const feat = readBlock(src, 'const FEATURED = {', '\n};');
+  const site = readBlock(src, 'const FACULTY_SITE = {', '};');
+  if(!Array.isArray(systems) || !systems.length){ if(!auto) toast('ไม่พบรายการเมนูในไฟล์ index.html', true); return; }
+  const items = [];
+  if(feat) items.push({ id: feat.id || 'attendance', kind:'pin', name: feat.name, short:'เข้า–ออกงานด้วย GPS', desc: feat.desc, url: feat.url,
+                        icon: feat.icon || 'punch', color: feat.color || ['#FFD54A','#F29A05'], newTab:true });
+  systems.forEach(x => items.push({ id: x.id, kind:'system', name: x.name, short: x.short, desc: x.desc, url: x.url, icon: x.icon,
+                                    color: x.color, newTab: !!x.newTab }));
+  if(site) items.push({ id:'faculty', kind:'link', name: site.name, short:'เว็บไซต์คณะ', url: site.url, icon:'globe', color:['#FFFFFF','#FFD9DE'], newTab: site.newTab !== false });
+  if(!auto && !confirm(`ดึงเมนูจากหน้าหลักที่ใช้งานอยู่ (${items.length} รายการ) เข้าระบบ?\nรายการที่มีอยู่แล้วจะถูกปรับให้ตรงกับหน้าหลัก รายการที่เพิ่มเองในระบบจะยังอยู่`)) return;
+  try{
+    const j = await api('importMenu', { items });
+    MENU = j.items; renderMenu();
+    toast(`ดึงเมนูเดิมเข้าระบบแล้ว: ระบบงาน ${j.imported.system} รายการ${j.imported.pin ? ' · ปักหมุด 1' : ''}${j.imported.link ? ` · ลิงก์ภายนอก ${j.imported.link}` : ''}`);
+  }catch(err){ toast(err.message, true); }
+}
+$('mnImport').onclick = () => importFromIndex(false);
+const MKIND = { pin:'ปักหมุดด้านบน (แสดงเป็นการ์ดลงเวลาบนหน้าหลักด้วย)', system:'ระบบงาน', link:'ลิงก์ภายนอก' };
+const kindOf = m => m.kind || 'system';
 function renderMenu(){
-  $('mnList').innerHTML = MENU.map((m, i) => `<li class="mrow ${m.active ? '' : 'off'}" data-id="${esc(m.id)}">
+  let html = '';
+  ['pin','system','link'].forEach(k => {
+    const list = MENU.filter(m => kindOf(m) === k);
+    if(!list.length && k === 'pin') return;
+    html += `<li class="mgrp">${MKIND[k]}</li>` + (list.map((m, i) => menuRow(m, i, list.length)).join('') || '<li class="empty" style="padding:14px">ยังไม่มีรายการ</li>');
+  });
+  $('mnList').innerHTML = html || '<li class="empty">ยังไม่มีเมนู</li>';
+}
+function menuRow(m, i, n){
+  return `<li class="mrow ${m.active ? '' : 'off'}" data-id="${esc(m.id)}">
       <span class="ord">${i + 1}</span>
       <span class="mico" style="--c1:${esc(m.color[0])};--c2:${esc(m.color[1])}">${misvg(m.icon)}</span>
       <div style="min-width:0"><b>${esc(m.name)}</b><small>${m.newTab ? '↗ แท็บใหม่ · ' : ''}${esc(m.url)}${m.active ? '' : ' · ซ่อนอยู่'}</small></div>
       <div class="acts">
         <button class="btn sm icon-only" data-act="up" ${i ? '' : 'disabled'} aria-label="เลื่อนขึ้น"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
-        <button class="btn sm icon-only" data-act="down" ${i < MENU.length - 1 ? '' : 'disabled'} aria-label="เลื่อนลง"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+        <button class="btn sm icon-only" data-act="down" ${i < n - 1 ? '' : 'disabled'} aria-label="เลื่อนลง"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
         <button class="btn sm" data-act="edit">แก้ไข</button>
-      </div></li>`).join('') || '<li class="empty">ยังไม่มีเมนู</li>';
+      </div></li>`;
 }
 $('mnList').addEventListener('click', async e => {
   const b = e.target.closest('button[data-act]'); if(!b) return;
   const k = MENU.findIndex(m => m.id === b.closest('.mrow').dataset.id);
   if(b.dataset.act === 'edit') return mnOpen(MENU[k]);
-  const j = b.dataset.act === 'up' ? k - 1 : k + 1;
+  /* สลับกับรายการก่อน/หลังที่อยู่กลุ่มเดียวกัน */
+  const kind = kindOf(MENU[k]), step = b.dataset.act === 'up' ? -1 : 1;
+  let j = k + step; while(MENU[j] && kindOf(MENU[j]) !== kind) j += step;
+  if(!MENU[j]) return;
   [MENU[k], MENU[j]] = [MENU[j], MENU[k]]; renderMenu();
   try{ await api('reorderMenu', { ids: MENU.map(m => m.id) }); toast('จัดลำดับเมนูแล้ว'); }
   catch(err){ toast(err.message, true); loadMenu(); }
@@ -1074,11 +1126,16 @@ $('mnIcons').innerHTML = Object.keys(MI).filter(k => !MI_SKIP.includes(k)).map(k
 $('mnColors').innerHTML = MI_COLORS.map((c, i) => `<button type="button" data-ci="${i}" style="--c1:${c[0]};--c2:${c[1]}" aria-label="ชุดสี ${i + 1}"></button>`).join('');
 function mnOpen(m){
   mnItem = m || null;
-  $('mnTitle').textContent = m ? 'แก้ไขเมนูระบบงาน' : 'เพิ่มระบบงาน';
+  const kind = m ? kindOf(m) : 'system', pin = kind === 'pin';
+  $('mnTitle').textContent = m ? (pin ? 'แก้ไขเมนูปักหมุด (ลงเวลาปฏิบัติราชการ)' : 'แก้ไขเมนู') : 'เพิ่มเมนู';
+  $('mnKindBox').hidden = !!m; $('mnKind').value = kind === 'link' ? 'link' : 'system';
+  $('mnShortLab').innerHTML = pin ? 'ข้อความใต้ชื่อในเมนู <small>(≤ 20)</small>' : 'ชื่อสั้น <small>(ไอคอนแอปบนมือถือ ≤ 20)</small>';
+  $('mnDescLab').innerHTML = pin ? 'คำอธิบายบนการ์ดลงเวลา (หน้าหลัก)' : 'คำอธิบายสั้น <small>(ไม่บังคับ)</small>';
+  $('mnTabBox').hidden = pin;
   $('mnName').value = m ? m.name : ''; $('mnShort').value = m ? m.short : ''; $('mnDesc').value = m ? (m.desc || '') : '';
   $('mnUrl').value = m ? m.url : ''; $('mnTab').value = m && m.newTab ? 'Y' : 'N'; $('mnActive').checked = m ? m.active : true;
   mnIcon = m ? m.icon : 'link'; mnC = m ? m.color.slice() : MI_COLORS[MENU.length % MI_COLORS.length].slice();
-  $('mnDel').hidden = !m;
+  $('mnDel').hidden = !m || pin;
   $('mnMeta').textContent = m && m.updated ? `แก้ไขล่าสุด ${m.updated} โดย ${m.updatedBy}` : '';
   mnPreview(); $('mnEd').showModal();
 }
@@ -1107,8 +1164,10 @@ $('mnForm').onsubmit = async e => {
   const name = $('mnName').value.trim(), url = $('mnUrl').value.trim();
   if(!name){ $('mnName').focus(); return toast('กรุณาใส่ชื่อระบบ', true); }
   if(!/^https?:\/\/\S+$/i.test(url)){ $('mnUrl').focus(); return toast('ลิงก์ระบบต้องขึ้นต้นด้วย https://', true); }
-  const item = { id: mnItem ? mnItem.id : '', name, short: $('mnShort').value.trim(), desc: $('mnDesc').value.trim(), url,
-                 icon: mnIcon, c1: mnC[0], c2: mnC[1], newTab: $('mnTab').value === 'Y', active: $('mnActive').checked };
+  const pin = mnItem && kindOf(mnItem) === 'pin';
+  const item = { id: mnItem ? mnItem.id : '', kind: mnItem ? kindOf(mnItem) : $('mnKind').value, name, short: $('mnShort').value.trim(),
+                 desc: $('mnDesc').value.trim(), url, icon: mnIcon, c1: mnC[0], c2: mnC[1],
+                 newTab: pin ? true : $('mnTab').value === 'Y', active: $('mnActive').checked };
   const btn = $('mnSave'); busy(btn, true, 'กำลังบันทึก…');
   try{ await api('saveMenu', { item }); $('mnEd').close(); toast('บันทึกแล้ว เมนูหน้าหลักจะอัปเดตภายในไม่กี่นาที'); loadMenu(); }
   catch(err){ toast(err.message, true); }
