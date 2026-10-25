@@ -500,6 +500,87 @@ a.tile{text-decoration:none;color:inherit}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
 }
+
+/* =====================================================================
+   หน้าหลักแบบใหม่: สไลด์ข่าว + แถบข้าง (ลงเวลาแบบกะทัดรัด + หัวข้อข่าว)
+   + ช่องทางข้อมูลฝ่ายงาน
+   ===================================================================== */
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.side .featured{display:block}
+/* ลงเวลาแบบกะทัดรัด */
+.pk{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px 14px 20px;display:grid;gap:12px}
+.pk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--gold),#F29A05)}
+.pk-top{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.pk-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 6px 14px -6px var(--c2)}
+.pk-ic svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pk-t{min-width:0}
+.pk-t b{display:block;font-size:15.5px;line-height:1.3}
+.pk-t small{display:block;font-size:12px;color:var(--muted);line-height:1.35}
+.pk-clock{text-align:right}
+.pk-clock time{display:block;white-space:nowrap;font-size:28px;font-weight:700;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.pk-clock time .sec{font-size:.5em;font-weight:600;color:var(--muted);margin-left:3px}
+.pk-clock > span{display:block;font-size:11.5px;color:var(--muted);margin-top:4px;white-space:nowrap}
+.pk-go{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#fff;font-weight:600;font-size:14.5px;
+  background:var(--grad-hot);border-radius:12px;padding:10px 14px;box-shadow:0 8px 18px -8px rgba(179,18,46,.5);transition:transform .15s}
+.pk-go:hover{transform:translateY(-1px)}
+.pk-go svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* หัวข้อข่าวทั้งหมด */
+.heads{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.hd-t{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line)}
+.hd-t b{font-size:14.5px}
+.hd-t span{font-size:12px;color:var(--muted)}
+.hd-l{list-style:none;margin:0;padding:4px 6px;overflow:auto;flex:1;min-height:0}
+.hd-l button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:0;background:none;border-radius:10px;padding:8px 10px;color:var(--text)}
+.hd-l button:hover{background:var(--surface-2,rgba(0,0,0,.04))}
+.hd-l button[aria-current="true"]{background:color-mix(in srgb, var(--accent) 9%, transparent)}
+.hd-l b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px;font-weight:600;line-height:1.4}
+.hd-l small{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.hd-d{flex:none;width:9px;height:9px;border-radius:50%;margin-top:6px;background:#E0243A}
+.hd-text{background:#F5A300}.hd-video{background:#2F6BFF}.hd-pdf{background:#0EA5A4}
+.hd-e{margin:0;padding:18px 16px;color:var(--muted);font-size:13.5px}
+
+/* ไอคอนระบบงานแบบแอป (เฉพาะมือถือ) */
+.apps{display:none}
+
+/* ช่องทางข้อมูลฝ่ายงาน (การ์ดหัวสี + รายการลิงก์) */
+.portal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-bottom:6px}
+.pc{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  box-shadow:0 4px 14px rgba(60,10,30,.06);transition:transform .2s,box-shadow .2s}
+.pc:hover{transform:translateY(-2px);box-shadow:0 12px 26px -10px color-mix(in srgb, var(--pc) 55%, transparent)}
+.pc-h{margin:0;min-height:96px;display:grid;place-items:center;text-align:center;padding:18px 16px;background:var(--pc);color:var(--pf);
+  font-size:clamp(19px,1.6vw,23px);font-weight:700;line-height:1.3}
+.pc-l{list-style:none;margin:0;padding:8px 18px 12px}
+.pc-l li + li{border-top:1px solid var(--line)}
+.pc-l a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;color:var(--text);text-decoration:none;font-size:14.5px;font-weight:500}
+.pc-l a svg{flex:none;width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s,stroke .15s}
+.pc-l a:hover{color:var(--pc)}
+.pc-l a:hover svg{stroke:var(--pc);transform:translate(2px,-2px)}
+.pc-l a:focus-visible{outline:2px solid var(--pc);outline-offset:2px;border-radius:6px}
+.pc-e{margin:0;padding:16px 18px;color:var(--muted);font-size:13.5px}
+:root[data-theme="dark"] .pc-l a:hover{color:color-mix(in srgb, var(--pc) 60%, #fff)}
+
+@media (min-width:1100px){
+  .top-row{grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr) !important;align-items:stretch}
+  .top-row > *{min-width:0}
+  .top-row .news{align-self:start}
+  /* แถบข้างสูงเท่าสไลด์พอดี (ไม่ดันให้สไลด์ยืด) รายการข่าวเลื่อนดูได้ในกรอบ */
+  .top-row .side{height:0;min-height:100%}
+  .portal{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .top-row .news{margin:0}
+}
+@media (max-width:1099px){ .side{margin-bottom:16px} .heads{max-height:300px} }
+@media (max-width:860px){
+  .heads{display:none}
+  .apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 8px;margin:0 0 20px;padding:14px 8px;
+    background:var(--surface);border:1px solid var(--line);border-radius:18px}
+  .app{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;padding:0;color:var(--text);text-decoration:none;min-width:0}
+  .app-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));
+    box-shadow:0 8px 16px -8px var(--c2)}
+  .app-ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .app-n{font-size:11.5px;line-height:1.3;text-align:center;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .portal{grid-template-columns:1fr;gap:12px}
+  .pc-h{min-height:68px;font-size:19px}
+}
 </style>
 </head>
 <body>
@@ -579,13 +660,19 @@ a.tile{text-decoration:none;color:inherit}
             <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="news-dots" id="newsDots"></div>
         </section>
-        <div id="featured" class="featured"></div>
+        <aside class="side">
+          <div id="featured" class="featured"></div>
+          <section class="heads" id="heads" aria-label="ข่าวประชาสัมพันธ์ทั้งหมด"></section>
+        </aside>
         </div>
+        <!-- มือถือ: ระบบงานแบบไอคอนแอป (บน PC ใช้เมนูด้านซ้ายอยู่แล้ว จึงไม่แสดงซ้ำ) -->
+        <nav class="apps" id="apps" aria-label="ระบบงาน"></nav>
         <div class="sec-row">
-          <h2 class="section-title">ระบบงานทั้งหมด</h2>
+          <h2 class="section-title">ช่องทางข้อมูลฝ่ายงาน</h2>
           <div class="slogan" id="slogan" aria-live="polite" hidden></div>
         </div>
-        <div class="grid" id="grid"></div>
+        <div class="portal" id="portal"></div>
+        <div id="grid" hidden></div>
       </div>
     </section>
     <div class="notice" id="notice" hidden>
@@ -630,22 +717,22 @@ a.tile{text-decoration:none;color:inherit}
    ลำดับในรายการนี้ = ลำดับที่แสดงทั้งในเมนูและบนหน้าหลัก (เรียงตามความถี่ในการใช้งาน)
    ========================================================= */
 const SYSTEMS = [
-  { id:"leave",     name:"ระบบยื่นใบลาและไปปฏิบัติราชการ", desc:"ยื่นใบลา ขออนุมัติไปปฏิบัติราชการ และตรวจสอบวันลาคงเหลือ",
+  { id:"leave",     short:"ยื่นลา/ไปราชการ", name:"ระบบยื่นใบลาและไปปฏิบัติราชการ", desc:"ยื่นใบลา ขออนุมัติไปปฏิบัติราชการ และตรวจสอบวันลาคงเหลือ",
     url:"https://eng.msu.ac.th/leave/",              icon:"calendar", group:"งานบริหาร", color:["#FFC53D","#EA580C"] },
-  { id:"documents", name:"ติดตามเอกสาร",        desc:"ส่งและติดตามสถานะเอกสารภายในคณะ",
+  { id:"documents", short:"ติดตามเอกสาร", name:"ติดตามเอกสาร",        desc:"ส่งและติดตามสถานะเอกสารภายในคณะ",
     url:"https://eng.msu.ac.th/documentstracking/",  icon:"doc",      group:"งานเอกสาร", color:["#4F8BFF","#1D4ED8"] },
-  { id:"finacc",    name:"การเงินและบัญชี",      desc:"เบิกจ่าย ตรวจสอบรายการการเงินและบัญชี",
+  { id:"finacc",    short:"การเงินและบัญชี", name:"การเงินและบัญชี",      desc:"เบิกจ่าย ตรวจสอบรายการการเงินและบัญชี",
     url:"https://eng.msu.ac.th/finacc/",             icon:"money",    group:"งานบริหาร", color:["#34D399","#047857"] },
-  { id:"dean",      name:"ติดตามงานเสนอคณบดี",   desc:"ติดตามเรื่องที่เสนอผู้บริหารพิจารณาและลงนาม",
+  { id:"dean",      short:"เสนอคณบดี", name:"ติดตามงานเสนอคณบดี",   desc:"ติดตามเรื่องที่เสนอผู้บริหารพิจารณาและลงนาม",
     url:"https://eng.msu.ac.th/deantracking/",       icon:"stamp",    group:"งานเอกสาร", color:["#B57BFF","#6D28D9"] },
-  { id:"dwms",      name:"ระบบ E-Service งานโสตทัศนศึกษา DWMS", desc:"ขอใช้บริการงานโสตทัศนศึกษาออนไลน์",
+  { id:"dwms",      short:"โสตฯ DWMS", name:"ระบบ E-Service งานโสตทัศนศึกษา DWMS", desc:"ขอใช้บริการงานโสตทัศนศึกษาออนไลน์",
     url:"https://eng.msu.ac.th/dwms/",              icon:"media",    group:"งานบริการ", color:["#22D3EE","#0E7490"] },
-  { id:"meeting",   name:"ระบบจองห้องประชุม",  desc:"ตรวจสอบห้องว่างและจองห้องประชุมของคณะ",
+  { id:"meeting",   short:"จองห้องประชุม", name:"ระบบจองห้องประชุม",  desc:"ตรวจสอบห้องว่างและจองห้องประชุมของคณะ",
     url:"https://script.google.com/a/macros/msu.ac.th/s/AKfycbzVlT2789uC8xLi78HhvyKdP0c7tIrxvdd6Z5vykmqASaLnhP_Wk8yxJ91JS5M7fkWD/exec",
     icon:"meeting", group:"งานบริการ", color:["#8B9BFF","#4338CA"], newTab:true },
-  { id:"assistant", name:"ค้นหาบุคลากร",     desc:"ระบบผู้ช่วยค้นหาห้องพัก/ห้องทำงานบุคลากร",
+  { id:"assistant", short:"ค้นหาบุคลากร", name:"ค้นหาบุคลากร",     desc:"ระบบผู้ช่วยค้นหาห้องพัก/ห้องทำงานบุคลากร",
     url:"https://eng.msu.ac.th/assistantpersonnel/", icon:"users",    group:"งานบริหาร", color:["#FF6FB5","#BE185D"] },
-  { id:"carbooking", name:"ระบบจองรถยนต์และพนักงานขับรถ", desc:"จองรถและพนักงานขับรถของคณะ ได้ในที่เดียว",
+  { id:"carbooking", short:"จองรถยนต์", name:"ระบบจองรถยนต์และพนักงานขับรถ", desc:"จองรถและพนักงานขับรถของคณะ ได้ในที่เดียว",
     url:"https://eng.msu.ac.th/carbooking/",          icon:"car",      group:"งานบริการ", color:["#FF8A65","#D32F2F"] },
 ];
 
@@ -728,24 +815,21 @@ function build(){
     </a>`;
   $('nav').innerHTML = html;
 
-  $('grid').innerHTML = SYSTEMS.map(s=>{
-    const inner = `<span class="tile-icon">${svg(s.icon)}</span>
-      <span><h2>${esc(s.name)}</h2><p>${esc(s.desc||'')}</p><span class="host">${s.newTab ? 'เปิดในแท็บใหม่' : esc(shortUrl(s.url))}</span></span>`;
+  $('apps').innerHTML = SYSTEMS.map(s=>{
+    const inner = `<span class="app-ic" style="${tint(s)}">${svg(s.icon)}</span><span class="app-n">${esc(s.short || s.name)}</span>`;
     return s.newTab
-      ? `<a class="tile" href="${esc(s.url)}" target="_blank" rel="noopener" data-ext style="${tint(s)}">${inner}<span class="tile-ext" aria-hidden="true">${svg('ext')}</span></a>`
-      : `<button class="tile" data-id="${esc(s.id)}" style="${tint(s)}">${inner}</button>`;
+      ? `<a class="app" href="${esc(s.url)}" target="_blank" rel="noopener" data-ext title="${esc(s.name)}">${inner}</a>`
+      : `<button class="app" type="button" data-id="${esc(s.id)}" title="${esc(s.name)}">${inner}</button>`;
   }).join('');
 
   $('featured').innerHTML = FEATURED ? `
-    <div class="punch" style="${tint(FEATURED)}">
-      <span class="tile-icon">${svg(FEATURED.icon)}</span>
-      <div>
-        <h2>${esc(FEATURED.name)}</h2>
-        <p>${esc(FEATURED.desc)}</p>
-        <a class="punch-go" href="${esc(FEATURED.url)}" target="_blank" rel="noopener">${svg('punch')}ลงเวลาเข้า–ออกงาน</a>
-        <span class="punch-note">${esc(FEATURED.note||'')}</span>
+    <div class="pk" style="${tint(FEATURED)}">
+      <div class="pk-top">
+        <span class="pk-ic">${svg(FEATURED.icon)}</span>
+        <div class="pk-t"><b>${esc(FEATURED.name)}</b><small>${esc(FEATURED.desc)}</small></div>
+        <div class="pk-clock" aria-live="off"><time id="clock"></time><span id="clockDate"></span></div>
       </div>
-      <div class="clock" aria-live="off"><time id="clock"></time><span id="clockDate"></span></div>
+      <a class="pk-go punch-go" href="${esc(FEATURED.url)}" target="_blank" rel="noopener">${svg('punch')}ลงเวลาเข้า–ออกงาน</a>
     </div>` : '';
 
   document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
@@ -758,7 +842,7 @@ function tick(){
   const n = new Date(), p = x=>String(x).padStart(2,'0');
   c.innerHTML = `${p(n.getHours())}:${p(n.getMinutes())}<span class="sec">${p(n.getSeconds())}</span>`;
   c.setAttribute('datetime', n.toISOString());
-  $('clockDate').textContent = n.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+  $('clockDate').textContent = n.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'2-digit'});
 }
 
 /* ---------------- เปิดระบบ (เก็บ iframe ไว้ ไม่โหลดใหม่เมื่อสลับ) ---------------- */
@@ -1013,6 +1097,32 @@ const Slogan = (()=>{
   return { set };
 })();
 
+/* =========================================================
+   ★ ช่องทางข้อมูลฝ่ายงาน ★
+   แต่ละฝ่ายแก้หัวข้อหลัก/หัวข้อย่อย/ลิงก์ของตัวเองได้ที่หน้าลงข่าว → แท็บ "ช่องทางฝ่ายงาน"
+   ========================================================= */
+const Portal = (()=>{
+  const el = $('portal');
+  let sig = null;
+  const lumi = hex => { const c = [1,3,5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4));
+    return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+  const fg = hex => /^#[0-9a-f]{6}$/i.test(hex || '') && lumi(hex) > .45 ? '#1F2937' : '#FFFFFF';
+  function set(list){
+    const s = JSON.stringify(list || []);
+    if(s === sig) return; sig = s;
+    el.hidden = !(list && list.length);
+    el.innerHTML = (list || []).map(c => `<article class="pc" style="--pc:${esc(c.color || '#B3122E')};--pf:${fg(c.color)}">
+        <h3 class="pc-h">${esc(c.title)}</h3>
+        ${c.links && c.links.length ? `<ul class="pc-l">${c.links.map(l => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">
+            <span>${esc(l.label)}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></li>`).join('')}</ul>`
+          : '<p class="pc-e">ฝ่ายงานกำลังจัดเตรียมข้อมูล</p>'}
+      </article>`).join('');
+  }
+  let cached = null; try{ cached = JSON.parse(load('portal') || 'null'); }catch(e){}
+  if(cached) set(cached); else el.hidden = true;
+  return { set };
+})();
+
 const News = (()=>{
   const box = $('news'), track = $('newsTrack'), dots = $('newsDots'), brand = $('brandSlide');
   const dlg = $('newsDlg'), dlgBody = $('newsDlgBody');
@@ -1058,7 +1168,20 @@ const News = (()=>{
     $('newsPrev').hidden = $('newsNext').hidden = !many;
     dots.innerHTML = many ? items.map((n,k)=>`<button type="button" data-k="${k}" aria-label="ข่าวที่ ${k+1}"><span></span></button>`).join('') : '';
     show(Math.min(idx, Math.max(items.length-1, 0)), false);
+    renderHeads();
   }
+
+  /* รายการหัวข้อข่าวทั้งหมดข้างสไลด์: เห็นภาพรวมในหน้าเดียว กดเพื่อเปิดอ่าน */
+  const TYPE_TH = { image:'ภาพข่าว', text:'ข้อความ', video:'วิดีโอ', pdf:'เอกสาร PDF' };
+  function renderHeads(){
+    const el = $('heads'); if(!el) return;
+    el.innerHTML = `<div class="hd-t"><b>ข่าวประชาสัมพันธ์</b><span>${items.length ? items.length + ' เรื่อง' : ''}</span></div>` +
+      (items.length ? `<ol class="hd-l">${items.map((n,k)=>`<li><button type="button" data-k="${k}" aria-current="${k === idx}">
+          <i class="hd-d hd-${esc(n.type)}" aria-hidden="true"></i><span><b>${esc(n.title)}</b>
+          <small>${esc(n.dept || 'ประชาสัมพันธ์')} · ${TYPE_TH[n.type] || ''}${n.files && n.files.length ? ` · 📎${n.files.length}` : ''}</small></span></button></li>`).join('')}</ol>`
+        : `<p class="hd-e">ยังไม่มีข่าวประชาสัมพันธ์ในขณะนี้</p>`);
+  }
+  $('heads').addEventListener('click', e => { const b = e.target.closest('button[data-k]'); if(!b) return; show(+b.dataset.k); open(+b.dataset.k); });
 
   function show(k, anim = true){
     const len = Math.max(items.length, 1);
@@ -1070,6 +1193,7 @@ const News = (()=>{
     track.style.transform = `translateX(${-idx*100}%)`;
     [...track.children].forEach((el,j)=>{ el.inert = j !== idx; });
     [...dots.children].forEach((d,j)=>d.setAttribute('aria-current', j === idx));
+    document.querySelectorAll('#heads button[data-k]').forEach((b,j)=>b.setAttribute('aria-current', j === idx));
     if(!anim) requestAnimationFrame(()=>track.classList.remove('drag'));
   }
 
@@ -1248,6 +1372,7 @@ const News = (()=>{
       const r = await fetch(NEWS_API + '?action=news', { cache:'no-store' });
       const j = await r.json();
       if(j.ok && Array.isArray(j.news)){ render(j.news); save('news', JSON.stringify(j.news)); }
+      if(j.ok && Array.isArray(j.portal)){ Portal.set(j.portal); save('portal', JSON.stringify(j.portal)); }
       if(j.ok && j.settings && j.settings.slogan){ Slogan.set(j.settings.slogan); save('slogan', JSON.stringify(j.settings.slogan)); }
     }catch(e){ /* ใช้ข่าวชุดล่าสุดที่จำไว้ */ }
   }
@@ -1265,40 +1390,8 @@ const News = (()=>{
    - สไลด์ข่าวขยาย/ย่อตามพื้นที่ที่เหลือ เพิ่มระบบเมื่อไรก็ปรับให้เอง
    ========================================================= */
 const TILE_MIN_W = 220, TILE_MAX_COLS = 5;
-function fitHome(){
-  const view = $('view-home'), inner = view.querySelector('.home-inner');
-  const top = view.querySelector('.top-row'), grid = $('grid');
-  if(!matchMedia('(min-width:1100px)').matches){ grid.style.gridTemplateColumns = top.style.gridTemplateColumns = ''; view.classList.remove('tight'); top.classList.remove('roomy'); return; }
-  if(view.hidden) return;
-  const W = inner.clientWidth, gap = 12, n = grid.children.length;
-  const maxCols = Math.max(1, Math.min(TILE_MAX_COLS, Math.floor((W + gap) / (TILE_MIN_W + gap))));
-  const rows = Math.ceil(n / maxCols), cols = Math.ceil(n / rows);
-  grid.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
-
-  const cs = getComputedStyle(view);
-  const availH = view.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-  const minW = W * .34, maxW = W * .6;
-  const fit = ()=>{
-    let w = maxW;
-    for(let i = 0; i < 4; i++){
-      top.style.gridTemplateColumns = `${Math.round(w)}px minmax(0,1fr)`;
-      const over = inner.offsetHeight - availH;
-      const next = Math.max(minW, Math.min(maxW, w - over * 16 / 9));
-      if(Math.abs(next - w) < 2) break;
-      w = next;
-    }
-    return w;
-  };
-  top.classList.remove('roomy'); view.classList.remove('tight');
-  const w = fit();
-  /* จอเตี้ย: ซ่อนบรรทัดรองเพื่อให้พอดีหน้าเดียว */
-  if(inner.offsetHeight > availH + 1){ view.classList.add('tight'); fit(); }
-  /* ถ้าสไลด์สูงพอ ขยายการ์ดลงเวลาให้ตัวใหญ่ขึ้น แล้วตรวจซ้ำว่ายังพอดีจอ */
-  if(w * 9 / 16 >= 300 && W - w >= 520){
-    top.classList.add('roomy');
-    if(inner.offsetHeight > availH + 1){ top.classList.remove('roomy'); fit(); }
-  }
-}
+/* หน้าหลักจัดวางด้วย CSS แล้ว (ไม่บีบให้พอดีจอ เพราะมีช่องทางข้อมูลฝ่ายงานต่อท้าย) */
+function fitHome(){}
 let fitT;
 const refit = ()=>{ clearTimeout(fitT); fitT = setTimeout(fitHome, 60); };
 addEventListener('resize', refit);

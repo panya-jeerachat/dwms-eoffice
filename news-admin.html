@@ -236,6 +236,26 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .contrast .bad{color:var(--accent);font-weight:700}
 @media (max-width:860px){ .setgrid{grid-template-columns:1fr} .crow{grid-template-columns:1fr} }
 
+/* ช่องทางฝ่ายงาน (การ์ดให้ตรงกับหน้าหลัก) */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.pwrap{display:flex;flex-direction:column;gap:8px}
+.pwrap.locked .pc{opacity:.6}
+.pacts{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.pacts .own{font-size:12px;color:var(--muted);margin-right:auto}
+.pc{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(60,10,30,.06)}
+.pc.off{outline:2px dashed var(--line);opacity:.65}
+.pc-h{margin:0;min-height:84px;display:grid;place-items:center;text-align:center;padding:16px;background:var(--pc);color:var(--pf);font-size:20px;font-weight:700;line-height:1.3}
+.pc-l{list-style:none;margin:0;padding:6px 16px 10px}
+.pc-l li + li{border-top:1px solid var(--line)}
+.pc-l a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 2px;color:var(--text);text-decoration:none;font-size:14px}
+.pc-l a svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2}
+.pc-e{margin:0;padding:14px 16px;color:var(--muted);font-size:13px}
+.lrow{display:grid;grid-template-columns:22px minmax(0,1fr) minmax(0,1.4fr) auto;gap:6px;align-items:center;margin-bottom:8px}
+.lrow .n{font-weight:700;color:var(--muted);text-align:center;font-size:13px}
+.lrow .acts{display:flex;gap:2px}
+.pcpv{max-width:300px}
+@media (max-width:640px){ .lrow{grid-template-columns:1fr 1fr;} .lrow .n{display:none} .lrow .acts{grid-column:1/-1} }
+
 /* ผู้ใช้งาน */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
 .card h3{margin:0 0 12px;font-size:16px}
@@ -375,6 +395,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <button role="tab" aria-selected="true" data-tab="tNews">ข่าวปัจจุบัน</button>
       <button role="tab" aria-selected="false" data-tab="tArch">คลังข่าว</button>
       <button role="tab" aria-selected="false" data-tab="tUsers" id="usersTab" hidden>ผู้ใช้งาน</button>
+      <button role="tab" aria-selected="false" data-tab="tPortal" id="portalTab" hidden>ช่องทางฝ่ายงาน</button>
       <button role="tab" aria-selected="false" data-tab="tSet" id="setTab" hidden>ข้อความหน้าหลัก</button>
     </div>
 
@@ -396,6 +417,14 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
         <span class="note">ข่าวที่เลยวันสิ้นสุดจะย้ายมาที่นี่อัตโนมัติทุกวัน และข่าวที่กด "ลบ" ก็มาเก็บที่นี่ ทุกข่าวยังนับในรายงานสถิติ</span>
       </div>
       <ul class="list" id="archList"></ul>
+    </section>
+
+    <section id="tPortal" hidden>
+      <div class="toolbar">
+        <button class="btn primary" id="pcAdd"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>เพิ่มการ์ดฝ่ายงาน</button>
+        <span class="note" id="pcNote"></span>
+      </div>
+      <div class="pgrid" id="pcList"></div>
     </section>
 
     <section id="tSet" hidden>
@@ -462,6 +491,43 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 <datalist id="deptList"></datalist>
 
 <!-- หน้าต่างเพิ่ม/แก้ไขข่าว -->
+<dialog class="ed" id="pcEd">
+  <form id="pcForm" novalidate style="display:contents">
+    <div class="ed-head"><h2 id="pcTitle">แก้ไขการ์ดฝ่ายงาน</h2>
+      <button class="btn ghost icon-only" type="button" id="pcClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="ed-body">
+      <div>
+        <label class="f"><span>หัวข้อหลัก <small>(ชื่อฝ่ายงาน/หมวดข้อมูล ไม่เกิน 60 ตัวอักษร)</small></span>
+          <input class="in" id="pcT" maxlength="60" placeholder="เช่น งานวิชาการ"></label>
+        <div class="f"><span class="lab">สีหัวการ์ด</span><div class="sw" id="pcSw"></div></div>
+        <div id="pcAdminBox">
+          <div class="row2">
+            <label class="f"><span>ฝ่ายเจ้าของ <small>(ผู้ลงข่าวของฝ่ายนี้แก้ไขการ์ดได้)</small></span>
+              <select class="in" id="pcDept"></select></label>
+            <label class="check" style="margin-top:26px"><input type="checkbox" id="pcActive" checked> แสดงบนหน้าหลัก</label>
+          </div>
+        </div>
+        <div class="f"><span class="lab">หัวข้อย่อย <small id="pcCount"></small></span>
+          <div id="pcLinks"></div>
+          <button class="btn sm" type="button" id="pcAddLink"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>เพิ่มหัวข้อย่อย</button>
+          <p class="hint">ใส่ลิงก์ได้ทุกแบบ เช่น หน้า Google Apps Script, Looker Studio, Google Sheets/Forms หรือเว็บไซต์ของฝ่าย ลิงก์ต้องขึ้นต้นด้วย https:// และจะเปิดในแท็บใหม่</p>
+        </div>
+      </div>
+      <div class="pv-side">
+        <span class="lab">ตัวอย่างบนหน้าหลัก</span>
+        <div class="pcpv" id="pcPv"></div>
+        <p class="hint" id="pcMeta"></p>
+      </div>
+    </div>
+    <div class="ed-foot">
+      <button class="btn danger" type="button" id="pcDel" style="margin-right:auto">ลบการ์ดนี้</button>
+      <span class="status" id="pcStatus"></span>
+      <button class="btn" type="button" id="pcCancel">ยกเลิก</button>
+      <button class="btn primary" id="pcSave">บันทึก</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog class="ed" id="ed">
   <form id="edForm" novalidate style="display:contents">
     <div class="ed-head">
@@ -736,6 +802,7 @@ function enterApp(){
   view('vApp');
   $('usersTab').hidden = me.role !== 'admin';
   $('setTab').hidden = me.role !== 'admin';
+  $('portalTab').hidden = me.role === 'viewer';
   $('deptField').hidden = me.role !== 'admin';
   $('deptList').innerHTML = (meta.departments || []).map(d => `<option value="${esc(d)}">`).join('');
   tab('tNews'); loadNews();
@@ -747,6 +814,8 @@ function tab(id){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
   $('tNews').hidden = id !== 'tNews'; $('tUsers').hidden = id !== 'tUsers'; $('tArch').hidden = id !== 'tArch'; $('tSet').hidden = id !== 'tSet';
   if(id === 'tSet') loadSettings();
+  $('tPortal').hidden = id !== 'tPortal';
+  if(id === 'tPortal') loadPortal();
   if(id === 'tUsers') loadUsers();
   if(id === 'tArch') loadArchive();
 }
@@ -938,6 +1007,126 @@ $('setForm').onsubmit = async e => {
     const j = await api('saveSettings', { settings });
     slFill(j.settings); toast('บันทึกแล้ว หน้าหลักจะแสดงข้อความใหม่ภายในไม่กี่นาที');
   }catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
+
+/* ---------------- ช่องทางข้อมูลฝ่ายงาน (สิทธิ์แยกตามฝ่าย) ---------------- */
+const PC_PALETTE = ['#FFBE0B','#0EA5E9','#16A34A','#E05A84','#D32F2F','#2563EB','#0091FF','#616161','#B3122E','#7C3AED','#0F766E','#EA580C'];
+const PC_MAX_LINKS = 5;
+let PORTAL = [], PDEPTS = [], pcItem = null, pcLinks = [], pcColor = PC_PALETTE[0];
+const pcLum = hex => { const c = [1,3,5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4));
+  return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const pcFg = hex => /^#[0-9a-f]{6}$/i.test(hex || '') && pcLum(hex) > .45 ? '#1F2937' : '#FFFFFF';
+const ARROW = '<svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+function pcCard(c){
+  return `<article class="pc ${c.active === false ? 'off' : ''}" style="--pc:${esc(c.color)};--pf:${pcFg(c.color)}">
+    <h3 class="pc-h">${esc(c.title || 'หัวข้อหลัก')}</h3>
+    ${c.links && c.links.length ? `<ul class="pc-l">${c.links.map(l => `<li><a href="${esc(l.url || '#')}" target="_blank" rel="noopener"><span>${esc(l.label || 'หัวข้อย่อย')}</span>${ARROW}</a></li>`).join('')}</ul>`
+      : '<p class="pc-e">ฝ่ายงานกำลังจัดเตรียมข้อมูล</p>'}</article>`;
+}
+async function loadPortal(){
+  $('pcList').innerHTML = '<div class="empty">กำลังโหลด…</div>';
+  try{ const j = await api('listPortal'); PORTAL = j.cards; PDEPTS = j.departments || []; renderPortal(); }
+  catch(err){ $('pcList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
+}
+function renderPortal(){
+  const admin = me.role === 'admin', own = PORTAL.filter(c => c.dept && c.dept === me.dept).length;
+  $('pcNote').textContent = admin
+    ? 'ผู้ดูแลจัดการได้ทุกการ์ด: จัดลำดับบนหน้าหลักด้วยลูกศร กำหนดฝ่ายเจ้าของ และเปิด/ปิดการแสดง'
+    : me.dept ? `คุณแก้ไขได้เฉพาะการ์ดของ "${me.dept}" (สร้างได้สูงสุด 2 การ์ด) การ์ดของฝ่ายอื่นแสดงเพื่อดูอย่างเดียว`
+              : 'บัญชีของคุณยังไม่ได้ระบุฝ่าย จึงยังแก้ไขการ์ดไม่ได้ กรุณาติดต่อผู้ดูแลระบบ';
+  $('pcAdd').hidden = !(admin || (me.dept && own < 2));
+  $('pcList').innerHTML = PORTAL.map((c, i) => `<div class="pwrap ${c.canEdit ? '' : 'locked'}" data-id="${esc(c.id)}">
+      ${pcCard(c)}
+      <div class="pacts">
+        <span class="own">${c.dept ? esc(c.dept) : 'ยังไม่กำหนดฝ่าย'}${c.active ? '' : ' · ซ่อนอยู่'}${c.canEdit ? '' : ' · 🔒'}</span>
+        ${admin ? `<button class="btn sm icon-only" data-act="up" ${i ? '' : 'disabled'} title="เลื่อนขึ้น" aria-label="เลื่อนขึ้น"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                   <button class="btn sm icon-only" data-act="down" ${i < PORTAL.length - 1 ? '' : 'disabled'} title="เลื่อนลง" aria-label="เลื่อนลง"><svg class="i" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>` : ''}
+        ${c.canEdit ? '<button class="btn sm" data-act="edit">แก้ไข</button>' : ''}
+      </div></div>`).join('') || '<div class="empty">ยังไม่มีการ์ดฝ่ายงาน</div>';
+}
+$('pcList').addEventListener('click', async e => {
+  if(e.target.closest('.pc-l a')){ e.preventDefault(); return; }
+  const b = e.target.closest('button[data-act]'); if(!b) return;
+  const id = b.closest('.pwrap').dataset.id, k = PORTAL.findIndex(c => c.id === id);
+  if(b.dataset.act === 'edit') return pcOpen(PORTAL[k]);
+  const j = b.dataset.act === 'up' ? k - 1 : k + 1;
+  [PORTAL[k], PORTAL[j]] = [PORTAL[j], PORTAL[k]]; renderPortal();
+  try{ await api('reorderPortal', { ids: PORTAL.map(c => c.id) }); toast('จัดลำดับแล้ว'); }
+  catch(err){ toast(err.message, true); loadPortal(); }
+});
+
+/* ---- หน้าต่างแก้ไขการ์ด ---- */
+$('pcSw').innerHTML = PC_PALETTE.map(c => `<button type="button" data-c="${c}" style="background:${c}" title="${c}" aria-label="สี ${c}"></button>`).join('') +
+  '<label class="cust"><input type="color" id="pcCustom"> สีอื่น</label>';
+function pcOpen(c){
+  const admin = me.role === 'admin';
+  pcItem = c || null;
+  pcLinks = c ? c.links.map(l => Object.assign({}, l)) : [];
+  pcColor = c ? c.color : PC_PALETTE[PORTAL.length % PC_PALETTE.length];
+  $('pcTitle').textContent = c ? 'แก้ไขการ์ดฝ่ายงาน' : 'เพิ่มการ์ดฝ่ายงาน';
+  $('pcT').value = c ? c.title : (admin ? '' : me.dept);
+  $('pcAdminBox').hidden = !admin;
+  $('pcDept').innerHTML = '<option value="">— ยังไม่กำหนด (ผู้ดูแลแก้ไขได้เท่านั้น) —</option>' +
+    [...new Set(PDEPTS.concat(c && c.dept ? [c.dept] : []))].map(d => `<option>${esc(d)}</option>`).join('');
+  $('pcDept').value = c ? (c.dept || '') : '';
+  $('pcActive').checked = c ? c.active : true;
+  $('pcDel').hidden = !c;
+  $('pcMeta').textContent = c && c.updated ? `แก้ไขล่าสุด ${c.updated} โดย ${c.updatedBy}` : '';
+  $('pcStatus').textContent = '';
+  pcRenderLinks(); $('pcEd').showModal();
+}
+function pcRenderLinks(){
+  $('pcLinks').innerHTML = pcLinks.map((l, i) => `<div class="lrow" data-i="${i}">
+      <span class="n">${i + 1}</span>
+      <input class="in" data-f="label" maxlength="60" placeholder="ชื่อหัวข้อย่อย" value="${esc(l.label)}">
+      <input class="in" data-f="url" inputmode="url" placeholder="https://" value="${esc(l.url)}">
+      <span class="acts">
+        <button type="button" class="btn sm icon-only ghost" data-m="-1" ${i ? '' : 'disabled'} aria-label="เลื่อนขึ้น"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+        <button type="button" class="btn sm icon-only ghost" data-m="1" ${i < pcLinks.length - 1 ? '' : 'disabled'} aria-label="เลื่อนลง"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+        <button type="button" class="btn sm icon-only ghost danger" data-x aria-label="ลบหัวข้อย่อย"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </span></div>`).join('') || '<p class="hint" style="margin:0 0 8px">ยังไม่มีหัวข้อย่อย กด "เพิ่มหัวข้อย่อย"</p>';
+  $('pcCount').textContent = `(${pcLinks.length}/${PC_MAX_LINKS} รายการ)`;
+  $('pcAddLink').disabled = pcLinks.length >= PC_MAX_LINKS;
+  pcPreview();
+}
+function pcPreview(){
+  document.querySelectorAll('#pcSw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.c.toUpperCase() === pcColor.toUpperCase()));
+  $('pcCustom').value = pcColor.toLowerCase();
+  $('pcPv').innerHTML = pcCard({ title: $('pcT').value.trim(), color: pcColor, links: pcLinks.filter(l => l.label || l.url), active: $('pcActive').checked });
+}
+$('pcLinks').addEventListener('input', e => { const r = e.target.closest('.lrow'); if(!r) return; pcLinks[+r.dataset.i][e.target.dataset.f] = e.target.value; pcPreview(); });
+$('pcLinks').addEventListener('click', e => {
+  const r = e.target.closest('.lrow'); if(!r) return; const i = +r.dataset.i;
+  const m = e.target.closest('[data-m]'); if(m){ const j = i + +m.dataset.m; [pcLinks[i], pcLinks[j]] = [pcLinks[j], pcLinks[i]]; pcRenderLinks(); }
+  if(e.target.closest('[data-x]')){ pcLinks.splice(i, 1); pcRenderLinks(); }
+});
+$('pcAddLink').onclick = () => { if(pcLinks.length < PC_MAX_LINKS){ pcLinks.push({ label:'', url:'' }); pcRenderLinks();
+  const ins = $('pcLinks').querySelectorAll('input[data-f="label"]'); ins[ins.length - 1].focus(); } };
+$('pcSw').addEventListener('click', e => { const b = e.target.closest('button[data-c]'); if(b){ pcColor = b.dataset.c; pcPreview(); } });
+$('pcCustom').addEventListener('input', e => { pcColor = e.target.value.toUpperCase(); pcPreview(); });
+['pcT','pcActive'].forEach(i => $(i).addEventListener('input', pcPreview));
+$('pcAdd').onclick = () => pcOpen(null);
+$('pcClose').onclick = $('pcCancel').onclick = () => $('pcEd').close();
+$('pcDel').onclick = async () => {
+  if(!pcItem || !confirm(`ลบการ์ด "${pcItem.title}" ออกจากหน้าหลัก?`)) return;
+  try{ await api('deletePortal', { id: pcItem.id }); $('pcEd').close(); toast('ลบการ์ดแล้ว'); loadPortal(); }
+  catch(err){ toast(err.message, true); }
+};
+$('pcForm').onsubmit = async e => {
+  e.preventDefault();
+  const title = $('pcT').value.trim();
+  if(!title){ $('pcT').focus(); return toast('กรุณาใส่หัวข้อหลัก', true); }
+  const links = pcLinks.map(l => ({ label: l.label.trim(), url: l.url.trim() })).filter(l => l.label || l.url);
+  for(const [i, l] of links.entries()){
+    if(!l.label) return toast(`หัวข้อย่อยที่ ${i + 1} ยังไม่มีชื่อ`, true);
+    if(!/^https?:\/\/\S+$/i.test(l.url)) return toast(`ลิงก์ของ "${l.label}" ต้องขึ้นต้นด้วย https://`, true);
+  }
+  const card = { id: pcItem ? pcItem.id : '', title, color: pcColor, links };
+  if(me.role === 'admin'){ card.dept = $('pcDept').value; card.active = $('pcActive').checked; }
+  const btn = $('pcSave'); busy(btn, true, 'กำลังบันทึก…');
+  try{ await api('savePortal', { card }); $('pcEd').close(); toast('บันทึกแล้ว หน้าหลักจะอัปเดตภายในไม่กี่นาที'); loadPortal(); }
+  catch(err){ toast(err.message, true); }
   finally{ busy(btn, false); }
 };
 
