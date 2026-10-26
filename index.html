@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EN-MSU Smart Office | คณะวิศวกรรมศาสตร์ มหาวิทยาลัยมหาสารคาม</title>
 <link rel="icon" href="logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- ฟอนต์ "มอน้ำชี" (Mornamchi) ฟอนต์ประจำมหาวิทยาลัยมหาสารคาม
+     ไฟล์ฟอนต์อยู่บนเซิร์ฟเวอร์ eng.msu.ac.th เท่านั้น (ลิขสิทธิ์เฉพาะมหาวิทยาลัย)
+     ห้ามคัดลอกไฟล์ฟอนต์ (.woff/.woff2) มาไว้ในโฟลเดอร์นี้หรือใน GitHub — ให้อ้างจาก eng.msu.ac.th เสมอ -->
+<link rel="preconnect" href="https://eng.msu.ac.th" crossorigin>
+<link rel="preload" href="https://eng.msu.ac.th/fonts/mornamchi/Mornamchi-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://eng.msu.ac.th/fonts/mornamchi/mornamchi.css">
 <style>
 /* =========================================================
    ธีมสีแดงไล่เฉด (ปรับเฉดทั้งหมดได้ที่ชุดตัวแปรนี้)
@@ -53,7 +56,7 @@
 *,*::before,*::after{box-sizing:inherit}
 html,body{height:100%;margin:0}
 body{
-  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif;
+  font-family:"Mornamchi","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif;font-synthesis:none;
   background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
   display:flex;overflow:hidden;
 }
@@ -1406,6 +1409,7 @@ const News = (()=>{
     }catch(e){ /* ใช้ข่าวชุดล่าสุดที่จำไว้ */ }
   }
   function start(){
+    renderHeads();
     if(NEWS_API){ try{ const c = JSON.parse(load('news') || '[]'); if(c.length) render(c); }catch(e){} }
     fetchNews();
     setInterval(fetchNews, NEWS_REFRESH_MIN * 60000);

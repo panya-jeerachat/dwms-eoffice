@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>จัดการข่าวประชาสัมพันธ์ — EN-MSU Smart Office</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- ฟอนต์ "มอน้ำชี" (Mornamchi) ฟอนต์ประจำมหาวิทยาลัยมหาสารคาม
+     ไฟล์ฟอนต์อยู่บนเซิร์ฟเวอร์ eng.msu.ac.th เท่านั้น (ลิขสิทธิ์เฉพาะมหาวิทยาลัย)
+     ห้ามคัดลอกไฟล์ฟอนต์ (.woff/.woff2) มาไว้ในโฟลเดอร์นี้หรือใน GitHub — ให้อ้างจาก eng.msu.ac.th เสมอ -->
+<link rel="preconnect" href="https://eng.msu.ac.th" crossorigin>
+<link rel="preload" href="https://eng.msu.ac.th/fonts/mornamchi/Mornamchi-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://eng.msu.ac.th/fonts/mornamchi/mornamchi.css">
 <style>
 :root{
   --red-1:#E0243A; --red-2:#B3122E; --red-3:#6E0B22; --red-4:#3A0714; --coral:#FF6B5A; --gold:#F2B705;
@@ -24,7 +27,7 @@
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
-  font-family:"IBM Plex Sans Thai","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif}
+  font-family:"Mornamchi","Noto Sans Thai","Sarabun","Leelawadee UI",Tahoma,sans-serif;font-synthesis:none}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 [hidden]{display:none!important}
