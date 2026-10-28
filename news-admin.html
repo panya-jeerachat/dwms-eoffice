@@ -267,6 +267,8 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 @media (max-width:640px){ .lrow{grid-template-columns:1fr 1fr;} .lrow .n{display:none} .lrow .acts{grid-column:1/-1} }
 
 /* โปรไฟล์ของฉัน (PDPA) */
+.kvp{display:grid;grid-template-columns:120px 1fr;gap:5px 12px;margin:4px 0;font-size:14px}
+.kvp dt{color:var(--muted)}.kvp dd{margin:0}
 .pfphoto{display:flex;gap:16px;align-items:center;margin-bottom:16px}
 .pfav{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-size:34px;font-weight:700;color:#fff;
   background:var(--grad-hot);box-shadow:0 0 0 3px var(--surface),0 8px 20px -8px rgba(179,18,46,.6)}
@@ -284,6 +286,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .ppv b{display:block;font-size:16px}
 .ppv .pos{display:block;font-size:13.5px;color:var(--muted)}
 .ppv .c{font-size:13px;margin-top:5px;display:grid;gap:2px}
+.ppv .t{display:inline-block;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:1px 8px;margin-bottom:2px}
 .ppv.hidden{opacity:.5}
 .pv-badges{display:inline-flex;gap:4px;margin-left:6px;vertical-align:2px}
 .pv-badges i{font-style:normal;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--ok-soft);color:var(--ok)}
@@ -552,6 +555,14 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
         </div>
         <p class="hint" id="uHint"></p>
       </form>
+      <div class="card" id="syncCard">
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px"><h3 style="margin:0 0 2px">ฐานข้อมูลกลางบุคลากร</h3>
+            <p class="hint" id="syncInfo" style="margin:0">ดึงชื่อ ตำแหน่ง ห้อง อีเมล และรูปภาพ มาแสดงในป๊อปอัปผู้รับผิดชอบ (จับคู่ด้วยอีเมล)</p></div>
+          <button class="btn primary" type="button" id="syncBtn"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>ซิงก์ฐานข้อมูลกลาง</button>
+        </div>
+        <div id="syncResult"></div>
+      </div>
       <div class="users" id="userList"></div>
     </section>
   </div>
@@ -562,55 +573,29 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 <!-- หน้าต่างเพิ่ม/แก้ไขข่าว -->
 <dialog class="ed" id="pfEd">
   <form id="pfForm" novalidate style="display:contents">
-    <div class="ed-head"><h2>โปรไฟล์ของฉัน · ข้อมูลผู้รับผิดชอบบนหน้าสาธารณะ</h2>
+    <div class="ed-head"><h2>โปรไฟล์ของฉัน · การแสดงบนหน้าสาธารณะ</h2>
       <button class="btn ghost icon-only" type="button" id="pfClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="ed-body">
       <div>
-        <div class="pfphoto">
-          <span class="pfav" id="pfAv"></span>
-          <div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap">
-              <label class="btn sm" style="cursor:pointer">เลือกรูปภาพ<input type="file" id="pfFile" accept="image/jpeg,image/png,image/webp" hidden></label>
-              <button class="btn sm danger" type="button" id="pfRm">ลบรูป</button>
-            </div>
-            <p class="hint" style="margin:6px 0 0">รูปหน้าตรง เห็นใบหน้าชัด ระบบครอบเป็นสี่เหลี่ยมจัตุรัสและย่อเหลือ 320×320 px ให้อัตโนมัติ</p>
-          </div>
-        </div>
-        <div class="row2">
-          <label class="f"><span>ชื่อ-สกุล <small>(แก้ไขโดยผู้ดูแลระบบ)</small></span><input class="in" id="pfName" disabled></label>
-          <label class="f"><span>ฝ่าย / หน่วยงาน</span><input class="in" id="pfDept" disabled></label>
-        </div>
-        <label class="f"><span>ตำแหน่ง</span><input class="in" id="pfPos" maxlength="80" placeholder="เช่น นักวิชาการโสตทัศนศึกษา"></label>
-        <div class="row2">
-          <label class="f"><span>ห้อง / สถานที่ทำงาน</span><input class="in" id="pfRoom" maxlength="60" placeholder="เช่น EN1-101"></label>
-          <label class="f"><span>เบอร์โทรที่ทำงาน</span><input class="in" id="pfPhone" maxlength="40" inputmode="tel" placeholder="เช่น 043-754316 ต่อ 3001"></label>
-        </div>
-
         <div class="pdpa">
-          <b>การเผยแพร่บนหน้า EN-MSU Smart Office</b>
-          <label class="check"><input type="checkbox" id="pfShow"> แสดงชื่อ-สกุล ตำแหน่ง และห้องทำงาน ในการ์ดฝ่ายงานที่ฉันรับผิดชอบ</label>
+          <b>ข้อมูลจากฐานข้อมูลกลางบุคลากรคณะ</b>
+          <dl class="kvp" id="pfData"></dl>
+          <p class="hint" style="margin:0">ชื่อ ตำแหน่ง ห้อง และรูปภาพ ดึงจากฐานข้อมูลกลางของคณะ (จับคู่ด้วยอีเมล) หากข้อมูลไม่ถูกต้อง ให้แจ้งผู้ดูแลฐานข้อมูลกลาง</p>
+        </div>
+        <div class="pdpa" style="margin-top:14px">
+          <b>การแสดงในการ์ดฝ่ายงานบนหน้า EN-MSU Smart Office</b>
+          <label class="check"><input type="checkbox" id="pfShow"> แสดงข้อมูลของฉันในการ์ดฝ่ายงานที่ฉันรับผิดชอบ</label>
           <div class="pdsub" id="pfSub">
             <label class="check"><input type="checkbox" id="pfShowPhoto"> แสดงรูปภาพ</label>
-            <label class="check"><input type="checkbox" id="pfShowPhone"> แสดงเบอร์โทรที่ทำงาน</label>
-            <label class="check"><input type="checkbox" id="pfShowEmail"> แสดงอีเมล <span id="pfEmail" class="muted"></span></label>
+            <label class="check"><input type="checkbox" id="pfShowEmail"> แสดงอีเมล</label>
           </div>
-          <details class="notice"><summary>ประกาศความเป็นส่วนตัว (อ่านก่อนให้ความยินยอม)</summary>
-            <p><b>วัตถุประสงค์:</b> ให้บุคลากรและผู้รับบริการทราบผู้รับผิดชอบงานของแต่ละฝ่าย และติดต่อประสานงานได้ถูกต้อง</p>
-            <p><b>ข้อมูลที่เผยแพร่:</b> เฉพาะรายการที่คุณเลือกด้านบน ข้อมูลที่ไม่ได้เลือกจะไม่ถูกส่งออกไปยังหน้าสาธารณะเลย</p>
-            <p><b>ผู้ที่เห็นข้อมูล:</b> ผู้เข้าชมหน้า EN-MSU Smart Office (ทั้งบุคลากรและบุคคลทั่วไป)</p>
-            <p><b>ระยะเวลา:</b> จนกว่าคุณจะถอนความยินยอม ย้ายฝ่าย หรือบัญชีถูกปิด/ลบ (รูปภาพถูกลบไปพร้อมบัญชี)</p>
-            <p><b>สิทธิของคุณ:</b> แก้ไขหรือถอนความยินยอมได้ทุกเมื่อที่หน้านี้ ข้อมูลจะหายจากหน้าสาธารณะภายในไม่กี่นาที และรูปภาพจะถูกปิดการเข้าถึงทันที
-              สอบถามหรือร้องขอเพิ่มเติมได้ที่ผู้ดูแลระบบของคณะ</p>
-            <p>เป็นไปตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
-          </details>
-          <label class="check consent" id="pfConsentBox"><input type="checkbox" id="pfConsent"> ข้าพเจ้าได้อ่านประกาศความเป็นส่วนตัว และยินยอมให้เผยแพร่ข้อมูลตามที่เลือก</label>
-          <p class="hint" id="pfMeta"></p>
+          <p class="hint" id="pfMeta" style="margin:0"></p>
         </div>
       </div>
       <div class="pv-side">
         <span class="lab">ตัวอย่างที่ผู้เข้าชมจะเห็น</span>
         <div class="ppv" id="pfPv"></div>
-        <p class="hint">รายการที่ไม่ได้เลือกให้แสดง จะไม่ปรากฏในหน้าสาธารณะ</p>
+        <p class="hint">ไม่แสดงเบอร์โทรศัพท์บนหน้าสาธารณะ</p>
       </div>
     </div>
     <div class="ed-foot">
@@ -1998,7 +1983,7 @@ async function loadUsers(){
     ? `บัญชีใหม่และบัญชีที่ถูกรีเซ็ตใช้รหัสผ่านเริ่มต้น ${meta.defaultPassword} ระบบจะชวนให้ตั้งรหัสผ่านใหม่เมื่อเข้าครั้งแรก (ผู้ใช้กดข้ามได้)`
     : '';
   $('userList').innerHTML = '<div class="empty">กำลังโหลด…</div>';
-  try{ users = (await api('listUsers')).users; renderUsers(); }
+  try{ const j = await api('listUsers'); users = j.users; renderUsers(); syncShow(j.staffSync ? JSON.parse(j.staffSync) : null); }
   catch(err){ $('userList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
 }
 function renderUsers(){
@@ -2006,7 +1991,7 @@ function renderUsers(){
     <div class="urow" data-email="${esc(u.email)}">
       <div><b>${esc(u.name)}</b><span class="role ${u.role}">${ {admin:'ผู้ดูแล', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน'}[u.role] || u.role }</span>${u.active ? '' : '<span class="role off">ปิดใช้งาน</span>'}
         <div class="meta"><span>${esc(u.email)}</span><span>${esc(u.dept || 'ไม่ระบุฝ่าย')}${u.position ? ' · ' + esc(u.position) : ''}</span>
-          <span>สาธารณะ<span class="pv-badges">${u.showPublic ? `<i>ชื่อ</i><i class="${u.showPhoto && u.hasPhoto ? '' : 'no'}">รูป</i><i class="${u.showPhone ? '' : 'no'}">โทร</i><i class="${u.showEmail ? '' : 'no'}">อีเมล</i>` : '<i class="no">ไม่เผยแพร่</i>'}</span></span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
+          <span>สาธารณะ<span class="pv-badges">${!u.inCentral ? '<i class="no" title="ไม่พบอีเมลนี้ในฐานข้อมูลกลาง">ไม่อยู่ในฐานข้อมูลกลาง</i>' : ''}${u.showPublic ? `<i>ชื่อ</i><i class="${u.showPhoto && u.hasPhoto ? '' : 'no'}">รูป</i><i class="${u.showEmail ? '' : 'no'}">อีเมล</i>` : '<i class="no">ไม่เผยแพร่</i>'}</span></span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
       <div class="acts">
         <button class="btn sm" data-act="edit">แก้ไข</button>
         <button class="btn sm" data-act="reset">รีเซ็ตรหัสผ่าน</button>
@@ -2062,88 +2047,66 @@ $('userList').addEventListener('click', async e => {
   }catch(err){ toast(err.message, true); busy(b, false); }
 });
 
-/* ---------------- โปรไฟล์ของฉัน (ข้อมูลผู้รับผิดชอบ · PDPA) ---------------- */
-let PF = null, pfPhotoData = null, pfRemove = false;
+/* ---------------- ซิงก์ฐานข้อมูลกลาง (ผู้ดูแล) ---------------- */
+function syncShow(r){
+  if(!r){ $('syncResult').innerHTML = '<p class="hint" style="margin:8px 0 0">ยังไม่เคยซิงก์ กดปุ่มเพื่อดึงข้อมูลครั้งแรก (ใช้เวลาประมาณ 1 นาที)</p>'; return; }
+  $('syncResult').innerHTML = `<p class="hint" style="margin:8px 0 0">ซิงก์ล่าสุด ${esc(r.at)} · บุคลากร ${r.staff} คน · ดึงรูปสำเร็จ ${r.photos} คน (อัปเดตรูปใหม่ ${r.photoNew})
+      ${r.noPhoto ? ` · ไม่มีรูปในฐานข้อมูลกลาง ${r.noPhoto} คน` : ''} · จับคู่ผู้ใช้ในระบบได้ ${r.matched} คน${r.noEmail ? ` · แถวที่ไม่มีอีเมล ${r.noEmail} แถว` : ''}</p>
+    ${r.hint ? `<p class="err" style="margin:8px 0 0">${esc(r.hint)}</p>` : ''}
+    ${r.timeUp ? '<p class="hint" style="margin:4px 0 0;color:var(--warn)">เกินเวลาที่ Google อนุญาตต่อครั้ง กดซิงก์อีกครั้งเพื่อทำต่อ</p>' : ''}
+    ${r.failedCount ? `<details style="margin-top:6px"><summary class="hint" style="color:var(--accent);cursor:pointer">ดึงรูปไม่สำเร็จ ${r.failedCount} คน (ดูสาเหตุ)</summary>
+      <ul class="hint" style="margin:4px 0 0;padding-left:18px">${(r.failed || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>` : ''}
+    ${r.unmatched && r.unmatched.length ? `<p class="hint" style="margin:4px 0 0;color:var(--warn)">ผู้ใช้ที่ไม่พบอีเมลในฐานข้อมูลกลาง (${r.unmatched.length}): ${r.unmatched.map(esc).join(', ')}</p>` : ''}`;
+}
+$('syncBtn').onclick = async () => {
+  const b = $('syncBtn'); busy(b, true, 'กำลังซิงก์… (ประมาณ 1 นาที)');
+  try{ const j = await api('syncStaff'); syncShow(j.summary); toast('ซิงก์ฐานข้อมูลกลางแล้ว'); loadUsers(); }
+  catch(err){ toast(err.message, true); }
+  finally{ busy(b, false); }
+};
+
+/* ---------------- โปรไฟล์ของฉัน (ข้อมูลจากฐานข้อมูลกลาง) ---------------- */
+let PF = null;
 const pfInitial = s => String(s || '').trim()
   .replace(/^(นางสาว|นาง|นาย|น\.ส\.|ว่าที่ร้อยตรี|ว่าที่ ร\.ต\.|ผศ\.|รศ\.|ศ\.|ดร\.|อ\.|ผู้ช่วยศาสตราจารย์|รองศาสตราจารย์|อาจารย์)\s*/g, '')
   .replace(/^ดร\.\s*/, '').slice(0, 1) || '•';
-function pfPhotoSrc(){ return pfRemove ? '' : (pfPhotoData || (PF && PF.photo) || ''); }
-function pfAvatar(){
-  const src = pfPhotoSrc();
-  return src ? `<img src="${esc(src)}" alt="" data-pfimg>` : esc(pfInitial(PF && PF.name));
-}
-/* ตัวเลือกใหม่ที่เปิดเพิ่มจากเดิม (รูป/โทร/อีเมล) ต้องติ๊กยินยอมก่อนบันทึก */
-function pfNeedsConsent(){
-  if(!PF) return false;
-  const now = { p: $('pfShowPhoto').checked, t: $('pfShowPhone').checked, e: $('pfShowEmail').checked };
-  return $('pfShow').checked && ((now.p && !PF.showPhoto) || (now.t && !PF.showPhone) || (now.e && !PF.showEmail) || (!PF.showPublic));
-}
+const pfLoc = st => st ? [st.building, st.floor ? 'ชั้น ' + st.floor : '', st.room ? (/^\d/.test(st.room) ? 'ห้อง ' + st.room : st.room) : ''].filter(Boolean).join(' · ') : '';
 function pfPreview(){
-  const show = $('pfShow').checked;
+  const show = $('pfShow').checked, st = PF.staff;
   $('pfSub').classList.toggle('off', !show);
-  $('pfAv').innerHTML = pfAvatar();
-  $('pfRm').hidden = !pfPhotoSrc();
-  $('pfConsentBox').hidden = !pfNeedsConsent();
-  const photo = show && $('pfShowPhoto').checked && pfPhotoSrc();
-  const pos = $('pfPos').value.trim(), room = $('pfRoom').value.trim(), phone = $('pfPhone').value.trim();
+  const photo = show && $('pfShowPhoto').checked && st && st.photo;
+  const name = (st && st.name) || PF.name;
   $('pfPv').className = 'ppv' + (show ? '' : ' hidden');
-  $('pfPv').innerHTML = show ? `<span class="pfav">${photo ? `<img src="${esc(photo)}" alt="">` : esc(pfInitial(PF.name))}</span>
-    <div><b>${esc(PF.name)}</b>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}
-      <div class="c">${room ? `<span>🏢 ${esc(room)}</span>` : ''}${$('pfShowPhone').checked && phone ? `<span>📞 ${esc(phone)}</span>` : ''}${$('pfShowEmail').checked ? `<span>✉️ ${esc(PF.email)}</span>` : ''}</div></div>`
+  $('pfPv').innerHTML = show ? `<span class="pfav">${photo ? `<img src="${esc(photo)}" alt="" data-pfimg referrerpolicy="no-referrer">` : esc(pfInitial(name))}</span>
+    <div>${st && st.title ? `<span class="t">${esc(st.title)}</span>` : ''}<b>${esc(name)}</b>${st && st.position ? `<span class="pos">${esc(st.position)}</span>` : ''}
+      <div class="c">${pfLoc(st) ? `<span>🏢 ${esc(pfLoc(st))}</span>` : ''}${$('pfShowEmail').checked ? `<span>✉️ ${esc((st && st.email) || PF.email)}</span>` : ''}</div></div>`
     : '<div><b>ไม่แสดงบนหน้าสาธารณะ</b><span class="pos">ชื่อของคุณจะไม่ปรากฏในการ์ดฝ่ายงาน</span></div>';
 }
 async function pfOpen(){
   try{ PF = (await api('getProfile')).profile; }catch(err){ return toast(err.message, true); }
-  pfPhotoData = null; pfRemove = false;
-  $('pfName').value = PF.name; $('pfDept').value = PF.dept || 'ไม่ระบุฝ่าย';
-  $('pfPos').value = PF.position; $('pfRoom').value = PF.room; $('pfPhone').value = PF.phone;
-  $('pfShow').checked = PF.showPublic; $('pfShowPhoto').checked = PF.showPhoto; $('pfShowPhone').checked = PF.showPhone; $('pfShowEmail').checked = PF.showEmail;
-  $('pfEmail').textContent = `(${PF.email})`;
-  $('pfConsent').checked = false;
-  $('pfMeta').textContent = PF.consentAt ? `ปรับการเผยแพร่ล่าสุดเมื่อ ${PF.consentAt}` : 'ยังไม่เคยให้ความยินยอม';
+  const st = PF.staff;
+  $('pfData').innerHTML = st ? [['ชื่อ-สกุล', st.name], ['ตำแหน่งทางวิชาการ/ระดับ', st.title], ['ตำแหน่ง', st.position], ['หน่วยงาน/สาขา', st.dept],
+      ['ที่ทำงาน', pfLoc(st)], ['อีเมล', st.email], ['หมายเหตุ', st.note], ['รูปภาพ', st.photo ? '✓ มีรูปในฐานข้อมูลกลาง' : 'ยังไม่มีรูป']]
+      .filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')
+    : `<dt>สถานะ</dt><dd>ไม่พบอีเมล ${esc(PF.email)} ในฐานข้อมูลกลาง จึงแสดงเฉพาะชื่อในระบบ (แจ้งผู้ดูแลฐานข้อมูลกลางให้ใส่อีเมลนี้)</dd>`;
+  $('pfShow').checked = PF.showPublic; $('pfShowPhoto').checked = PF.showPhoto; $('pfShowEmail').checked = PF.showEmail;
+  $('pfMeta').textContent = PF.consentAt ? `ปรับการแสดงผลล่าสุดเมื่อ ${PF.consentAt}` : 'ค่าเริ่มต้น: แสดงชื่อ รูปภาพ และอีเมล';
   $('pfStatus').textContent = '';
   pfPreview(); $('pfEd').showModal();
 }
 $('pfOpen').onclick = pfOpen;
 $('pfClose').onclick = $('pfCancel').onclick = () => $('pfEd').close();
-['pfPos','pfRoom','pfPhone','pfShow','pfShowPhoto','pfShowPhone','pfShowEmail'].forEach(i => $(i).addEventListener('input', pfPreview));
-$('pfRm').onclick = () => { pfRemove = true; pfPhotoData = null; $('pfShowPhoto').checked = false; pfPreview(); };
-/* ครอบรูปเป็นสี่เหลี่ยมจัตุรัสตรงกลาง ย่อเหลือ 320 px (ลดขนาดไฟล์ และไม่เก็บข้อมูลเกินจำเป็น เช่น EXIF/ตำแหน่ง GPS) */
-$('pfFile').onchange = () => {
-  const f = $('pfFile').files[0]; $('pfFile').value = '';
-  if(!f) return;
-  if(!/^image\/(jpeg|png|webp)$/.test(f.type)) return toast('รองรับไฟล์ JPG, PNG หรือ WebP', true);
-  if(f.size > 10 * 1048576) return toast('ไฟล์ใหญ่เกิน 10 MB', true);
-  const im = new Image();
-  im.onload = () => {
-    const s = Math.min(im.naturalWidth, im.naturalHeight), c = document.createElement('canvas'); c.width = c.height = 320;
-    const x = c.getContext('2d'); x.imageSmoothingQuality = 'high';
-    x.drawImage(im, (im.naturalWidth - s) / 2, (im.naturalHeight - s) / 2, s, s, 0, 0, 320, 320);
-    pfPhotoData = c.toDataURL('image/jpeg', .85); pfRemove = false;
-    if(!PF.showPhoto) $('pfShowPhoto').checked = true;
-    pfPreview();
-  };
-  im.onerror = () => toast('เปิดไฟล์รูปนี้ไม่ได้', true);
-  im.src = URL.createObjectURL(f);
-};
+['pfShow','pfShowPhoto','pfShowEmail'].forEach(i => $(i).addEventListener('input', pfPreview));
 $('pfForm').onsubmit = async e => {
   e.preventDefault();
-  const phone = $('pfPhone').value.trim();
-  if(phone && !/^[0-9+\-()\s,ต่อ.]+$/.test(phone)) return toast('เบอร์โทรใส่ได้เฉพาะตัวเลข - ( ) และคำว่า "ต่อ"', true);
-  if($('pfShowPhone').checked && !phone) return toast('กรุณาใส่เบอร์โทร หรือเอาเครื่องหมาย "แสดงเบอร์โทร" ออก', true);
-  if($('pfShowPhoto').checked && !pfPhotoSrc()) return toast('กรุณาเลือกรูปภาพ หรือเอาเครื่องหมาย "แสดงรูปภาพ" ออก', true);
-  if(pfNeedsConsent() && !$('pfConsent').checked){ $('pfConsentBox').scrollIntoView({ block:'center' }); return toast('กรุณาอ่านประกาศความเป็นส่วนตัว และติ๊กยินยอมก่อนบันทึก', true); }
-  const profile = { position: $('pfPos').value, room: $('pfRoom').value, phone,
-    showPublic: $('pfShow').checked, showPhoto: $('pfShow').checked && $('pfShowPhoto').checked,
-    showPhone: $('pfShow').checked && $('pfShowPhone').checked, showEmail: $('pfShow').checked && $('pfShowEmail').checked };
-  if(pfPhotoData) profile.photoData = pfPhotoData;
-  if(pfRemove) profile.removePhoto = true;
+  const show = $('pfShow').checked;
+  const profile = { showPublic: show, showPhoto: show && $('pfShowPhoto').checked, showEmail: show && $('pfShowEmail').checked };
   const btn = $('pfSave'); busy(btn, true, 'กำลังบันทึก…');
   try{ PF = (await api('saveProfile', { profile })).profile; $('pfEd').close(); toast('บันทึกแล้ว หน้าสาธารณะจะอัปเดตภายในไม่กี่นาที'); }
   catch(err){ toast(err.message, true); }
   finally{ busy(btn, false); }
 };
-/* รูปที่เปิดลิงก์ Drive ไม่ได้ (ยังไม่เปิดแชร์) → แสดงอักษรย่อแทน */
+/* รูปที่เปิดลิงก์ไม่ได้ → แสดงอักษรย่อแทน */
 document.addEventListener('error', e => { if(e.target.dataset && e.target.dataset.pfimg !== undefined){ const av = e.target.closest('.pfav'); if(av) av.textContent = pfInitial(PF && PF.name); } }, true);
 
 /* ---------------- เริ่มต้น ---------------- */
