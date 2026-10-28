@@ -292,6 +292,25 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .pv-badges i{font-style:normal;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--ok-soft);color:var(--ok)}
 .pv-badges i.no{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
 
+/* ความคืบหน้าการซิงก์ */
+.sprog{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.sprog-top{display:flex;align-items:baseline;gap:10px}
+.sprog-top b{font-size:24px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums;min-width:62px}
+.sprog-top span{font-size:14px}
+.sprog-top .sp-time{margin-left:auto;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.sprog-bar{height:12px;border-radius:99px;background:var(--line);overflow:hidden;margin:9px 0 6px}
+.sprog-bar span{display:block;height:100%;width:0;border-radius:99px;transition:width .5s ease;
+  background:linear-gradient(90deg,#E0243A,#F2B705);background-size:28px 28px;position:relative}
+.sprog.run .sprog-bar span{background-image:linear-gradient(90deg,#E0243A,#F2B705),
+  repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 10px,transparent 10px 20px);background-blend-mode:overlay;animation:spmove 1s linear infinite}
+@keyframes spmove{to{background-position:0 0,28px 0}}
+.sprog.ok .sprog-bar span{background:var(--ok)}
+.sprog.ok .sprog-top b{color:var(--ok)}
+.sprog.bad .sprog-bar span{background:var(--accent)}
+.sprog-sub{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+.sprog-sub span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+@media (prefers-reduced-motion:reduce){ .sprog.run .sprog-bar span{animation:none} }
+
 /* เมนูระบบงาน */
 .mico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));flex:none}
 .mico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -560,6 +579,11 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
           <div style="flex:1;min-width:240px"><h3 style="margin:0 0 2px">ฐานข้อมูลกลางบุคลากร</h3>
             <p class="hint" id="syncInfo" style="margin:0">ดึงชื่อ ตำแหน่ง ห้อง อีเมล และรูปภาพ มาแสดงในป๊อปอัปผู้รับผิดชอบ (จับคู่ด้วยอีเมล)</p></div>
           <button class="btn primary" type="button" id="syncBtn"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>ซิงก์ฐานข้อมูลกลาง</button>
+        </div>
+        <div class="sprog" id="syncProg" hidden aria-live="polite">
+          <div class="sprog-top"><b id="spPct">0%</b><span id="spStage">กำลังเริ่มซิงก์</span><span class="sp-time" id="spTime">0:00</span></div>
+          <div class="sprog-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="spBar"><span id="spFill"></span></div>
+          <div class="sprog-sub"><span id="spCount"></span><span id="spCur"></span></div>
         </div>
         <div id="syncResult"></div>
       </div>
@@ -1983,7 +2007,7 @@ async function loadUsers(){
     ? `บัญชีใหม่และบัญชีที่ถูกรีเซ็ตใช้รหัสผ่านเริ่มต้น ${meta.defaultPassword} ระบบจะชวนให้ตั้งรหัสผ่านใหม่เมื่อเข้าครั้งแรก (ผู้ใช้กดข้ามได้)`
     : '';
   $('userList').innerHTML = '<div class="empty">กำลังโหลด…</div>';
-  try{ const j = await api('listUsers'); users = j.users; renderUsers(); syncShow(j.staffSync ? JSON.parse(j.staffSync) : null); }
+  try{ const j = await api('listUsers'); users = j.users; renderUsers(); syncShow(j.staffSync ? JSON.parse(j.staffSync) : null); if(!spPoll) spWatch(); }
   catch(err){ $('userList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
 }
 function renderUsers(){
@@ -2049,7 +2073,7 @@ $('userList').addEventListener('click', async e => {
 
 /* ---------------- ซิงก์ฐานข้อมูลกลาง (ผู้ดูแล) ---------------- */
 function syncShow(r){
-  if(!r){ $('syncResult').innerHTML = '<p class="hint" style="margin:8px 0 0">ยังไม่เคยซิงก์ กดปุ่มเพื่อดึงข้อมูลครั้งแรก (ใช้เวลาประมาณ 1 นาที)</p>'; return; }
+  if(!r){ $('syncResult').innerHTML = '<p class="hint" style="margin:8px 0 0">ยังไม่เคยซิงก์ กดปุ่มเพื่อดึงข้อมูลครั้งแรก</p>'; return; }
   $('syncResult').innerHTML = `<p class="hint" style="margin:8px 0 0">ซิงก์ล่าสุด ${esc(r.at)} · บุคลากร ${r.staff} คน · ดึงรูปสำเร็จ ${r.photos} คน (อัปเดตรูปใหม่ ${r.photoNew})
       ${r.noPhoto ? ` · ไม่มีรูปในฐานข้อมูลกลาง ${r.noPhoto} คน` : ''} · จับคู่ผู้ใช้ในระบบได้ ${r.matched} คน${r.noEmail ? ` · แถวที่ไม่มีอีเมล ${r.noEmail} แถว` : ''}</p>
     ${r.hint ? `<p class="err" style="margin:8px 0 0">${esc(r.hint)}</p>` : ''}
@@ -2058,12 +2082,62 @@ function syncShow(r){
       <ul class="hint" style="margin:4px 0 0;padding-left:18px">${(r.failed || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>` : ''}
     ${r.unmatched && r.unmatched.length ? `<p class="hint" style="margin:4px 0 0;color:var(--warn)">ผู้ใช้ที่ไม่พบอีเมลในฐานข้อมูลกลาง (${r.unmatched.length}): ${r.unmatched.map(esc).join(', ')}</p>` : ''}`;
 }
+/* แสดงความคืบหน้า: ถามเซิร์ฟเวอร์ทุก 1 วินาที + นับเวลาที่ใช้ไปบนหน้าจอ */
+let spPoll = null, spClock = null, spT0 = 0, spPct = 0, spRun = 0;   // spRun: รอบการติดตาม (กันคำตอบที่มาช้าหลังจบงาน)
+function spShow(p, state){
+  const box = $('syncProg'); box.hidden = false;
+  box.className = 'sprog ' + (state || 'run');
+  spPct = Math.round(Math.max(state === 'run' ? spPct : 0, Number(p.pct) || 0));   // ไม่ให้แถบถอยหลัง
+  $('spPct').textContent = spPct + '%';
+  $('spFill').style.width = spPct + '%';
+  $('spBar').setAttribute('aria-valuenow', spPct);
+  $('spStage').textContent = p.stage || '';
+  $('spCount').textContent = p.total ? `ประมวลผลแล้ว ${p.done || 0} จาก ${p.total} แถว` : '';
+  $('spCur').textContent = p.current && state === 'run' ? p.current : '';
+}
+function spTime(){ const s = Math.floor((Date.now() - spT0) / 1000); $('spTime').textContent = `ใช้เวลา ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+function spStart(t0){
+  spT0 = t0 || Date.now(); spPct = 0; spStop();
+  spTime(); spClock = setInterval(spTime, 250);
+  const run = ++spRun;
+  spPoll = setInterval(async () => {
+    try{ const j = await api('syncProgress'); if(run === spRun && spPoll && j.progress && !j.progress.finished) spShow(j.progress, 'run'); }catch(e){}
+  }, 1000);
+}
+function spStop(){ clearInterval(spPoll); clearInterval(spClock); spPoll = spClock = null; spRun++; }
+function spDone(p, ok){ spStop(); spTime(); spShow(Object.assign({}, p, { pct: ok ? 100 : p.pct }), ok ? 'ok' : 'bad'); $('syncBtn').disabled = false; }
+
 $('syncBtn').onclick = async () => {
-  const b = $('syncBtn'); busy(b, true, 'กำลังซิงก์… (ประมาณ 1 นาที)');
-  try{ const j = await api('syncStaff'); syncShow(j.summary); toast('ซิงก์ฐานข้อมูลกลางแล้ว'); loadUsers(); }
-  catch(err){ toast(err.message, true); }
+  const b = $('syncBtn'); busy(b, true, 'กำลังซิงก์…');
+  spShow({ pct: 1, stage: 'กำลังเริ่มซิงก์' }, 'run'); spStart();
+  try{
+    const j = await api('syncStaff');
+    spDone({ stage: 'ซิงก์เสร็จสิ้น', total: j.summary.staff, done: j.summary.staff }, true);
+    syncShow(j.summary); toast('ซิงก์ฐานข้อมูลกลางแล้ว'); loadUsers();
+  }catch(err){
+    if(err.code === 'BUSY'){ toast(err.message); spWatch(); return; }       // มีการซิงก์ค้างอยู่ → ติดตามต่อ
+    spDone({ pct: spPct, stage: 'เกิดข้อผิดพลาด: ' + err.message }, false); toast(err.message, true);
+  }
   finally{ busy(b, false); }
 };
+/* เปิดแท็บระหว่างที่มีการซิงก์ทำงานอยู่ (เช่น กดจากอีกเครื่อง หรือรีเฟรชหน้า) → แสดงความคืบหน้าต่อจนเสร็จ */
+async function spWatch(){
+  let j; try{ j = await api('syncProgress'); }catch(e){ return; }
+  const p = j.progress;
+  if(!p || p.finished) return;
+  $('syncBtn').disabled = true;
+  spShow(p, 'run'); spStart(p.started || Date.now());
+  clearInterval(spPoll);
+  const run = spRun;
+  spPoll = setInterval(async () => {
+    try{
+      const k = await api('syncProgress'), q = k.progress;
+      if(!q || run !== spRun || !spPoll) return;
+      if(q.finished){ spDone(q.error ? Object.assign(q, { stage: 'เกิดข้อผิดพลาด: ' + q.error }) : q, !q.error); if(q.summary) syncShow(q.summary); loadUsers(); }
+      else spShow(q, 'run');
+    }catch(e){}
+  }, 1000);
+}
 
 /* ---------------- โปรไฟล์ของฉัน (ข้อมูลจากฐานข้อมูลกลาง) ---------------- */
 let PF = null;
