@@ -266,6 +266,29 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .pacts .eds-l{display:block;width:100%;font-size:12px;color:var(--muted)}
 @media (max-width:640px){ .lrow{grid-template-columns:1fr 1fr;} .lrow .n{display:none} .lrow .acts{grid-column:1/-1} }
 
+/* โปรไฟล์ของฉัน (PDPA) */
+.pfphoto{display:flex;gap:16px;align-items:center;margin-bottom:16px}
+.pfav{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-size:34px;font-weight:700;color:#fff;
+  background:var(--grad-hot);box-shadow:0 0 0 3px var(--surface),0 8px 20px -8px rgba(179,18,46,.6)}
+.pfav img{width:100%;height:100%;object-fit:cover}
+.pdpa{margin-top:4px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);display:grid;gap:8px}
+.pdpa .check{margin:0;font-weight:500;font-size:14px}
+.pdsub{display:grid;gap:6px;padding-left:28px}
+.pdsub.off{opacity:.45;pointer-events:none}
+.notice{font-size:13px;color:var(--muted)}
+.notice summary{cursor:pointer;color:var(--accent);font-weight:600}
+.notice p{margin:6px 0}
+.consent{padding:8px 10px;border-radius:10px;background:var(--warn-soft)}
+.ppv{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.ppv .pfav{width:72px;height:72px;font-size:26px}
+.ppv b{display:block;font-size:16px}
+.ppv .pos{display:block;font-size:13.5px;color:var(--muted)}
+.ppv .c{font-size:13px;margin-top:5px;display:grid;gap:2px}
+.ppv.hidden{opacity:.5}
+.pv-badges{display:inline-flex;gap:4px;margin-left:6px;vertical-align:2px}
+.pv-badges i{font-style:normal;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--ok-soft);color:var(--ok)}
+.pv-badges i.no{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+
 /* เมนูระบบงาน */
 .mico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));flex:none}
 .mico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -293,7 +316,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 /* ผู้ใช้งาน */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
 .card h3{margin:0 0 12px;font-size:16px}
-.ufrm{display:grid;grid-template-columns:1.3fr 1.2fr 1.1fr .8fr auto;gap:10px;align-items:end}
+.ufrm{display:grid;grid-template-columns:1.3fr 1.2fr 1.1fr 1.1fr .8fr auto;gap:10px;align-items:end}
 .ufrm label.f{margin:0}
 .users{display:grid;gap:8px}
 .urow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
@@ -420,6 +443,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
     <div class="who"><b id="whoName"></b><span id="whoDept"></span></div>
     <a class="btn sm" href="news-dashboard.html" title="รายงานสรุปผลการประชาสัมพันธ์"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl">รายงาน</span></a>
     <a class="btn sm" href="index.html" title="ไปหน้า EN-MSU Smart Office"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lbl">หน้าหลัก</span></a>
+    <button class="btn sm" id="pfOpen" title="โปรไฟล์ของฉัน (ข้อมูลผู้รับผิดชอบบนหน้าสาธารณะ)"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">โปรไฟล์ของฉัน</span></button>
     <button class="btn sm" id="pwOpen" title="เปลี่ยนรหัสผ่าน"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="lbl">รหัสผ่าน</span></button>
     <button class="btn sm" id="logoutBtn" title="ออกจากระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg><span class="lbl">ออก</span></button>
   </header>
@@ -522,6 +546,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
           <label class="f"><span>อีเมล @msu.ac.th</span><input class="in" id="uEmail" type="email" placeholder="name@msu.ac.th" required></label>
           <label class="f"><span>ชื่อ-สกุล</span><input class="in" id="uName" required maxlength="100"></label>
           <label class="f"><span>ฝ่าย / หน่วยงาน</span><input class="in" id="uDept" list="deptList" maxlength="100"></label>
+          <label class="f"><span>ตำแหน่ง</span><input class="in" id="uPos" maxlength="80" placeholder="เช่น นักวิชาการศึกษา"></label>
           <label class="f"><span>สิทธิ์</span><select class="in" id="uRole"><option value="editor">ผู้ลงข่าว</option><option value="viewer">ผู้ดูรายงาน (ผู้บริหาร/กรรมการ)</option><option value="admin">ผู้ดูแลระบบ</option></select></label>
           <div style="display:flex;gap:6px"><button class="btn primary" id="uSave">เพิ่มผู้ใช้</button><button class="btn" type="button" id="uCancel" hidden>ยกเลิก</button></div>
         </div>
@@ -535,6 +560,67 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 <datalist id="deptList"></datalist>
 
 <!-- หน้าต่างเพิ่ม/แก้ไขข่าว -->
+<dialog class="ed" id="pfEd">
+  <form id="pfForm" novalidate style="display:contents">
+    <div class="ed-head"><h2>โปรไฟล์ของฉัน · ข้อมูลผู้รับผิดชอบบนหน้าสาธารณะ</h2>
+      <button class="btn ghost icon-only" type="button" id="pfClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="ed-body">
+      <div>
+        <div class="pfphoto">
+          <span class="pfav" id="pfAv"></span>
+          <div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <label class="btn sm" style="cursor:pointer">เลือกรูปภาพ<input type="file" id="pfFile" accept="image/jpeg,image/png,image/webp" hidden></label>
+              <button class="btn sm danger" type="button" id="pfRm">ลบรูป</button>
+            </div>
+            <p class="hint" style="margin:6px 0 0">รูปหน้าตรง เห็นใบหน้าชัด ระบบครอบเป็นสี่เหลี่ยมจัตุรัสและย่อเหลือ 320×320 px ให้อัตโนมัติ</p>
+          </div>
+        </div>
+        <div class="row2">
+          <label class="f"><span>ชื่อ-สกุล <small>(แก้ไขโดยผู้ดูแลระบบ)</small></span><input class="in" id="pfName" disabled></label>
+          <label class="f"><span>ฝ่าย / หน่วยงาน</span><input class="in" id="pfDept" disabled></label>
+        </div>
+        <label class="f"><span>ตำแหน่ง</span><input class="in" id="pfPos" maxlength="80" placeholder="เช่น นักวิชาการโสตทัศนศึกษา"></label>
+        <div class="row2">
+          <label class="f"><span>ห้อง / สถานที่ทำงาน</span><input class="in" id="pfRoom" maxlength="60" placeholder="เช่น EN1-101"></label>
+          <label class="f"><span>เบอร์โทรที่ทำงาน</span><input class="in" id="pfPhone" maxlength="40" inputmode="tel" placeholder="เช่น 043-754316 ต่อ 3001"></label>
+        </div>
+
+        <div class="pdpa">
+          <b>การเผยแพร่บนหน้า EN-MSU Smart Office</b>
+          <label class="check"><input type="checkbox" id="pfShow"> แสดงชื่อ-สกุล ตำแหน่ง และห้องทำงาน ในการ์ดฝ่ายงานที่ฉันรับผิดชอบ</label>
+          <div class="pdsub" id="pfSub">
+            <label class="check"><input type="checkbox" id="pfShowPhoto"> แสดงรูปภาพ</label>
+            <label class="check"><input type="checkbox" id="pfShowPhone"> แสดงเบอร์โทรที่ทำงาน</label>
+            <label class="check"><input type="checkbox" id="pfShowEmail"> แสดงอีเมล <span id="pfEmail" class="muted"></span></label>
+          </div>
+          <details class="notice"><summary>ประกาศความเป็นส่วนตัว (อ่านก่อนให้ความยินยอม)</summary>
+            <p><b>วัตถุประสงค์:</b> ให้บุคลากรและผู้รับบริการทราบผู้รับผิดชอบงานของแต่ละฝ่าย และติดต่อประสานงานได้ถูกต้อง</p>
+            <p><b>ข้อมูลที่เผยแพร่:</b> เฉพาะรายการที่คุณเลือกด้านบน ข้อมูลที่ไม่ได้เลือกจะไม่ถูกส่งออกไปยังหน้าสาธารณะเลย</p>
+            <p><b>ผู้ที่เห็นข้อมูล:</b> ผู้เข้าชมหน้า EN-MSU Smart Office (ทั้งบุคลากรและบุคคลทั่วไป)</p>
+            <p><b>ระยะเวลา:</b> จนกว่าคุณจะถอนความยินยอม ย้ายฝ่าย หรือบัญชีถูกปิด/ลบ (รูปภาพถูกลบไปพร้อมบัญชี)</p>
+            <p><b>สิทธิของคุณ:</b> แก้ไขหรือถอนความยินยอมได้ทุกเมื่อที่หน้านี้ ข้อมูลจะหายจากหน้าสาธารณะภายในไม่กี่นาที และรูปภาพจะถูกปิดการเข้าถึงทันที
+              สอบถามหรือร้องขอเพิ่มเติมได้ที่ผู้ดูแลระบบของคณะ</p>
+            <p>เป็นไปตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
+          </details>
+          <label class="check consent" id="pfConsentBox"><input type="checkbox" id="pfConsent"> ข้าพเจ้าได้อ่านประกาศความเป็นส่วนตัว และยินยอมให้เผยแพร่ข้อมูลตามที่เลือก</label>
+          <p class="hint" id="pfMeta"></p>
+        </div>
+      </div>
+      <div class="pv-side">
+        <span class="lab">ตัวอย่างที่ผู้เข้าชมจะเห็น</span>
+        <div class="ppv" id="pfPv"></div>
+        <p class="hint">รายการที่ไม่ได้เลือกให้แสดง จะไม่ปรากฏในหน้าสาธารณะ</p>
+      </div>
+    </div>
+    <div class="ed-foot">
+      <span class="status" id="pfStatus"></span>
+      <button class="btn" type="button" id="pfCancel">ยกเลิก</button>
+      <button class="btn primary" id="pfSave">บันทึก</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog class="ed" id="mnEd">
   <form id="mnForm" novalidate style="display:contents">
     <div class="ed-head"><h2 id="mnTitle">แก้ไขเมนูระบบงาน</h2>
@@ -890,6 +976,7 @@ async function logout(){ try{ await api('logout'); }catch(e){} logoutLocal(); }
 $('logoutBtn').onclick = logout;
 
 function enterApp(){
+  $('pfOpen').hidden = !me || me.email === 'admin';
   const next = new URLSearchParams(location.search).get('next');
   if(me.role === 'viewer' || next === 'dashboard'){ location.href = 'news-dashboard.html'; return; }
   view('vApp');
@@ -1918,10 +2005,12 @@ function renderUsers(){
   $('userList').innerHTML = users.map(u => `
     <div class="urow" data-email="${esc(u.email)}">
       <div><b>${esc(u.name)}</b><span class="role ${u.role}">${ {admin:'ผู้ดูแล', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน'}[u.role] || u.role }</span>${u.active ? '' : '<span class="role off">ปิดใช้งาน</span>'}
-        <div class="meta"><span>${esc(u.email)}</span><span>${esc(u.dept || 'ไม่ระบุฝ่าย')}</span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
+        <div class="meta"><span>${esc(u.email)}</span><span>${esc(u.dept || 'ไม่ระบุฝ่าย')}${u.position ? ' · ' + esc(u.position) : ''}</span>
+          <span>สาธารณะ<span class="pv-badges">${u.showPublic ? `<i>ชื่อ</i><i class="${u.showPhoto && u.hasPhoto ? '' : 'no'}">รูป</i><i class="${u.showPhone ? '' : 'no'}">โทร</i><i class="${u.showEmail ? '' : 'no'}">อีเมล</i>` : '<i class="no">ไม่เผยแพร่</i>'}</span></span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
       <div class="acts">
         <button class="btn sm" data-act="edit">แก้ไข</button>
         <button class="btn sm" data-act="reset">รีเซ็ตรหัสผ่าน</button>
+        ${u.showPublic && u.email !== 'admin' ? '<button class="btn sm" data-act="hide" title="PDPA: ผู้ดูแลปิดการเผยแพร่แทนได้ แต่เปิดแทนเจ้าของข้อมูลไม่ได้">ซ่อนจากหน้าสาธารณะ</button>' : ''}
         ${u.email === 'admin' || u.email === me.email ? '' : `
         <button class="btn sm" data-act="toggle">${u.active ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}</button>
         <button class="btn sm danger" data-act="del">ลบ</button>`}
@@ -1934,6 +2023,7 @@ function userForm(u){
   $('uEmail').value = u ? u.email : ''; $('uEmail').disabled = !!u;
   $('uName').value = u ? u.name : ''; $('uDept').value = u ? (u.dept || '') : '';
   $('uRole').value = u ? u.role : 'editor'; $('uRole').disabled = !!u && u.email === 'admin';
+  $('uPos').value = u ? (u.position || '') : '';
   $('uSave').textContent = u ? 'บันทึก' : 'เพิ่มผู้ใช้'; $('uCancel').hidden = !u;
 }
 $('uCancel').onclick = () => userForm(null);
@@ -1945,7 +2035,7 @@ $('userForm').onsubmit = async e => {
   const btn = $('uSave'); busy(btn, true, 'กำลังบันทึก…');
   try{
     await api('saveUser', { isNew: !uEditing, email: uEditing ? uEditing.email : email,
-      name: $('uName').value, dept: $('uDept').value, role: $('uRole').value });
+      name: $('uName').value, dept: $('uDept').value, role: $('uRole').value, position: $('uPos').value });
     toast(uEditing ? 'บันทึกแล้ว' : `เพิ่ม ${email} แล้ว`);
     const d = $('uDept').value.trim();
     if(d && !meta.departments.includes(d)){ meta.departments.push(d); $('deptList').insertAdjacentHTML('beforeend', `<option value="${esc(d)}">`); }
@@ -1959,16 +2049,102 @@ $('userList').addEventListener('click', async e => {
   const act = b.dataset.act;
   if(act === 'edit'){ userForm(u); $('userForm').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
   const ask = { reset:`รีเซ็ตรหัสผ่านของ ${u.name} กลับเป็นรหัสผ่านเริ่มต้น?`, del:`ลบผู้ใช้ ${u.name}?\nข่าวที่ลงไว้จะยังอยู่`,
-                toggle: u.active ? `ปิดใช้งานบัญชี ${u.name}? (เข้าสู่ระบบไม่ได้จนกว่าจะเปิดใหม่)` : '' }[act];
+                toggle: u.active ? `ปิดใช้งานบัญชี ${u.name}? (เข้าสู่ระบบไม่ได้จนกว่าจะเปิดใหม่)` : '',
+                hide: `ซ่อนข้อมูลของ ${u.name} จากหน้าสาธารณะ?\nเจ้าของข้อมูลเปิดกลับได้เองที่ "โปรไฟล์ของฉัน"` }[act];
   if(ask && !confirm(ask)) return;
   busy(b, true);
   try{
     if(act === 'reset'){ await api('resetPassword', { email:u.email }); toast('รีเซ็ตรหัสผ่านแล้ว'); }
     if(act === 'del'){ await api('deleteUser', { email:u.email }); toast('ลบผู้ใช้แล้ว'); }
+    if(act === 'hide'){ await api('saveUser', { email:u.email, name:u.name, dept:u.dept, role:u.role, hidePublic:true }); toast('ซ่อนจากหน้าสาธารณะแล้ว'); }
     if(act === 'toggle'){ await api('saveUser', { email:u.email, name:u.name, dept:u.dept, role:u.role, active:!u.active }); toast(u.active ? 'ปิดใช้งานแล้ว' : 'เปิดใช้งานแล้ว'); }
     loadUsers();
   }catch(err){ toast(err.message, true); busy(b, false); }
 });
+
+/* ---------------- โปรไฟล์ของฉัน (ข้อมูลผู้รับผิดชอบ · PDPA) ---------------- */
+let PF = null, pfPhotoData = null, pfRemove = false;
+const pfInitial = s => String(s || '').trim()
+  .replace(/^(นางสาว|นาง|นาย|น\.ส\.|ว่าที่ร้อยตรี|ว่าที่ ร\.ต\.|ผศ\.|รศ\.|ศ\.|ดร\.|อ\.|ผู้ช่วยศาสตราจารย์|รองศาสตราจารย์|อาจารย์)\s*/g, '')
+  .replace(/^ดร\.\s*/, '').slice(0, 1) || '•';
+function pfPhotoSrc(){ return pfRemove ? '' : (pfPhotoData || (PF && PF.photo) || ''); }
+function pfAvatar(){
+  const src = pfPhotoSrc();
+  return src ? `<img src="${esc(src)}" alt="" data-pfimg>` : esc(pfInitial(PF && PF.name));
+}
+/* ตัวเลือกใหม่ที่เปิดเพิ่มจากเดิม (รูป/โทร/อีเมล) ต้องติ๊กยินยอมก่อนบันทึก */
+function pfNeedsConsent(){
+  if(!PF) return false;
+  const now = { p: $('pfShowPhoto').checked, t: $('pfShowPhone').checked, e: $('pfShowEmail').checked };
+  return $('pfShow').checked && ((now.p && !PF.showPhoto) || (now.t && !PF.showPhone) || (now.e && !PF.showEmail) || (!PF.showPublic));
+}
+function pfPreview(){
+  const show = $('pfShow').checked;
+  $('pfSub').classList.toggle('off', !show);
+  $('pfAv').innerHTML = pfAvatar();
+  $('pfRm').hidden = !pfPhotoSrc();
+  $('pfConsentBox').hidden = !pfNeedsConsent();
+  const photo = show && $('pfShowPhoto').checked && pfPhotoSrc();
+  const pos = $('pfPos').value.trim(), room = $('pfRoom').value.trim(), phone = $('pfPhone').value.trim();
+  $('pfPv').className = 'ppv' + (show ? '' : ' hidden');
+  $('pfPv').innerHTML = show ? `<span class="pfav">${photo ? `<img src="${esc(photo)}" alt="">` : esc(pfInitial(PF.name))}</span>
+    <div><b>${esc(PF.name)}</b>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}
+      <div class="c">${room ? `<span>🏢 ${esc(room)}</span>` : ''}${$('pfShowPhone').checked && phone ? `<span>📞 ${esc(phone)}</span>` : ''}${$('pfShowEmail').checked ? `<span>✉️ ${esc(PF.email)}</span>` : ''}</div></div>`
+    : '<div><b>ไม่แสดงบนหน้าสาธารณะ</b><span class="pos">ชื่อของคุณจะไม่ปรากฏในการ์ดฝ่ายงาน</span></div>';
+}
+async function pfOpen(){
+  try{ PF = (await api('getProfile')).profile; }catch(err){ return toast(err.message, true); }
+  pfPhotoData = null; pfRemove = false;
+  $('pfName').value = PF.name; $('pfDept').value = PF.dept || 'ไม่ระบุฝ่าย';
+  $('pfPos').value = PF.position; $('pfRoom').value = PF.room; $('pfPhone').value = PF.phone;
+  $('pfShow').checked = PF.showPublic; $('pfShowPhoto').checked = PF.showPhoto; $('pfShowPhone').checked = PF.showPhone; $('pfShowEmail').checked = PF.showEmail;
+  $('pfEmail').textContent = `(${PF.email})`;
+  $('pfConsent').checked = false;
+  $('pfMeta').textContent = PF.consentAt ? `ปรับการเผยแพร่ล่าสุดเมื่อ ${PF.consentAt}` : 'ยังไม่เคยให้ความยินยอม';
+  $('pfStatus').textContent = '';
+  pfPreview(); $('pfEd').showModal();
+}
+$('pfOpen').onclick = pfOpen;
+$('pfClose').onclick = $('pfCancel').onclick = () => $('pfEd').close();
+['pfPos','pfRoom','pfPhone','pfShow','pfShowPhoto','pfShowPhone','pfShowEmail'].forEach(i => $(i).addEventListener('input', pfPreview));
+$('pfRm').onclick = () => { pfRemove = true; pfPhotoData = null; $('pfShowPhoto').checked = false; pfPreview(); };
+/* ครอบรูปเป็นสี่เหลี่ยมจัตุรัสตรงกลาง ย่อเหลือ 320 px (ลดขนาดไฟล์ และไม่เก็บข้อมูลเกินจำเป็น เช่น EXIF/ตำแหน่ง GPS) */
+$('pfFile').onchange = () => {
+  const f = $('pfFile').files[0]; $('pfFile').value = '';
+  if(!f) return;
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)) return toast('รองรับไฟล์ JPG, PNG หรือ WebP', true);
+  if(f.size > 10 * 1048576) return toast('ไฟล์ใหญ่เกิน 10 MB', true);
+  const im = new Image();
+  im.onload = () => {
+    const s = Math.min(im.naturalWidth, im.naturalHeight), c = document.createElement('canvas'); c.width = c.height = 320;
+    const x = c.getContext('2d'); x.imageSmoothingQuality = 'high';
+    x.drawImage(im, (im.naturalWidth - s) / 2, (im.naturalHeight - s) / 2, s, s, 0, 0, 320, 320);
+    pfPhotoData = c.toDataURL('image/jpeg', .85); pfRemove = false;
+    if(!PF.showPhoto) $('pfShowPhoto').checked = true;
+    pfPreview();
+  };
+  im.onerror = () => toast('เปิดไฟล์รูปนี้ไม่ได้', true);
+  im.src = URL.createObjectURL(f);
+};
+$('pfForm').onsubmit = async e => {
+  e.preventDefault();
+  const phone = $('pfPhone').value.trim();
+  if(phone && !/^[0-9+\-()\s,ต่อ.]+$/.test(phone)) return toast('เบอร์โทรใส่ได้เฉพาะตัวเลข - ( ) และคำว่า "ต่อ"', true);
+  if($('pfShowPhone').checked && !phone) return toast('กรุณาใส่เบอร์โทร หรือเอาเครื่องหมาย "แสดงเบอร์โทร" ออก', true);
+  if($('pfShowPhoto').checked && !pfPhotoSrc()) return toast('กรุณาเลือกรูปภาพ หรือเอาเครื่องหมาย "แสดงรูปภาพ" ออก', true);
+  if(pfNeedsConsent() && !$('pfConsent').checked){ $('pfConsentBox').scrollIntoView({ block:'center' }); return toast('กรุณาอ่านประกาศความเป็นส่วนตัว และติ๊กยินยอมก่อนบันทึก', true); }
+  const profile = { position: $('pfPos').value, room: $('pfRoom').value, phone,
+    showPublic: $('pfShow').checked, showPhoto: $('pfShow').checked && $('pfShowPhoto').checked,
+    showPhone: $('pfShow').checked && $('pfShowPhone').checked, showEmail: $('pfShow').checked && $('pfShowEmail').checked };
+  if(pfPhotoData) profile.photoData = pfPhotoData;
+  if(pfRemove) profile.removePhoto = true;
+  const btn = $('pfSave'); busy(btn, true, 'กำลังบันทึก…');
+  try{ PF = (await api('saveProfile', { profile })).profile; $('pfEd').close(); toast('บันทึกแล้ว หน้าสาธารณะจะอัปเดตภายในไม่กี่นาที'); }
+  catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
+/* รูปที่เปิดลิงก์ Drive ไม่ได้ (ยังไม่เปิดแชร์) → แสดงอักษรย่อแทน */
+document.addEventListener('error', e => { if(e.target.dataset && e.target.dataset.pfimg !== undefined){ const av = e.target.closest('.pfav'); if(av) av.textContent = pfInitial(PF && PF.name); } }, true);
 
 /* ---------------- เริ่มต้น ---------------- */
 (async function init(){

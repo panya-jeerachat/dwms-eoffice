@@ -562,6 +562,45 @@ a.tile{text-decoration:none;color:inherit}
 .pc-e{margin:0;padding:16px 18px;color:var(--muted);font-size:13.5px}
 :root[data-theme="dark"] .pc-l a:hover{color:color-mix(in srgb, var(--pc) 60%, #fff)}
 
+/* ผู้รับผิดชอบของแต่ละฝ่าย */
+.pc-hb{border:0;width:100%;cursor:pointer;font:inherit;font-size:clamp(19px,1.6vw,23px);font-weight:700;transition:filter .15s}
+.pc-hb:hover{filter:brightness(1.06)}
+.pc-hb:focus-visible{outline:3px solid #fff;outline-offset:-6px}
+.pc-l{flex:1}
+.pc-f{display:flex;align-items:center;gap:10px;margin:0 12px 12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);
+  font:inherit;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
+.pc-f:hover{border-color:var(--pc);background:color-mix(in srgb, var(--pc) 8%, var(--surface))}
+.pc-f > span:nth-child(2){white-space:nowrap}
+.pc-f .go{margin-left:auto;color:var(--pc);font-size:18px;line-height:1}
+.avs{display:flex}
+.avs .av + .av{margin-left:-8px}
+.av{display:inline-grid;place-items:center;flex:none;border-radius:50%;overflow:hidden;background:var(--surface);box-shadow:0 0 0 2px var(--surface)}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av.ini{color:var(--pf);background:var(--pc);font-weight:700}
+.av.ini img{display:none}
+.av.sm{width:28px;height:28px;font-size:12.5px}
+.av.lg{width:76px;height:76px;font-size:28px;box-shadow:0 0 0 3px var(--surface),0 6px 18px -6px color-mix(in srgb, var(--pc) 70%, transparent)}
+.people-dlg{border:0;padding:0;border-radius:22px;width:min(720px,94vw);max-height:90vh;overflow:auto;background:var(--surface);color:var(--text);
+  box-shadow:0 30px 80px rgba(20,0,6,.45)}
+.people-dlg[open]{animation:ppIn .25s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes ppIn{from{opacity:0;transform:translateY(12px) scale(.97)}}
+.people-dlg::backdrop{background:rgba(25,4,10,.6)}
+.pd-h{position:sticky;top:0;z-index:2;padding:20px 64px 18px 24px;background:var(--pc);color:var(--pf)}
+.pd-h small{font-size:13px;font-weight:600;opacity:.9}
+.pd-h h3{margin:2px 0 0;font-size:24px;line-height:1.3}
+.pd-h .dlg-x{position:absolute;top:14px;right:14px;margin:0;float:none}
+.pd-l{list-style:none;margin:0;padding:18px 20px 6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.pp{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.pp-i{min-width:0}
+.pp-i b{display:block;font-size:16px;line-height:1.35}
+.pp-i .pos{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
+.pp-c{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.pp-c span,.pp-c a{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);text-decoration:none;word-break:break-all}
+.pp-c a:hover{color:var(--pc)}
+.pp-c svg{width:14px;height:14px;flex:none;fill:none;stroke:var(--pc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pd-n{margin:6px 20px 18px;padding:10px 14px;border-radius:12px;background:var(--bg);font-size:12px;color:var(--muted);line-height:1.6}
+@media (prefers-reduced-motion:reduce){ .people-dlg[open]{animation:none} }
+
 @media (min-width:1100px){
   .top-row{grid-template-columns:minmax(0,1.75fr) minmax(300px,1fr) !important;align-items:stretch}
   .top-row > *{min-width:0}
@@ -684,6 +723,15 @@ a.tile{text-decoration:none;color:inherit}
       <button class="x" id="noticeX" aria-label="ปิดข้อความ">ปิด</button>
     </div>
   </div>
+
+  <dialog class="people-dlg" id="peopleDlg" aria-labelledby="pdT">
+    <div class="pd-h"><small id="pdK"></small><h3 id="pdT"></h3>
+      <button class="dlg-x" type="button" aria-label="ปิด" onclick="this.closest('dialog').close()">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ul class="pd-l" id="pdList"></ul>
+    <p class="pd-n">🔒 ข้อมูลนี้เผยแพร่ตามความยินยอมของเจ้าของข้อมูล เพื่อการติดต่อประสานงานเท่านั้น
+      ห้ามนำไปใช้เพื่อวัตถุประสงค์อื่น (พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562) · เจ้าของข้อมูลแก้ไขหรือถอนความยินยอมได้ที่หน้าลงข่าว เมนู "โปรไฟล์ของฉัน"</p>
+  </dialog>
 
   <dialog class="news-dlg" id="newsDlg" aria-label="รายละเอียดข่าว">
     <button class="dlg-x" type="button" aria-label="ปิด" onclick="this.closest('dialog').close()">
@@ -1142,13 +1190,62 @@ const Portal = (()=>{
     const s = JSON.stringify(list || []);
     if(s === sig) return; sig = s;
     el.hidden = !(list && list.length);
-    el.innerHTML = (list || []).map(c => `<article class="pc" style="--pc:${esc(c.color || '#B3122E')};--pf:${fg(c.color)}">
-        <h3 class="pc-h">${esc(c.title)}</h3>
+    LIST = list || [];
+    el.innerHTML = LIST.map((c, k) => `<article class="pc" style="--pc:${esc(c.color || '#B3122E')};--pf:${fg(c.color)}">
+        ${c.people && c.people.length
+          ? `<button class="pc-h pc-hb" type="button" data-pk="${k}" title="ดูผู้รับผิดชอบ ${esc(c.title)}">${esc(c.title)}</button>`
+          : `<h3 class="pc-h">${esc(c.title)}</h3>`}
         ${c.links && c.links.length ? `<ul class="pc-l">${c.links.map(l => `<li><a href="${esc(l.url)}" target="_blank" rel="noopener">
             <span>${esc(l.label)}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></li>`).join('')}</ul>`
           : '<p class="pc-e">ฝ่ายงานกำลังจัดเตรียมข้อมูล</p>'}
+        ${c.people && c.people.length ? `<button class="pc-f" type="button" data-pk="${k}">
+            <span class="avs">${c.people.slice(0, 4).map(p => avatar(p, 'sm')).join('')}</span>
+            <span>ผู้รับผิดชอบ ${c.people.length} คน</span><span class="go" aria-hidden="true">›</span></button>` : ''}
       </article>`).join('');
   }
+
+  /* ---------- หน้าต่างผู้รับผิดชอบ (แสดงเฉพาะข้อมูลที่เจ้าของข้อมูลยินยอม) ---------- */
+  let LIST = [];
+  const dlg = $('peopleDlg');
+  const initial = s => String(s || '').trim()
+    .replace(/^(นางสาว|นาง|นาย|น\.ส\.|ว่าที่ร้อยตรี|ว่าที่ ร\.ต\.|ผศ\.|รศ\.|ศ\.|ดร\.|อ\.|ผู้ช่วยศาสตราจารย์|รองศาสตราจารย์|อาจารย์)\s*/g, '')
+    .replace(/^ดร\.\s*/, '').slice(0, 1) || '•';
+  function avatar(p, size){
+    return p.photo
+      ? `<span class="av ${size}" data-i="${esc(initial(p.name))}"><img src="${esc(p.photo)}" alt="" loading="lazy" data-pid="${esc(p.pid || '')}" referrerpolicy="no-referrer"></span>`
+      : `<span class="av ${size} ini" aria-hidden="true">${esc(initial(p.name))}</span>`;
+  }
+  const ICO = {
+    room:'<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 10h4a1 1 0 0 1 1 1v10M2 21h20"/>',
+    phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
+  };
+  const ic = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
+  function openPeople(k){
+    const c = LIST[k]; if(!c || !c.people) return;
+    dlg.style.setProperty('--pc', c.color || '#B3122E'); dlg.style.setProperty('--pf', fg(c.color));
+    $('pdT').textContent = c.title;
+    $('pdK').textContent = `ผู้รับผิดชอบ ${c.people.length} คน`;
+    $('pdList').innerHTML = c.people.map(p => `<li class="pp">
+        ${avatar(p, 'lg')}
+        <div class="pp-i"><b>${esc(p.name)}</b>${p.position ? `<span class="pos">${esc(p.position)}</span>` : ''}
+          <div class="pp-c">
+            ${p.room ? `<span>${ic('room')}${esc(p.room)}</span>` : ''}
+            ${p.phone ? `<a href="tel:${esc(p.phone.replace(/[^0-9+]/g, ''))}">${ic('phone')}${esc(p.phone)}</a>` : ''}
+            ${p.email ? `<a href="mailto:${esc(p.email)}">${ic('mail')}${esc(p.email)}</a>` : ''}
+          </div></div></li>`).join('');
+    dlg.showModal();
+  }
+  el.addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if(b) openPeople(+b.dataset.pk); });
+  dlg.addEventListener('click', e => { if(e.target === dlg) dlg.close(); });
+  /* รูปที่เปิดแชร์ลิงก์ไม่ได้ → ขอผ่าน Apps Script (ส่งเฉพาะรูปที่เจ้าของยินยอม) */
+  document.addEventListener('error', e => {
+    const img = e.target;
+    if(img.tagName !== 'IMG' || !img.dataset.pid || img.dataset.fb || !NEWS_API) return;
+    img.dataset.fb = '1';
+    fetch(NEWS_API + '?action=photo&id=' + encodeURIComponent(img.dataset.pid)).then(r => r.json())
+      .then(j => { if(j.ok) img.src = j.data; else { const av = img.closest('.av'); av.classList.add('ini'); av.textContent = av.dataset.i || '•'; } }).catch(() => {});
+  }, true);
   let cached = null; try{ cached = JSON.parse(load('portal') || 'null'); }catch(e){}
   if(cached) set(cached); else el.hidden = true;
   return { set };
