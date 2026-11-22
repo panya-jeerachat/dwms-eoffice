@@ -374,6 +374,12 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 @media (max-width:760px){ .bk-row{grid-template-columns:auto auto minmax(0,1fr)} .bk-row .in{grid-column:3} }
 
 /* ความคืบหน้าการซิงก์ */
+.sso-status{padding:10px 14px;border-radius:12px;margin-bottom:14px;font-size:14px;font-weight:600}
+.sso-status.on{background:var(--ok-soft);color:var(--ok)}
+.sso-status.off{background:var(--warn-soft);color:var(--warn)}
+.sso-origins{display:grid;gap:6px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;background:var(--surface-2)}
+.sso-origins b{font-size:13.5px}
+.sso-origins code{font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 8px;justify-self:start}
 .sprog{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
 .sprog-top{display:flex;align-items:baseline;gap:10px}
 .sprog-top b{font-size:24px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums;min-width:62px}
@@ -419,6 +425,11 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 /* เข้าสู่ระบบด้วย Google */
 .gsi{display:grid;gap:4px;margin-bottom:6px}
 .gsi-btn{display:flex;justify-content:center;min-height:44px}
+.gsi-fake{display:flex;align-items:center;justify-content:center;gap:10px;width:300px;max-width:100%;height:42px;border:1px solid var(--line);border-radius:99px;
+  background:var(--surface);color:var(--text);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.gsi-fake:disabled{cursor:not-allowed;opacity:.65}
+.gsi-fake .g{width:20px;height:20px;flex:none}
+.gsi-warn{color:var(--warn)!important}
 .or{display:flex;align-items:center;gap:10px;margin:14px 0 4px;color:var(--muted);font-size:12.5px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .linkbtn{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;margin:6px auto 0}
@@ -481,10 +492,10 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
     <p class="lead">EN-MSU Smart Office · สำหรับบุคลากรผู้รับผิดชอบลงข่าว</p>
     <p class="err" id="loginErr" hidden></p>
     <p class="okmsg" id="loginOk" hidden></p>
-    <!-- เข้าสู่ระบบด้วย Google @msu.ac.th (แสดงเมื่อผู้ดูแลตั้งค่า GOOGLE_CLIENT_ID ใน Code.gs แล้ว) -->
-    <div class="gsi" id="gsiBox" hidden>
-      <div id="gsiBtn" class="gsi-btn"></div>
-      <p class="hint" style="margin:8px 0 0;text-align:center">ใช้บัญชี Google ของมหาวิทยาลัย (@msu.ac.th) ไม่ต้องจำรหัสผ่านเพิ่ม</p>
+    <!-- เข้าสู่ระบบด้วย Google @msu.ac.th (SSO) — แสดงเสมอ พร้อมสถานะถ้ายังใช้ไม่ได้ -->
+    <div class="gsi" id="gsiBox">
+      <div id="gsiBtn" class="gsi-btn"><button class="gsi-fake" type="button" disabled><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span>กำลังเตรียมปุ่มเข้าสู่ระบบด้วย Google…</span></button></div>
+      <p class="hint" id="gsiNote" style="margin:8px 0 0;text-align:center">ใช้บัญชี Google ของมหาวิทยาลัย (@msu.ac.th) ไม่ต้องจำรหัสผ่านเพิ่ม</p>
       <div class="or" id="gsiOr"><span>หรือเข้าด้วยอีเมลและรหัสผ่าน</span></div>
       <button class="linkbtn" type="button" id="pwToggle" hidden>เข้าด้วยบัญชีผู้ดูแลระบบ (admin)</button>
     </div>
@@ -571,6 +582,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <button class="sn-it" type="button" data-go="tUsers" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.6A5 5 0 0 1 21.5 19"/></svg></span><span>ผู้ใช้งาน</span></button>
       <button class="sn-it" type="button" data-go="tMenu" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><span>เมนูระบบงาน</span></button>
       <button class="sn-it" type="button" data-go="tSet" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 10h8"/></svg></span><span>ข้อความหน้าหลัก</span></button>
+      <button class="sn-it" type="button" data-go="tSso"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span>ตั้งค่า SSO</span></button>
       <div class="sn-g">ระบบ</div>
       <button class="sn-it" type="button" id="pfOpen"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>โปรไฟล์ของฉัน</span></button>
       <button class="sn-it" type="button" id="pwOpen"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg></span><span>เปลี่ยนรหัสผ่าน</span></button>
@@ -600,6 +612,7 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <button role="tab" aria-selected="false" data-tab="tPortal" id="portalTab" hidden>ช่องทางฝ่ายงาน</button>
       <button role="tab" aria-selected="false" data-tab="tMenu" id="menuTab" hidden>เมนูระบบงาน</button>
       <button role="tab" aria-selected="false" data-tab="tSet" id="setTab" hidden>ข้อความหน้าหลัก</button>
+      <button role="tab" aria-selected="false" data-tab="tSso" id="ssoTab" hidden>ตั้งค่า SSO</button>
     </div>
 
     <section id="tNews">
@@ -637,6 +650,28 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
         <span class="note">เมนูด้านซ้ายของหน้า EN-MSU Smart Office (และไอคอนแอปบนมือถือ) แสดงตามรายการนี้ · ใช้ลูกศรจัดลำดับภายในแต่ละกลุ่ม · หน้าหลักอัปเดตภายในไม่กี่นาที</span>
       </div>
       <ul class="list" id="mnList"></ul>
+    </section>
+
+    <section id="tSso" hidden>
+      <form class="card" id="ssoForm" novalidate>
+        <h3>เข้าสู่ระบบด้วยบัญชี Google @msu.ac.th (SSO)</h3>
+        <p class="hint" style="margin:-4px 0 14px">ค่าที่บันทึกที่นี่เก็บไว้ในระบบหลังบ้าน ไม่หายเมื่อวาง Code.gs เวอร์ชันใหม่ · ขั้นตอนสร้าง Client ID ดูไฟล์ "คู่มือเปิดใช้-เข้าสู่ระบบด้วย-Google.md"</p>
+        <div class="sso-status" id="ssoStatus"></div>
+        <label class="f"><span>OAuth Client ID <small>(คัดลอกจาก Google Cloud &gt; Google Auth Platform &gt; Clients ลงท้ายด้วย .apps.googleusercontent.com)</small></span>
+          <input class="in" id="ssoId" placeholder="123456789012-xxxxxxxxxxxxxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"></label>
+        <label class="check"><input type="checkbox" id="ssoPw" checked> ยังให้เข้าด้วยอีเมลและรหัสผ่านได้ (แนะนำให้เปิดไว้ช่วงทดลองใช้)</label>
+        <p class="hint" style="margin:0 0 12px">เมื่อปิด ผู้ใช้ทุกคนต้องเข้าด้วยปุ่ม Google · บัญชี admin ยังเข้าด้วยรหัสผ่านได้เสมอ (กันการล็อกตัวเองออกจากระบบ)</p>
+        <div class="sso-origins">
+          <b>Authorized JavaScript origins ที่ต้องใส่ใน Google Cloud</b>
+          <code id="ssoOrigin"></code><code>https://eng.msu.ac.th</code>
+          <span class="hint">ใส่ให้ตรงทุกตัวอักษร ไม่มี / ปิดท้าย · ถ้าใช้สำเนาบน GitHub เพิ่ม https://panya-jeerachat.github.io</span>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">
+          <button class="btn" type="button" id="ssoTest">ทดสอบปุ่ม Google</button>
+          <button class="btn primary" id="ssoSave">บันทึก</button>
+        </div>
+        <div id="ssoTestBox" class="gsi-btn" style="margin-top:12px" hidden></div>
+      </form>
     </section>
 
     <section id="tSet" hidden>
@@ -1159,6 +1194,7 @@ function enterApp(){
   $('usersTab').hidden = me.role !== 'admin';
   $('setTab').hidden = me.role !== 'admin';
   $('menuTab').hidden = me.role !== 'admin';
+  $('ssoTab').hidden = me.role !== 'admin';
   $('portalTab').hidden = me.role === 'viewer';
   $('deptField').hidden = me.role !== 'admin';
   $('deptList').innerHTML = (meta.departments || []).map(d => `<option value="${esc(d)}">`).join('');
@@ -1172,7 +1208,8 @@ const PAGE = {
   tPortal: ['ช่องทางฝ่ายงาน', 'การ์ดข้อมูลฝ่ายงานและผู้รับผิดชอบบนหน้าหลัก'],
   tUsers:  ['ผู้ใช้งาน', 'เพิ่มผู้รับผิดชอบจากฐานข้อมูลกลางบุคลากร และกำหนดสิทธิ์'],
   tMenu:   ['เมนูระบบงาน', 'ชื่อ ลำดับ ไอคอน และลิงก์ของเมนูด้านซ้ายบนหน้าหลัก'],
-  tSet:    ['ข้อความหน้าหลัก', 'สโลแกนข้างหัวข้อบนหน้า EN-MSU Smart Office']
+  tSet:    ['ข้อความหน้าหลัก', 'สโลแกนข้างหัวข้อบนหน้า EN-MSU Smart Office'],
+  tSso:    ['ตั้งค่า SSO', 'เข้าสู่ระบบด้วยบัญชี Google @msu.ac.th']
 };
 function syncNav(id){
   document.querySelectorAll('.sn-it[data-go]').forEach(b => {
@@ -1209,6 +1246,8 @@ function tab(id){
   if(id === 'tSet') loadSettings();
   $('tPortal').hidden = id !== 'tPortal';
   $('tMenu').hidden = id !== 'tMenu';
+  $('tSso').hidden = id !== 'tSso';
+  if(id === 'tSso') loadSso();
   if(id === 'tMenu') loadMenu();
   if(id === 'tPortal') loadPortal();
   if(id === 'tUsers') loadUsers();
@@ -2519,6 +2558,43 @@ $('pfForm').onsubmit = async e => {
 /* รูปที่เปิดลิงก์ไม่ได้ → แสดงอักษรย่อแทน */
 document.addEventListener('error', e => { if(e.target.dataset && e.target.dataset.pfimg !== undefined){ const av = e.target.closest('.pfav'); if(av) av.textContent = pfInitial(PF && PF.name); } }, true);
 
+/* ---------------- ตั้งค่า SSO (ผู้ดูแล) ---------------- */
+function ssoShow(c){
+  $('ssoId').value = c.clientId || ''; $('ssoPw').checked = c.allowPassword;
+  $('ssoStatus').className = 'sso-status ' + (c.clientId ? 'on' : 'off');
+  $('ssoStatus').textContent = c.clientId
+    ? `✓ เปิดใช้งานแล้ว · หน้าลงข่าวและหน้าหลักแสดงปุ่ม "เข้าสู่ระบบด้วย Google"${c.allowPassword ? ' · ยังเข้าด้วยรหัสผ่านได้' : ' · ปิดการเข้าด้วยรหัสผ่านแล้ว (ยกเว้น admin)'}${c.source === 'code' ? ' · ค่ามาจาก Code.gs (กดบันทึกเพื่อย้ายมาเก็บในระบบ)' : ''}`
+    : '✕ ยังไม่เปิดใช้งาน · ใส่ OAuth Client ID แล้วกดบันทึก';
+  $('ssoOrigin').textContent = location.origin.startsWith('http') ? location.origin : 'https://eng.msu.ac.th';
+  $('ssoOrigin').hidden = $('ssoOrigin').textContent === 'https://eng.msu.ac.th';
+}
+async function loadSso(){ try{ ssoShow(await api('getAuthSettings')); }catch(err){ toast(err.message, true); } }
+$('ssoForm').onsubmit = async e => {
+  e.preventDefault();
+  const id = $('ssoId').value.trim();
+  if(id && !/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/.test(id)) return toast('รูปแบบ Client ID ไม่ถูกต้อง (ตัวเลข-ตัวอักษร.apps.googleusercontent.com)', true);
+  if(!$('ssoPw').checked && !confirm('ปิดการเข้าด้วยรหัสผ่าน? ผู้ใช้ทุกคนต้องเข้าด้วยปุ่ม Google (บัญชี admin ยังใช้รหัสผ่านได้)\nแนะนำให้กด "ทดสอบปุ่ม Google" ให้ผ่านก่อน')) return;
+  const btn = $('ssoSave'); busy(btn, true, 'กำลังบันทึก…');
+  try{ ssoShow(await api('saveAuthSettings', { settings: { clientId: id, allowPassword: $('ssoPw').checked } })); toast('บันทึกการตั้งค่า SSO แล้ว'); }
+  catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); }
+};
+/* ทดสอบ: แสดงปุ่ม Google ด้วย Client ID ที่กรอก ถ้า origin ไม่ถูกต้อง Google จะแจ้งในหน้าต่างเข้าสู่ระบบ */
+$('ssoTest').onclick = async () => {
+  const id = $('ssoId').value.trim();
+  if(!id) return toast('กรอก Client ID ก่อน', true);
+  if(location.protocol === 'file:') return toast('ทดสอบได้เมื่อเปิดผ่าน https://eng.msu.ac.th เท่านั้น', true);
+  try{ await loadGsi(); }catch(e){ return toast('โหลดสคริปต์ของ Google ไม่ได้', true); }
+  $('ssoTestBox').hidden = false; $('ssoTestBox').innerHTML = '';
+  google.accounts.id.initialize({ client_id: id, hd: AUTH && AUTH.domain || 'msu.ac.th', ux_mode:'popup',
+    callback: async r => {
+      try{ const j = await api('googleLogin', { credential: r.credential }); toast('✓ ทดสอบผ่าน: Google ยืนยันบัญชี ' + j.user.email + ' แล้ว'); }
+      catch(err){ toast('ทดสอบไม่ผ่าน: ' + err.message + (/ไม่ได้ออกให้ระบบ/.test(err.message) ? ' (กดบันทึก Client ID ก่อนทดสอบ)' : ''), true); }
+    } });
+  google.accounts.id.renderButton($('ssoTestBox'), { theme:'outline', size:'large', shape:'pill', text:'signin_with', locale:'th' });
+  toast('กดปุ่ม Google ด้านล่างเพื่อทดสอบ ถ้าขึ้น "origin is not allowed" ให้ตรวจ Authorized JavaScript origins');
+};
+
 /* ---------------- เข้าสู่ระบบด้วย Google @msu.ac.th ---------------- */
 let AUTH = null;
 function loadGsi(){
@@ -2530,19 +2606,34 @@ function loadGsi(){
     document.head.appendChild(sc);
   });
 }
+const G_ICON = '<svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+function gsiState(text, warn, label){
+  $('gsiBtn').innerHTML = `<button class="gsi-fake" type="button" disabled>${G_ICON}<span>${esc(label || 'เข้าสู่ระบบด้วย Google (@msu.ac.th)')}</span></button>`;
+  $('gsiNote').textContent = text; $('gsiNote').classList.toggle('gsi-warn', !!warn);
+}
 async function setupGoogle(){
+  if(location.protocol === 'file:') return gsiState('ปุ่ม Google ใช้ได้เมื่อเปิดผ่าน https://eng.msu.ac.th เท่านั้น (ไม่ใช่การเปิดไฟล์จากเครื่อง)', true);
   try{
     const r = await fetch(NEWS_API + '?action=config', { cache:'no-store' });
-    AUTH = (await r.json()).auth || null;
-  }catch(e){ AUTH = null; }
-  if(!AUTH || !AUTH.googleClientId) return;              // ยังไม่เปิดใช้ → ใช้รหัสผ่านตามเดิม
-  try{ await loadGsi(); }catch(e){ return; }
+    const j = await r.json();
+    if(!j.auth) throw new Error('old');
+    AUTH = j.auth;
+  }catch(e){
+    AUTH = null;
+    return gsiState(e.message === 'old'
+      ? 'ระบบหลังบ้านยังเป็นเวอร์ชันเก่า: ผู้ดูแลต้องวาง Code.gs ล่าสุด แล้ว Deploy > Manage deployments > Edit > New version'
+      : 'เชื่อมต่อระบบไม่ได้ จึงยังแสดงปุ่ม Google ไม่ได้ (เข้าด้วยรหัสผ่านได้ตามปกติ)', true);
+  }
+  if(!AUTH.googleClientId)
+    return gsiState('ยังไม่เปิดใช้งาน: ผู้ดูแลระบบเข้าสู่ระบบด้วยบัญชี admin แล้วตั้งค่าที่เมนู "ตั้งค่า SSO"', true);
+  try{ await loadGsi(); }catch(e){ return gsiState('โหลดปุ่ม Google ไม่ได้ (เครือข่ายอาจบล็อก accounts.google.com) เข้าด้วยรหัสผ่านไปก่อน', true); }
+  $('gsiBtn').innerHTML = '';
   google.accounts.id.initialize({
     client_id: AUTH.googleClientId, callback: onGoogle, hd: AUTH.domain,
     ux_mode: 'popup', auto_select: false, itp_support: true, use_fedcm_for_prompt: true
   });
   google.accounts.id.renderButton($('gsiBtn'), { theme:'filled_blue', size:'large', shape:'pill', text:'signin_with', locale:'th', width: 300 });
-  $('gsiBox').hidden = false;
+  $('gsiNote').textContent = 'ใช้บัญชี Google ของมหาวิทยาลัย (@msu.ac.th) ไม่ต้องจำรหัสผ่านเพิ่ม'; $('gsiNote').classList.remove('gsi-warn');
   /* ปิดการเข้าด้วยรหัสผ่านแล้ว → ซ่อนฟอร์ม เหลือทางเข้าสำหรับบัญชี admin */
   if(!AUTH.passwordLogin){ $('pwBox').hidden = true; $('gsiOr').hidden = true; $('pwToggle').hidden = false; }
 }
