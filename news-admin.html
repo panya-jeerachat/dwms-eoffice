@@ -85,6 +85,57 @@ textarea.in{resize:vertical;min-height:96px}
 .bar .btn:hover{background:rgba(255,255,255,.22)}
 
 .wrap{max-width:1080px;margin:0 auto;padding:18px clamp(14px,3vw,32px) 60px}
+
+/* ===== โครงหน้าแบบระบบ ERP: เมนูด้านซ้าย + เนื้อหาเต็มจอ (รูปแบบเดียวกับระบบจัดการวันลา) ===== */
+.shell{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh;transition:grid-template-columns .25s}
+.shell.mini{grid-template-columns:0 minmax(0,1fr)}
+.snav{position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--line);z-index:30}
+.shell.mini .snav{overflow:hidden;border:0}
+.sn-brand{display:flex;gap:12px;align-items:center;padding:20px 18px 18px;border-bottom:1px solid var(--line)}
+.sn-logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;background:var(--grad-hot);flex:none;box-shadow:0 8px 16px -8px rgba(179,18,46,.6)}
+.sn-brand b{display:block;font-size:15.5px;line-height:1.25}
+.sn-brand small{display:block;font-size:12px;color:var(--muted)}
+.sn-menu{padding:10px 12px;display:grid;gap:2px}
+.sn-g{font-size:11.5px;font-weight:700;color:var(--muted);padding:14px 10px 6px}
+.sn-it{display:flex;align-items:center;gap:12px;width:100%;padding:8px 10px;border:0;background:none;border-radius:12px;color:var(--text);
+  font:inherit;font-size:14.5px;font-weight:500;text-align:left;text-decoration:none;cursor:pointer;transition:background .15s}
+.sn-it:hover{background:var(--surface-2)}
+.sn-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--surface-2);color:var(--muted);flex:none;transition:all .15s}
+.sn-it[aria-current="page"]{background:#FFF1E6;font-weight:700}
+.sn-it[aria-current="page"] .sn-ic{background:linear-gradient(135deg,#FFB35C,#FF7A1A);color:#fff;box-shadow:0 6px 14px -6px #FF7A1A}
+:root[data-theme="dark"] .sn-it[aria-current="page"]{background:rgba(255,140,40,.14)}
+.sn-me{margin:auto 12px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface-2);text-align:center}
+.sn-photo{width:100%;aspect-ratio:1/1;max-width:200px;margin:0 auto 10px;border-radius:16px;overflow:hidden;background:var(--grad-hot);display:grid;place-items:center;
+  color:#fff;font-size:64px;font-weight:700}
+.sn-photo img{width:100%;height:100%;object-fit:cover}
+.sn-me b{display:block;font-size:15px;line-height:1.3}
+.sn-me span{display:block;font-size:12.5px;color:var(--muted)}
+.sn-foot{padding:14px 12px 18px;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.6}
+.sn-foot a{color:var(--accent)}
+.smain{min-width:0;display:flex;flex-direction:column}
+.shead{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:14px 28px;background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.sh-tog{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--text);cursor:pointer;flex:none}
+.sh-t h2{margin:0;font-size:19px;line-height:1.25}
+.sh-t p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.shead .sp{flex:1}
+.sh-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--line);border-radius:99px;background:var(--surface);font-size:13.5px;color:var(--muted);white-space:nowrap}
+.sh-chip b{color:var(--text);font-variant-numeric:tabular-nums}
+.sh-chip .dot{width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+.sh-chip .i{width:16px;height:16px}
+.smain .wrap{max-width:none;width:100%;margin:0;padding:22px 28px 60px}
+.smain .tabs{display:none}
+.sn-back{display:none}
+@media (max-width:960px){
+  .shell,.shell.mini{grid-template-columns:minmax(0,1fr)}
+  .snav{position:fixed;left:0;top:0;bottom:0;width:280px;transform:translateX(-100%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  .shell.open .snav{transform:none}
+  .shell.open .sn-back{display:block;position:fixed;inset:0;background:rgba(20,6,12,.45);z-index:25}
+  .shead{padding:12px 14px}
+  .shead .sh-chip{display:none}
+  .smain .wrap{padding:16px 14px 50px}
+}
+@media (max-width:1200px){ .shead .sh-chip:last-child{display:none} }
 .tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line)}
 .tabs button{border:0;background:none;padding:10px 14px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
 .tabs button[aria-selected="true"]{color:var(--accent);border-color:var(--accent)}
@@ -292,6 +343,36 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .pv-badges i{font-style:normal;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--ok-soft);color:var(--ok)}
 .pv-badges i.no{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
 
+/* ค้นหาชื่อจากฐานข้อมูลกลาง (autocomplete) */
+.ac-wrap{position:relative}
+.ac{position:absolute;left:0;top:100%;z-index:40;width:max(100%,380px);max-height:340px;overflow:auto;margin-top:4px;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -12px rgba(40,0,20,.35);padding:6px}
+.ac-it{display:flex;gap:10px;align-items:center;padding:7px 8px;border-radius:10px;cursor:pointer}
+.ac-it[aria-selected="true"],.ac-it:hover{background:var(--surface-2)}
+.ac-it.dis{opacity:.5;cursor:not-allowed}
+.ac-it b{display:block;font-size:14px;font-weight:600}
+.ac-it small{display:block;font-size:12px;color:var(--muted);line-height:1.35}
+.ac-it mark{background:#FFE7A3;color:inherit;border-radius:3px}
+.ac-tag{margin-left:auto;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.ac-empty{padding:10px;font-size:13px;color:var(--muted)}
+.pav{width:38px;height:38px;border-radius:50%;flex:none;overflow:hidden;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;background:var(--grad-hot)}
+.pav img{width:100%;height:100%;object-fit:cover}
+.urow .pav{width:44px;height:44px;margin-right:12px}
+.urow > div:first-child{display:flex;align-items:center}
+/* เพิ่มหลายคน */
+#bulkEd{width:min(980px,96vw)}
+.bk-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--line)}
+.bk-body{display:block!important;padding-top:10px}
+.bk-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.bk-list{display:grid;gap:6px}
+.bk-row{display:grid;grid-template-columns:auto auto minmax(0,1fr) 220px;gap:12px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.bk-row.sel{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 5%, var(--surface))}
+.bk-row.dis{opacity:.55}
+.bk-row b{display:block;font-size:14px}
+.bk-row small{display:block;font-size:12px;color:var(--muted)}
+.bk-row .in{padding:6px 9px;font-size:13px}
+@media (max-width:760px){ .bk-row{grid-template-columns:auto auto minmax(0,1fr)} .bk-row .in{grid-column:3} }
+
 /* ความคืบหน้าการซิงก์ */
 .sprog{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
 .sprog-top{display:flex;align-items:baseline;gap:10px}
@@ -334,6 +415,13 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 .mnpv-app .mico{width:52px;height:52px;border-radius:16px}
 .mnpv-app .mico svg{width:26px;height:26px}
 .mnpv-app span{font-size:12px;text-align:center;line-height:1.3}
+
+/* เข้าสู่ระบบด้วย Google */
+.gsi{display:grid;gap:4px;margin-bottom:6px}
+.gsi-btn{display:flex;justify-content:center;min-height:44px}
+.or{display:flex;align-items:center;gap:10px;margin:14px 0 4px;color:var(--muted);font-size:12.5px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.linkbtn{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;margin:6px auto 0}
 
 /* ผู้ใช้งาน */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px}
@@ -393,12 +481,21 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
     <p class="lead">EN-MSU Smart Office · สำหรับบุคลากรผู้รับผิดชอบลงข่าว</p>
     <p class="err" id="loginErr" hidden></p>
     <p class="okmsg" id="loginOk" hidden></p>
+    <!-- เข้าสู่ระบบด้วย Google @msu.ac.th (แสดงเมื่อผู้ดูแลตั้งค่า GOOGLE_CLIENT_ID ใน Code.gs แล้ว) -->
+    <div class="gsi" id="gsiBox" hidden>
+      <div id="gsiBtn" class="gsi-btn"></div>
+      <p class="hint" style="margin:8px 0 0;text-align:center">ใช้บัญชี Google ของมหาวิทยาลัย (@msu.ac.th) ไม่ต้องจำรหัสผ่านเพิ่ม</p>
+      <div class="or" id="gsiOr"><span>หรือเข้าด้วยอีเมลและรหัสผ่าน</span></div>
+      <button class="linkbtn" type="button" id="pwToggle" hidden>เข้าด้วยบัญชีผู้ดูแลระบบ (admin)</button>
+    </div>
+    <div id="pwBox">
     <label class="f"><span>อีเมล</span>
       <input class="in" id="lEmail" type="text" inputmode="email" autocomplete="username" placeholder="ชื่อผู้ใช้@msu.ac.th" required></label>
     <label class="f"><span>รหัสผ่าน</span>
       <input class="in" id="lPw" type="password" autocomplete="current-password" required></label>
     <button class="btn primary" id="loginBtn">เข้าสู่ระบบ</button>
     <div class="auth-foot"><a href="#" id="forgotOpen">ลืมรหัสผ่าน?</a></div>
+    </div>
     <div class="auth-foot" style="margin-top:8px"><a href="index.html">← กลับหน้า EN-MSU Smart Office</a></div>
   </form>
 </main>
@@ -458,18 +555,43 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 
 <!-- หน้าจัดการ -->
 <div id="vApp" hidden>
-  <header class="bar">
-    <span class="mark"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></span>
-    <h1>ข่าวประชาสัมพันธ์<small>EN-MSU Smart Office</small></h1>
-    <span class="sp"></span>
-    <div class="who"><b id="whoName"></b><span id="whoDept"></span></div>
-    <a class="btn sm" href="news-dashboard.html" title="รายงานสรุปผลการประชาสัมพันธ์"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="lbl">รายงาน</span></a>
-    <a class="btn sm" href="index.html" title="ไปหน้า EN-MSU Smart Office"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lbl">หน้าหลัก</span></a>
-    <button class="btn sm" id="pfOpen" title="โปรไฟล์ของฉัน (ข้อมูลผู้รับผิดชอบบนหน้าสาธารณะ)"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">โปรไฟล์ของฉัน</span></button>
-    <button class="btn sm" id="pwOpen" title="เปลี่ยนรหัสผ่าน"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="lbl">รหัสผ่าน</span></button>
-    <button class="btn sm" id="logoutBtn" title="ออกจากระบบ"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg><span class="lbl">ออก</span></button>
-  </header>
-
+<div class="shell" id="shell">
+  <aside class="snav" id="snav" aria-label="เมนูระบบข่าวประชาสัมพันธ์">
+    <div class="sn-brand">
+      <span class="sn-logo"><svg class="i" viewBox="0 0 24 24"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></span>
+      <div><b>ระบบข่าวประชาสัมพันธ์</b><small>คณะวิศวกรรมศาสตร์ มมส.</small></div>
+    </div>
+    <nav class="sn-menu">
+      <div class="sn-g">เมนูหลัก</div>
+      <button class="sn-it" type="button" data-go="tNews" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 8h3v9a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5"/></svg></span><span>ข่าวปัจจุบัน</span></button>
+      <button class="sn-it" type="button" data-go="tArch" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v10h14V9"/><path d="M10 13h4"/></svg></span><span>คลังข่าว</span></button>
+      <button class="sn-it" type="button" data-go="tPortal" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg></span><span>ช่องทางฝ่ายงาน</span></button>
+      <a class="sn-it" href="news-dashboard.html"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span>รายงานผล</span></a>
+      <div class="sn-g" id="snAdminG">ผู้ดูแลระบบ</div>
+      <button class="sn-it" type="button" data-go="tUsers" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.6A5 5 0 0 1 21.5 19"/></svg></span><span>ผู้ใช้งาน</span></button>
+      <button class="sn-it" type="button" data-go="tMenu" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><span>เมนูระบบงาน</span></button>
+      <button class="sn-it" type="button" data-go="tSet" ><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 10h8"/></svg></span><span>ข้อความหน้าหลัก</span></button>
+      <div class="sn-g">ระบบ</div>
+      <button class="sn-it" type="button" id="pfOpen"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>โปรไฟล์ของฉัน</span></button>
+      <button class="sn-it" type="button" id="pwOpen"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg></span><span>เปลี่ยนรหัสผ่าน</span></button>
+      <a class="sn-it" href="index.html"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span>หน้า EN-MSU Smart Office</span></a>
+      <button class="sn-it" type="button" id="logoutBtn"><span class="sn-ic"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg></span><span>ออกจากระบบ</span></button>
+    </nav>
+    <div class="sn-me">
+      <div class="sn-photo" id="mePhoto"></div>
+      <b id="whoName"></b><span id="whoDept"></span>
+    </div>
+    <div class="sn-foot">© 2569 คณะวิศวกรรมศาสตร์ มมส.<br>พัฒนาโดย <b>นายปัญญา จีระฉัตร</b><br><a href="mailto:panya.j@msu.ac.th">panya.j@msu.ac.th</a></div>
+  </aside>
+  <div class="sn-back" id="snBack"></div>
+  <div class="smain">
+    <header class="shead">
+      <button class="sh-tog" type="button" id="snTog" aria-label="ย่อ/ขยายเมนู"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="sh-t"><h2 id="pgTitle">ข่าวปัจจุบัน</h2><p id="pgSub"></p></div>
+      <span class="sp"></span>
+      <span class="sh-chip"><i class="dot"></i>ล่าสุด <b id="shClock">--:--:--</b></span>
+      <span class="sh-chip"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span id="shDate"></span></span>
+    </header>
   <div class="wrap">
     <div class="tabs" role="tablist">
       <button role="tab" aria-selected="true" data-tab="tNews">ข่าวปัจจุบัน</button>
@@ -563,10 +685,15 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
 
     <section id="tUsers" hidden>
       <form class="card" id="userForm" novalidate>
-        <h3 id="uFormTitle">เพิ่มผู้รับผิดชอบลงข่าว</h3>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+          <h3 id="uFormTitle" style="margin:0;flex:1">เพิ่มผู้รับผิดชอบลงข่าว</h3>
+          <button class="btn" type="button" id="bulkOpen"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M19 8v6M16 11h6"/></svg>เพิ่มหลายคนจากฐานข้อมูลกลาง</button>
+        </div>
+        <p class="hint" style="margin:-4px 0 10px">พิมพ์ชื่อหรืออีเมล 1–3 ตัวอักษร แล้วเลือกจากรายชื่อในฐานข้อมูลกลาง ระบบจะกรอกอีเมล ชื่อ ฝ่าย และตำแหน่งให้อัตโนมัติ</p>
         <div class="ufrm">
-          <label class="f"><span>อีเมล @msu.ac.th</span><input class="in" id="uEmail" type="email" placeholder="name@msu.ac.th" required></label>
-          <label class="f"><span>ชื่อ-สกุล</span><input class="in" id="uName" required maxlength="100"></label>
+          <label class="f"><span>อีเมล @msu.ac.th</span><input class="in" id="uEmail" type="email" placeholder="name@msu.ac.th" required autocomplete="off"></label>
+          <label class="f ac-wrap"><span>ชื่อ-สกุล</span><input class="in" id="uName" required maxlength="100" autocomplete="off" placeholder="พิมพ์ชื่อเพื่อค้นหา" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="acList">
+            <div class="ac" id="acList" role="listbox" hidden></div></label>
           <label class="f"><span>ฝ่าย / หน่วยงาน</span><input class="in" id="uDept" list="deptList" maxlength="100"></label>
           <label class="f"><span>ตำแหน่ง</span><input class="in" id="uPos" maxlength="80" placeholder="เช่น นักวิชาการศึกษา"></label>
           <label class="f"><span>สิทธิ์</span><select class="in" id="uRole"><option value="editor">ผู้ลงข่าว</option><option value="viewer">ผู้ดูรายงาน (ผู้บริหาร/กรรมการ)</option><option value="admin">ผู้ดูแลระบบ</option></select></label>
@@ -590,11 +717,40 @@ dialog.ed::backdrop{background:rgba(25,4,10,.65)}
       <div class="users" id="userList"></div>
     </section>
   </div>
+  </div>
+</div>
 </div>
 
 <datalist id="deptList"></datalist>
 
 <!-- หน้าต่างเพิ่ม/แก้ไขข่าว -->
+<dialog class="ed" id="bulkEd">
+  <form id="bulkForm" novalidate style="display:contents">
+    <div class="ed-head"><h2>เพิ่มผู้ใช้หลายคนจากฐานข้อมูลกลางบุคลากร</h2>
+      <button class="btn ghost icon-only" type="button" id="bulkClose" aria-label="ปิด"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="bk-tools">
+      <input class="in" type="search" id="bkQ" placeholder="ค้นหาชื่อ ตำแหน่ง หรืออีเมล" style="flex:1;min-width:200px">
+      <div class="seg" id="bkType" style="margin:0">
+        <label><input type="radio" name="bkt" value="S" checked><span>สายสนับสนุน (รหัส S)</span></label>
+        <label><input type="radio" name="bkt" value="T"><span>สายวิชาการ (รหัส T)</span></label>
+        <label><input type="radio" name="bkt" value=""><span>ทั้งหมด</span></label>
+      </div>
+      <label class="check" style="margin:0"><input type="checkbox" id="bkHide" checked> ซ่อนผู้ที่มีบัญชีแล้ว</label>
+    </div>
+    <div class="ed-body bk-body">
+      <div class="bk-head"><label class="check" style="margin:0"><input type="checkbox" id="bkAll"> เลือกทั้งหมดที่แสดง</label><span id="bkCount" class="muted"></span></div>
+      <div class="bk-list" id="bkList"></div>
+    </div>
+    <div class="ed-foot">
+      <span class="hint" style="margin-right:auto">ชื่อและตำแหน่งดึงจากฐานข้อมูลกลาง · ฝ่ายแก้ไขได้ทีละคนก่อนกดเพิ่ม · รหัสผ่านเริ่มต้น <b id="bkPw"></b></span>
+      <label class="f" style="margin:0;display:flex;gap:6px;align-items:center"><span style="margin:0">สิทธิ์</span>
+        <select class="in" id="bkRole" style="width:auto"><option value="editor">ผู้ลงข่าว</option><option value="viewer">ผู้ดูรายงาน</option><option value="admin">ผู้ดูแลระบบ</option></select></label>
+      <button class="btn" type="button" id="bulkCancel">ยกเลิก</button>
+      <button class="btn primary" id="bulkSave">เพิ่มผู้ใช้</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog class="ed" id="pfEd">
   <form id="pfForm" novalidate style="display:contents">
     <div class="ed-head"><h2>โปรไฟล์ของฉัน · การแสดงบนหน้าสาธารณะ</h2>
@@ -904,7 +1060,13 @@ $('loginForm').onsubmit = async e => {
   finally{ busy(btn, false); }
 };
 function showErr(id, m){ $(id).textContent = m; $(id).hidden = false; }
-function setMe(u, m){ me = u; if(m) meta = m; $('whoName').textContent = u.name || u.email; $('whoDept').textContent = u.dept || (u.role==='admin' ? 'ผู้ดูแลระบบ' : ''); }
+const ROLE_TH = { admin:'ผู้ดูแลระบบ', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน' };
+function setMe(u, m){
+  me = u; if(m) meta = m;
+  $('whoName').textContent = u.name || u.email;
+  $('whoDept').textContent = [u.dept, ROLE_TH[u.role]].filter(Boolean).join(' · ');
+  showMePhoto(u);
+}
 
 function showPw(forced){
   forcedPw = forced;
@@ -981,7 +1143,12 @@ $('resetForm').onsubmit = async e => {
 };
 
 function logoutLocal(){ token = null; me = null; store.set('token', null); store.set('skipPw', null); view('vLogin'); }
-async function logout(){ try{ await api('logout'); }catch(e){} logoutLocal(); }
+async function logout(){
+  try{ await api('logout'); }catch(e){}
+  try{ if(window.google && google.accounts) google.accounts.id.disableAutoSelect(); }catch(e){}
+  try{ localStorage.removeItem('eoffice-me'); }catch(e){}         // ออกจากระบบที่หน้ารวมระบบด้วย
+  logoutLocal();
+}
 $('logoutBtn').onclick = logout;
 
 function enterApp(){
@@ -998,10 +1165,46 @@ function enterApp(){
   tab('tNews'); loadNews();
 }
 
+/* ---------------- โครงหน้า: เมนูด้านซ้าย / หัวเรื่อง / นาฬิกา ---------------- */
+const PAGE = {
+  tNews:   ['ข่าวปัจจุบัน', 'จัดการข่าวที่แสดงบนหน้า EN-MSU Smart Office'],
+  tArch:   ['คลังข่าว', 'ข่าวที่หมดอายุหรือถูกนำออก ค้นหาและนำกลับมาแสดงได้'],
+  tPortal: ['ช่องทางฝ่ายงาน', 'การ์ดข้อมูลฝ่ายงานและผู้รับผิดชอบบนหน้าหลัก'],
+  tUsers:  ['ผู้ใช้งาน', 'เพิ่มผู้รับผิดชอบจากฐานข้อมูลกลางบุคลากร และกำหนดสิทธิ์'],
+  tMenu:   ['เมนูระบบงาน', 'ชื่อ ลำดับ ไอคอน และลิงก์ของเมนูด้านซ้ายบนหน้าหลัก'],
+  tSet:    ['ข้อความหน้าหลัก', 'สโลแกนข้างหัวข้อบนหน้า EN-MSU Smart Office']
+};
+function syncNav(id){
+  document.querySelectorAll('.sn-it[data-go]').forEach(b => {
+    const tb = document.querySelector(`.tabs [data-tab="${b.dataset.go}"]`);
+    b.hidden = !tb || tb.hidden;
+    b.dataset.go === id ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
+  });
+  $('snAdminG').hidden = $('usersTab').hidden;
+  const pg = PAGE[id] || ['', '']; $('pgTitle').textContent = pg[0]; $('pgSub').textContent = pg[1];
+  document.title = pg[0] + ' — ระบบข่าวประชาสัมพันธ์ EN-MSU';
+}
+document.querySelectorAll('.sn-it[data-go]').forEach(b => b.onclick = () => { tab(b.dataset.go); $('shell').classList.remove('open'); });
+$('snTog').onclick = () => innerWidth <= 960 ? $('shell').classList.toggle('open') : $('shell').classList.toggle('mini');
+$('snBack').onclick = () => $('shell').classList.remove('open');
+function shClock(){
+  const n = new Date();
+  $('shClock').textContent = n.toLocaleTimeString('th-TH', { hour12:false });
+  $('shDate').textContent = n.toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+}
+shClock(); setInterval(shClock, 1000);
+const meIni = s => String(s || '').trim().replace(/^(นางสาว|นาง|นาย|ผศ\.|รศ\.|ศ\.|ดร\.)\s*/g, '').slice(0, 1) || '•';
+function showMePhoto(u){
+  const el = $('mePhoto');
+  el.innerHTML = u && u.photo ? `<img src="${esc(u.photo)}" alt="" referrerpolicy="no-referrer">` : esc(meIni(u && u.name));
+  const im = el.querySelector('img'); if(im) im.onerror = () => { el.textContent = meIni(u.name); };
+}
+
 /* ---------------- แท็บ ---------------- */
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => tab(b.dataset.tab));
 function tab(id){
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
+  syncNav(id);
   $('tNews').hidden = id !== 'tNews'; $('tUsers').hidden = id !== 'tUsers'; $('tArch').hidden = id !== 'tArch'; $('tSet').hidden = id !== 'tSet';
   if(id === 'tSet') loadSettings();
   $('tPortal').hidden = id !== 'tPortal';
@@ -2003,6 +2206,7 @@ $('edForm').onsubmit = async e => {
 /* ---------------- ผู้ใช้งาน (เฉพาะผู้ดูแลระบบ) ---------------- */
 let uEditing = null;
 async function loadUsers(){
+  loadStaff(true).catch(() => {});
   $('uHint').textContent = meta.defaultPassword
     ? `บัญชีใหม่และบัญชีที่ถูกรีเซ็ตใช้รหัสผ่านเริ่มต้น ${meta.defaultPassword} ระบบจะชวนให้ตั้งรหัสผ่านใหม่เมื่อเข้าครั้งแรก (ผู้ใช้กดข้ามได้)`
     : '';
@@ -2010,12 +2214,144 @@ async function loadUsers(){
   try{ const j = await api('listUsers'); users = j.users; renderUsers(); syncShow(j.staffSync ? JSON.parse(j.staffSync) : null); if(!spPoll) spWatch(); }
   catch(err){ $('userList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
 }
+/* ---------------- ฐานข้อมูลกลาง: ค้นหาชื่อ + เพิ่มหลายคน ---------------- */
+let STAFF = null, staffLoading = null;
+const pav = p => `<span class="pav">${p && p.photo ? `<img src="${esc(p.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.textContent='${esc(meIni(p.name))}'">` : esc(meIni(p && p.name))}</span>`;
+function loadStaff(force){
+  if(STAFF && !force) return Promise.resolve(STAFF);
+  if(!staffLoading || force) staffLoading = api('listStaff').then(j => (STAFF = j.staff)).finally(() => { staffLoading = null; });
+  return staffLoading;
+}
+const norm = s => String(s || '').toLowerCase().replace(/\s+/g, '');
+function staffMatch(q, list){
+  const n = norm(q); if(!n) return [];
+  return list.filter(st => norm(st.name).includes(n) || norm(st.email).includes(n) || norm(st.position).includes(n))
+    .sort((a, b) => (norm(b.name).startsWith(n) - norm(a.name).startsWith(n)) || a.name.localeCompare(b.name, 'th'));
+}
+const hl = (text, q) => { const t = String(text || ''), i = t.toLowerCase().indexOf(String(q || '').trim().toLowerCase());
+  return i < 0 || !q.trim() ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.trim().length)) + '</mark>' + esc(t.slice(i + q.trim().length)); };
+
+/* ค้นหาชื่อแบบพิมพ์แล้วเลือก (ช่องชื่อ และช่องอีเมล) */
+let acItems = [], acIdx = -1, acTimer = null;
+function acClose(){ $('acList').hidden = true; $('uName').setAttribute('aria-expanded', 'false'); acIdx = -1; }
+function acRender(q){
+  if(!STAFF){ $('acList').innerHTML = '<div class="ac-empty">กำลังโหลดรายชื่อจากฐานข้อมูลกลาง…</div>'; $('acList').hidden = false; return; }
+  acItems = staffMatch(q, STAFF).slice(0, 8); acIdx = -1;
+  $('acList').innerHTML = acItems.length ? acItems.map((st, i) => {
+    const why = st.user ? 'มีบัญชีแล้ว' : !st.validEmail ? 'อีเมลไม่ใช่ @msu.ac.th' : '';
+    return `<div class="ac-it ${why ? 'dis' : ''}" role="option" data-i="${i}" aria-disabled="${!!why}">${pav(st)}
+      <div style="min-width:0"><b>${hl(st.name, q)}</b><small>${esc(st.position || '')}${st.unit ? ' · ' + esc(st.unit) : ''}</small><small>${hl(st.email, q)}</small></div>
+      ${why ? `<span class="ac-tag">${why}</span>` : ''}</div>`; }).join('')
+    : `<div class="ac-empty">ไม่พบ "${esc(q)}" ในฐานข้อมูลกลาง${STAFF.length ? '' : ' (ยังไม่เคยซิงก์ — กดซิงก์ฐานข้อมูลกลางด้านล่างก่อน)'} · กรอกข้อมูลเองได้</div>`;
+  $('acList').hidden = false; $('uName').setAttribute('aria-expanded', 'true');
+}
+function acPick(i){
+  const st = acItems[i]; if(!st || st.user || !st.validEmail) return;
+  $('uEmail').value = st.email; $('uName').value = st.name; $('uDept').value = st.suggestDept || ''; $('uPos').value = st.position || '';
+  acClose(); toast(`กรอกข้อมูลของ ${st.name} จากฐานข้อมูลกลางแล้ว ตรวจฝ่ายก่อนกดเพิ่มผู้ใช้`); $('uDept').focus();
+}
+function acInput(e){
+  if(uEditing) return;
+  const q = e.target.value.trim();
+  clearTimeout(acTimer);
+  if(!q){ acClose(); return; }
+  loadStaff().then(() => acRender(q)).catch(err => { $('acList').innerHTML = `<div class="ac-empty">${esc(err.message)}</div>`; $('acList').hidden = false; });
+  acRender(q);
+}
+$('uName').addEventListener('input', acInput);
+$('uEmail').addEventListener('input', e => { if(!uEditing && e.target.value.trim().length >= 2) { $('uName').focus(); $('uName').value = e.target.value.trim(); acInput({ target: $('uName') }); } });
+$('uName').addEventListener('focus', () => { if(!uEditing) loadStaff().catch(() => {}); });
+$('uName').addEventListener('keydown', e => {
+  if($('acList').hidden) return;
+  const els = [...$('acList').querySelectorAll('.ac-it')];
+  if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    e.preventDefault(); acIdx = (acIdx + (e.key === 'ArrowDown' ? 1 : -1) + els.length) % els.length;
+    els.forEach((x, i) => x.setAttribute('aria-selected', i === acIdx)); els[acIdx] && els[acIdx].scrollIntoView({ block:'nearest' });
+  } else if(e.key === 'Enter' && acIdx >= 0){ e.preventDefault(); acPick(acIdx); }
+  else if(e.key === 'Escape') acClose();
+});
+$('acList').addEventListener('mousedown', e => { const it = e.target.closest('.ac-it'); if(it){ e.preventDefault(); acPick(+it.dataset.i); } });
+document.addEventListener('click', e => { if(!e.target.closest('.ac-wrap')) acClose(); });
+
+/* เพิ่มหลายคน */
+let bkSel = new Map();           // email → ฝ่าย
+async function bulkOpen(){
+  $('bkPw').textContent = meta.defaultPassword || '';
+  bkSel = new Map(); $('bkQ').value = ''; $('bkAll').checked = false;
+  $('bkList').innerHTML = '<div class="empty">กำลังโหลดรายชื่อจากฐานข้อมูลกลาง…</div>';
+  $('bulkEd').showModal();
+  try{ await loadStaff(true); bkRender(); }catch(err){ $('bkList').innerHTML = `<div class="empty">${esc(err.message)}</div>`; }
+}
+function bkVisible(){
+  const t = document.querySelector('input[name="bkt"]:checked').value, q = $('bkQ').value.trim(), hide = $('bkHide').checked;
+  let list = q ? staffMatch(q, STAFF) : STAFF.slice().sort((a, b) => String(a.code).localeCompare(String(b.code), 'th', { numeric:true }));
+  if(t) list = list.filter(st => String(st.code || '').toUpperCase().startsWith(t));
+  if(hide) list = list.filter(st => !st.user);
+  return list;
+}
+function bkRender(){
+  if(!STAFF) return;
+  const list = bkVisible(), q = $('bkQ').value.trim();
+  $('bkList').innerHTML = list.map(st => {
+    const why = st.user ? 'มีบัญชีแล้ว' : !st.validEmail ? 'อีเมลไม่ใช่ @msu.ac.th' : '';
+    const on = bkSel.has(st.email);
+    return `<div class="bk-row ${on ? 'sel' : ''} ${why ? 'dis' : ''}" data-e="${esc(st.email)}">
+      <input type="checkbox" ${on ? 'checked' : ''} ${why ? 'disabled' : ''} aria-label="เลือก ${esc(st.name)}">
+      ${pav(st)}
+      <div style="min-width:0"><b>${hl(st.name, q)} <span class="muted" style="font-weight:400;font-size:12px">${esc(st.code || '')}</span></b>
+        <small>${esc(st.position || '')}${st.unit ? ' · ' + esc(st.unit) : ''}</small><small>${hl(st.email, q)}${why ? ` · <b style="display:inline;color:var(--warn)">${why}</b>` : ''}</small></div>
+      ${why ? '<span></span>' : `<input class="in" list="deptList" data-dept value="${esc(on ? bkSel.get(st.email) : st.suggestDept)}" placeholder="ฝ่าย / หน่วยงาน" aria-label="ฝ่ายของ ${esc(st.name)}">`}
+    </div>`; }).join('') || '<div class="empty">ไม่พบรายชื่อตามเงื่อนไข</div>';
+  const avail = list.filter(st => !st.user && st.validEmail);
+  $('bkAll').checked = avail.length > 0 && avail.every(st => bkSel.has(st.email));
+  $('bkCount').textContent = `แสดง ${list.length} คน · เลือกแล้ว ${bkSel.size} คน`;
+  $('bulkSave').textContent = bkSel.size ? `เพิ่มผู้ใช้ ${bkSel.size} คน` : 'เพิ่มผู้ใช้';
+  $('bulkSave').disabled = !bkSel.size;
+}
+$('bkList').addEventListener('change', e => {
+  const row = e.target.closest('.bk-row'); if(!row) return;
+  const email = row.dataset.e;
+  if(e.target.type === 'checkbox'){
+    e.target.checked ? bkSel.set(email, row.querySelector('[data-dept]').value) : bkSel.delete(email);
+    row.classList.toggle('sel', e.target.checked); bkRender();
+  }
+});
+$('bkList').addEventListener('input', e => { if(e.target.dataset.dept !== undefined){ const em = e.target.closest('.bk-row').dataset.e; if(bkSel.has(em)) bkSel.set(em, e.target.value); } });
+$('bkList').addEventListener('click', e => {         // คลิกที่แถว = เลือก/ยกเลิก
+  if(e.target.closest('input')) return;
+  const cb = e.target.closest('.bk-row') && e.target.closest('.bk-row').querySelector('input[type=checkbox]');
+  if(cb && !cb.disabled){ cb.checked = !cb.checked; cb.dispatchEvent(new Event('change', { bubbles:true })); }
+});
+$('bkAll').onchange = () => {
+  bkVisible().filter(st => !st.user && st.validEmail).forEach(st => $('bkAll').checked ? bkSel.set(st.email, bkSel.get(st.email) || st.suggestDept) : bkSel.delete(st.email));
+  bkRender();
+};
+['bkQ','bkHide'].forEach(i => $(i).addEventListener('input', bkRender));
+$('bkType').addEventListener('change', bkRender);
+$('bulkOpen').onclick = bulkOpen;
+$('bulkClose').onclick = $('bulkCancel').onclick = () => $('bulkEd').close();
+$('bulkForm').onsubmit = async e => {
+  e.preventDefault();
+  if(!bkSel.size) return;
+  const items = [...bkSel].map(([email, dept]) => ({ email, dept: String(dept || '').trim(), role: $('bkRole').value }));
+  if(items.some(x => !x.dept) && !confirm('มีบางคนยังไม่ได้ระบุฝ่าย ต้องการเพิ่มต่อหรือไม่?')) return;
+  const btn = $('bulkSave'); busy(btn, true, 'กำลังเพิ่มผู้ใช้…');
+  try{
+    const j = await api('bulkAddUsers', { items });
+    $('bulkEd').close();
+    toast(`เพิ่มผู้ใช้แล้ว ${j.created.length} คน${j.skipped.length ? ` · ข้าม ${j.skipped.length} คน` : ''}`);
+    if(j.skipped.length) setTimeout(() => alert('รายการที่ข้าม:\n' + j.skipped.join('\n')), 300);
+    STAFF = null; loadUsers();
+  }catch(err){ toast(err.message, true); }
+  finally{ busy(btn, false); bkRender(); }
+};
+
 function renderUsers(){
   $('userList').innerHTML = users.map(u => `
     <div class="urow" data-email="${esc(u.email)}">
-      <div><b>${esc(u.name)}</b><span class="role ${u.role}">${ {admin:'ผู้ดูแล', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน'}[u.role] || u.role }</span>${u.active ? '' : '<span class="role off">ปิดใช้งาน</span>'}
+      <div>${pav(u)}<div style="min-width:0"><b>${esc(u.name)}</b><span class="role ${u.role}">${ {admin:'ผู้ดูแล', editor:'ผู้ลงข่าว', viewer:'ผู้ดูรายงาน'}[u.role] || u.role }</span>${u.active ? '' : '<span class="role off">ปิดใช้งาน</span>'}
         <div class="meta"><span>${esc(u.email)}</span><span>${esc(u.dept || 'ไม่ระบุฝ่าย')}${u.position ? ' · ' + esc(u.position) : ''}</span>
-          <span>สาธารณะ<span class="pv-badges">${!u.inCentral ? '<i class="no" title="ไม่พบอีเมลนี้ในฐานข้อมูลกลาง">ไม่อยู่ในฐานข้อมูลกลาง</i>' : ''}${u.showPublic ? `<i>ชื่อ</i><i class="${u.showPhoto && u.hasPhoto ? '' : 'no'}">รูป</i><i class="${u.showEmail ? '' : 'no'}">อีเมล</i>` : '<i class="no">ไม่เผยแพร่</i>'}</span></span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div>
+          <span>สาธารณะ<span class="pv-badges">${!u.inCentral ? '<i class="no" title="ไม่พบอีเมลนี้ในฐานข้อมูลกลาง">ไม่อยู่ในฐานข้อมูลกลาง</i>' : ''}${u.showPublic ? `<i>ชื่อ</i><i class="${u.showPhoto && u.hasPhoto ? '' : 'no'}">รูป</i><i class="${u.showEmail ? '' : 'no'}">อีเมล</i>` : '<i class="no">ไม่เผยแพร่</i>'}</span></span><span>เข้าล่าสุด ${esc(u.lastLogin || '-')}</span>${u.mustChange ? '<span>ยังไม่เปลี่ยนรหัสผ่าน</span>' : ''}</div></div></div>
       <div class="acts">
         <button class="btn sm" data-act="edit">แก้ไข</button>
         <button class="btn sm" data-act="reset">รีเซ็ตรหัสผ่าน</button>
@@ -2183,8 +2519,48 @@ $('pfForm').onsubmit = async e => {
 /* รูปที่เปิดลิงก์ไม่ได้ → แสดงอักษรย่อแทน */
 document.addEventListener('error', e => { if(e.target.dataset && e.target.dataset.pfimg !== undefined){ const av = e.target.closest('.pfav'); if(av) av.textContent = pfInitial(PF && PF.name); } }, true);
 
+/* ---------------- เข้าสู่ระบบด้วย Google @msu.ac.th ---------------- */
+let AUTH = null;
+function loadGsi(){
+  return new Promise((ok, no) => {
+    if(window.google && google.accounts && google.accounts.id) return ok();
+    const sc = document.createElement('script');
+    sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true;
+    sc.onload = () => ok(); sc.onerror = () => no(new Error('โหลดปุ่ม Google ไม่ได้'));
+    document.head.appendChild(sc);
+  });
+}
+async function setupGoogle(){
+  try{
+    const r = await fetch(NEWS_API + '?action=config', { cache:'no-store' });
+    AUTH = (await r.json()).auth || null;
+  }catch(e){ AUTH = null; }
+  if(!AUTH || !AUTH.googleClientId) return;              // ยังไม่เปิดใช้ → ใช้รหัสผ่านตามเดิม
+  try{ await loadGsi(); }catch(e){ return; }
+  google.accounts.id.initialize({
+    client_id: AUTH.googleClientId, callback: onGoogle, hd: AUTH.domain,
+    ux_mode: 'popup', auto_select: false, itp_support: true, use_fedcm_for_prompt: true
+  });
+  google.accounts.id.renderButton($('gsiBtn'), { theme:'filled_blue', size:'large', shape:'pill', text:'signin_with', locale:'th', width: 300 });
+  $('gsiBox').hidden = false;
+  /* ปิดการเข้าด้วยรหัสผ่านแล้ว → ซ่อนฟอร์ม เหลือทางเข้าสำหรับบัญชี admin */
+  if(!AUTH.passwordLogin){ $('pwBox').hidden = true; $('gsiOr').hidden = true; $('pwToggle').hidden = false; }
+}
+$('pwToggle').onclick = () => { $('pwBox').hidden = false; $('pwToggle').hidden = true; $('lEmail').value = 'admin'; $('lPw').focus(); };
+async function onGoogle(resp){
+  $('loginErr').hidden = true; $('loginOk').hidden = true;
+  $('loginOk').textContent = 'กำลังตรวจสอบบัญชีกับ Google…'; $('loginOk').hidden = false;
+  try{
+    const j = await api('googleLogin', { credential: resp.credential });
+    $('loginOk').hidden = true;
+    token = j.token; store.set('token', token); setMe(j.user, j.meta);
+    enterApp();
+  }catch(err){ $('loginOk').hidden = true; showErr('loginErr', err.message); }
+}
+
 /* ---------------- เริ่มต้น ---------------- */
 (async function init(){
+  setupGoogle();
   if(!NEWS_API) return view('vCfg');
   const q = new URLSearchParams(location.search);
   if(q.get('reset')){
